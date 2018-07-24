@@ -15,7 +15,8 @@
 
         <div class="swiper-container" id="swiper">
             <div class="swiper-wrapper">
-                <div class="swiper-slide" v-for="(item, index) in meunList" :key="index">{{index}}</div>
+                <div class="swiper-slide" v-for="(item, index) in meunList" :key="index">
+                </div>
             </div>
         </div>
     </div>
