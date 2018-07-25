@@ -128,6 +128,7 @@ export default {
   & .tabbar {
     position: relative;
     height: 50px;
+    background: #fff;
     & ul {
       display: flex;
       list-style: none;

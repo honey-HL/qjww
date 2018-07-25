@@ -17,6 +17,11 @@ import AnswerResult from '@/pages/answerResult'
 import Report from '@/pages/report'
 import IcomeAnswer from '@/pages/icomeAnswer'
 import MyAnswer from '@/pages/myAnswer'
+import Expert from '@/pages/expert'
+import ExpertDetail from '@/pages/expertDetail'
+import MyCollection from '@/pages/myCollection'
+import Feedback from '@/pages/feedback'
+import Signin from '@/pages/signin'
 
 
 Vue.use(VueScroller)
@@ -26,7 +31,7 @@ Vue.use(Router)
 const routers = new Router({
   mode: "history",
   routes: [
-    { path: '/', redirect: "/index/myAnswer" },
+    { path: '/', redirect: "/index/signin" },
     {
       path: '/index',
       name: 'index',
@@ -46,6 +51,11 @@ const routers = new Router({
         { path: 'report', name: 'report', component: Report, meta: { title: "举报" } },
         { path: 'icomeAnswer', name: 'icomeAnswer', component: IcomeAnswer, meta: { title: "我来回答" } },
         { path: 'myAnswer', name: 'myAnswer', component: MyAnswer, meta: { title: "我的回答" } },
+        { path: 'expert', name: 'expert', component: Expert, meta: { title: "专家" } },
+        { path: 'expertDetail', name: 'expertDetail', component: ExpertDetail, meta: { title: "专家--王师傅" } },
+        { path: 'myCollection', name: 'myCollection', component: MyCollection, meta: { title: "我的收藏" } },
+        { path: 'feedback', name: 'feedback', component: Feedback, meta: { title: "意见反馈" } },
+        { path: 'signin', name: 'signin', component: Signin, meta: { title: "签到" } },
       ]
     },
   ]
