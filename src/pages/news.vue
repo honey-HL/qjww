@@ -24,16 +24,18 @@
             </div>
             <div class="time">5分钟前</div>
         </div>
-        <div class="not" v-if="false">
-            <div class="icon"></div>
-            <div class="title">暂未收到通知</div>
-            <div class="hint">您收到的通知都在这里汇集</div>
+        <div class="not" v-if="true">
+            <Not title="暂未收到通知" hint="您收到的通知都在这里汇集"/>
         </div>
     </div>
 </template>
 <script>
+    import Not from "@/components/notData";
     export default {
         name: "news",
+        components: {
+            Not
+        },
         data() {
             return {
 
@@ -96,27 +98,6 @@
         }
         .row:last-child {
             margin-bottom: 0;
-        }
-        .not {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            .icon {
-                width: calc(356px / 2);
-                height: calc(354px / 2);
-                background-size: cover !important;
-                background-position: center !important;
-                background: url(../assets/new-not.png);
-            }
-            .title {
-                font-size: 16px;
-                color: #000000;
-            }
-            .hint {
-                color: #999999;
-            }
         }
     }
 </style>

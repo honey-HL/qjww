@@ -4,7 +4,7 @@
         <p class="title">手机问题，就来千机问问</p>
         <div class="search-bar">
             <img src="../assets/search.png" />
-            <input type="text" placeholder="请输入您遇到的手机问题">
+            <input type="text" placeholder="请输入您遇到的手机问题" maxlength="30" v-model="searchValue" @keyup.enter="searchEnterFun">
         </div>
         <div class="solve">
             已有
@@ -12,7 +12,7 @@
         </div>
         <div class="bottom-bar">
             <div class="title">不止解答·直至解决</div>
-            <img src="../assets/ad.png">
+            <div class="ad"></div>
         </div>
 
         <MyFooter />
@@ -29,17 +29,27 @@
             MyFooter
         },
         data() {
-            return {};
+            return {
+                searchValue: "",
+            };
         },
+        methods: {
+            searchEnterFun(e) {
+                var keyCode = window.event ? e.keyCode : e.which;
+                if (keyCode == 13 && this.searchValue != "") {
+                    this.$router.push({ path: '/index/result?keywords=' + this.searchValue });
+                }
+            },
+        }
     };
 </script>
 
 <style lang="scss" scoped>
     .home {
+        padding-top: 100px;
         .logo {
             display: block;
             margin: 0 auto;
-            margin-top: 100px;
             width: calc(304px / 2);
             height: calc(64px / 2);
         }
@@ -84,14 +94,23 @@
             }
         }
         .bottom-bar {
-            position: absolute;
-            bottom: 50px;
+            margin-top: 50px;
             width: 100%;
+            text-align: center;
             & .title {
                 font-size: 18px;
                 letter-spacing: 2px;
                 color: #666;
                 margin-bottom: 10px;
+            }
+            & .ad {
+                display: inline-block;
+                border-radius: 6px;
+                width: calc(692px / 2);
+                height: calc(242px / 2);
+                background-size: cover !important;
+                background-origin: center !important;
+                background: #ddd;
             }
 
         }

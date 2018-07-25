@@ -1,33 +1,7 @@
 <template>
     <div id="result">
-        <Search />
-        <scroller class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#4b8bf4" loading-layer-color="#ec4949">
-            <!--下拉loading-->
-            <svg class="spinner" style="stroke: #4b8bf4;" slot="refresh-spinner" viewBox="0 0 64 64">
-                <g stroke-width="7" stroke-linecap="round">
-                    <line x1="10" x2="10" y1="27.3836" y2="36.4931">
-                        <animate attributeName="y1" dur="750ms" values="16;18;28;18;16;16" repeatCount="indefinite"></animate>
-                        <animate attributeName="y2" dur="750ms" values="48;46;36;44;48;48" repeatCount="indefinite"></animate>
-                        <animate attributeName="stroke-opacity" dur="750ms" values="1;.4;.5;.8;1;1" repeatCount="indefinite"></animate>
-                    </line>
-                    <line x1="24" x2="24" y1="18.6164" y2="45.3836">
-                        <animate attributeName="y1" dur="750ms" values="16;16;18;28;18;16" repeatCount="indefinite"></animate>
-                        <animate attributeName="y2" dur="750ms" values="48;48;46;36;44;48" repeatCount="indefinite"></animate>
-                        <animate attributeName="stroke-opacity" dur="750ms" values="1;1;.4;.5;.8;1" repeatCount="indefinite"></animate>
-                    </line>
-                    <line x1="38" x2="38" y1="16.1233" y2="47.8767">
-                        <animate attributeName="y1" dur="750ms" values="18;16;16;18;28;18" repeatCount="indefinite"></animate>
-                        <animate attributeName="y2" dur="750ms" values="44;48;48;46;36;44" repeatCount="indefinite"></animate>
-                        <animate attributeName="stroke-opacity" dur="750ms" values=".8;1;1;.4;.5;.8" repeatCount="indefinite"></animate>
-                    </line>
-                    <line x1="52" x2="52" y1="16" y2="48">
-                        <animate attributeName="y1" dur="750ms" values="28;18;16;16;18;28" repeatCount="indefinite"></animate>
-                        <animate attributeName="y2" dur="750ms" values="36;44;48;48;46;36" repeatCount="indefinite"></animate>
-                        <animate attributeName="stroke-opacity" dur="750ms" values=".5;.8;1;1;.4;.5" repeatCount="indefinite"></animate>
-                    </line>
-                </g>
-            </svg>
-
+        <Search :searchValue="searchValue" />
+        <scroller class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
             <div class="hint">最佳匹配答案</div>
             <div class="row">
                 <div class="title">阿萨德大范甘迪发大师法规地方鬼地方个电饭锅电饭锅地方</div>
@@ -74,23 +48,7 @@
                 </div>
             </div>
 
-            <!-- 上拉loading -->
-            <svg class="spinner" style="fill: #ec4949;" slot="infinite-spinner" viewBox="0 0 64 64">
-                <g>
-                    <circle cx="16" cy="32" stroke-width="0" r="3">
-                        <animate attributeName="fill-opacity" dur="750ms" values=".5;.6;.8;1;.8;.6;.5;.5" repeatCount="indefinite"></animate>
-                        <animate attributeName="r" dur="750ms" values="3;3;4;5;6;5;4;3" repeatCount="indefinite"></animate>
-                    </circle>
-                    <circle cx="32" cy="32" stroke-width="0" r="3.09351">
-                        <animate attributeName="fill-opacity" dur="750ms" values=".5;.5;.6;.8;1;.8;.6;.5" repeatCount="indefinite"></animate>
-                        <animate attributeName="r" dur="750ms" values="4;3;3;4;5;6;5;4" repeatCount="indefinite"></animate>
-                    </circle>
-                    <circle cx="48" cy="32" stroke-width="0" r="4.09351">
-                        <animate attributeName="fill-opacity" dur="750ms" values=".6;.5;.5;.6;.8;1;.8;.6" repeatCount="indefinite"></animate>
-                        <animate attributeName="r" dur="750ms" values="5;4;3;3;4;5;6;5" repeatCount="indefinite"></animate>
-                    </circle>
-                </g>
-            </svg>
+
         </scroller>
     </div>
 </template>
@@ -100,14 +58,17 @@
 
     export default {
         name: "result",
+        components: {
+            Search
+        },
         data() {
             return {
                 items: [],
-                searchValue: "阿斯"
+                searchValue: ""
             };
         },
-        components: {
-            Search
+        created() {
+            this.searchValue = this.$route.query.keywords
         },
         mounted() {
             for (let i = 1; i <= 20; i++) {
@@ -141,6 +102,7 @@
                 }, 1500);
                 return;
             },
+            /*高亮*/
             ruleTitles(value) {
                 if (!value) return;
                 if (this.searchValue && this.searchValue.length > 0) {
@@ -250,7 +212,7 @@
                         margin-left: 15px;
                         vertical-align: center;
                         position: relative;
-                        top:2px;
+                        top: 2px;
                     }
                     span {
                         font-size: 12px;

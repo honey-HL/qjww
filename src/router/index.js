@@ -31,7 +31,7 @@ Vue.use(Router)
 const routers = new Router({
   mode: "history",
   routes: [
-    { path: '/', redirect: "/index/signin" },
+    { path: '/', redirect: "/index/home" },
     {
       path: '/index',
       name: 'index',

@@ -1,8 +1,8 @@
 <template>
   <div id="search">
     <div class="search-bar">
-      <input placeholder="请输入您遇到的手机问题" maxlength="30" v-model="searchValue">
-      <img src="../assets/search.png" />
+      <input placeholder="请输入您遇到的手机问题" maxlength="30" v-model="searchValue" @keyup.enter="searchEnterFun">
+      <img src="../assets/search.png" @click="search" />
     </div>
   </div>
 </template>
@@ -12,18 +12,28 @@
     name: "search",
     data() {
       return {
-        items: [],
-        searchValue: "阿斯"
       };
     },
-    mounted() {
-
+    props: {
+      searchValue: {
+        type: String,
+        default: ""
+      }
     },
     methods: {
+      searchEnterFun(e) {
+        console.log(e);
+        var keyCode = window.event ? e.keyCode : e.which;
+        if (keyCode == 13 && this.searchValue != "") {
+          //TODO 
+          alert(this.searchValue);
 
-    },
-    computed: {
-
+        }
+      },
+      search() {
+        alert(this.searchValue);
+        //TODO 
+      }
     }
   };
 </script>

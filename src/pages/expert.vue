@@ -53,8 +53,18 @@
               </div>
             </div>
           </div>
+          <Not v-if="true" title="网络出现故障" hint="网络出现故障，请刷新一下" type="YC">
+            <div class="o-btn">
+              <span>刷新</span>
+            </div>
+          </Not>
         </div>
         <div class="swiper-slide">
+          <Not v-if="true" title="暂无专家咨询" hint="已咨询过的专家将显示在这里" type="ZX">
+            <div class="o-btn">
+              <span>找专家咨询</span>
+            </div>
+          </Not>
           <div class="item">
             <div class="row">
               <div class="head">
@@ -83,18 +93,15 @@
 <script>
   import "swiper/dist/css/swiper.css";
   import Swiper from "swiper";
+  import Not from "@/components/notData";
   export default {
     name: "expert",
-    props: {
-      meunList: {
-        type: Array,
-        default: () => {
-          return [{ id: 1, name: "专家" }, { id: 2, name: "我的咨询" }];
-        }
-      }
+    components: {
+      Not
     },
     data() {
       return {
+        meunList: [{ id: 1, name: "专家" }, { id: 2, name: "我的咨询" }],
         current: 0,
         swiper: null,
         isScreen: false,
@@ -185,6 +192,19 @@
       height: calc(100% - 50px);
       & .swiper-slide {
         position: relative;
+        & .o-btn {
+          text-align: center;
+          padding-top: 15px;
+          span {
+            display: inline-block;
+            width: 108px;
+            height: 32px;
+            line-height: 32px;
+            background-image: linear-gradient(-90deg, #5FB62A 0%, #78BC28 100%);
+            border-radius: 100px;
+            color: #fff;
+          }
+        }
         &:nth-child(1) {
           padding-top: 46px;
         }
