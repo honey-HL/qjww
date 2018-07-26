@@ -2,7 +2,9 @@
   <div id="search">
     <div class="search-bar">
       <input placeholder="请输入您遇到的手机问题" maxlength="30" v-model="searchValue" @keyup.enter="searchEnterFun">
-      <img src="../assets/search.png" @click="search" />
+      <div class="img-div">
+        <img src="../assets/search.png" @click="search" />
+      </div>
     </div>
   </div>
 </template>
@@ -22,17 +24,17 @@
     },
     methods: {
       searchEnterFun(e) {
-        console.log(e);
         var keyCode = window.event ? e.keyCode : e.which;
         if (keyCode == 13 && this.searchValue != "") {
           //TODO 
-          alert(this.searchValue);
-
+          //alert(this.searchValue);
+          this.$emit("searchData", this.searchValue);
         }
       },
       search() {
-        alert(this.searchValue);
-        //TODO 
+        if (this.searchValue != "") {
+          this.$emit("searchData", this.searchValue);
+        }
       }
     }
   };
@@ -45,12 +47,19 @@
     .search-bar {
       width: 100%;
       position: relative;
+      .img-div {
+        position: absolute;
+        width: 50px;
+        height: 32px;
+        right: 0;
+        top: 0;
+        text-align: center
+      }
       img {
         width: calc(34px / 2);
         height: calc(34px / 2);
-        position: absolute;
+        position: relative;
         top: 6.5px;
-        right: 15px;
       }
       input {
         width: 100%;

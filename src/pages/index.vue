@@ -16,7 +16,7 @@
         },
         /*页面切换效果*/
         beforeRouteUpdate(to, from, next) {
-            console.log(to.name);
+            console.log("路由名字：" + to.name);
             if (to.name == "home" || to.name == "answer" || to.name == "my") {
                 this.transitionName = 'opacity';
             }
@@ -30,12 +30,13 @@
             }
             this.$router.isBack = false
             next()
-        }
+        },
     }
 </script>
 
 <style scoped>
     .child-view {
+        height: 100%;
         transition: all .3s cubic-bezier(.55, 0, .1, 1);
     }
 

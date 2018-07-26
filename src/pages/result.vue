@@ -1,30 +1,31 @@
 <template>
     <div id="result">
-        <Search :searchValue="searchValue" />
+        <Search :searchValue="searchValue" @searchData="searchData" />
         <scroller class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
             <div class="hint">最佳匹配答案</div>
-            <div class="row">
-                <div class="title">阿萨德大范甘迪发大师法规地方鬼地方个电饭锅电饭锅地方</div>
-                <div class="content">
-                    1.阿斯蒂芬的鬼地方大师法规地方个地方个地方鬼地方个电饭锅大范甘迪发 2.阿斯蒂芬的鬼地方大师法规地方个地方个地方鬼地方个电饭锅大范甘迪发
-                </div>
-                <div class="more-hint">
-                    还有
-                    <span>34</span>条相关讨论
-                </div>
+            <div class="row" v-for="(item, index) in items" :key="index" v-if="item.userPush">
+                <div class="title" v-html="item.questionKeyWords"></div>
+                <div class="content" v-html="item.questionContent"></div>
             </div>
-            <div v-for="(item, index) in items" :key="index" class="row">
-                <div class="title" v-html="ruleTitles(item.title)"></div>
-                <div class="content">
-                    1.阿斯蒂芬的鬼地方大师法规地方个地方个地方鬼地方个电饭锅大范甘迪发 2.阿斯蒂芬的鬼地方大师法规地方个地方个地方鬼地方个电饭锅大范甘迪发
+            <Loading v-if="isShowLoading" />
+            <div class="more-hint">
+                <span>{{totalNum}}</span>条相关讨论
+            </div>
+            <div v-for="(item, index) in items" :key="index" class="row" v-if="!item.userPush">
+                <div class="title" v-html="item.questionKeyWords"></div>
+                <div class="content" v-html="item.questionContent"></div>
+                <div class="img-list">
+                    <div class="img-item" v-for="child in splitImg(item.images)" v-lazy:background-image="child">
+                        <img v-lazy="child" width="100%" height="100%">
+                    </div>
                 </div>
                 <div class="operation-bar">
                     <div class="left">
                         <div class="head"></div>
-                        <div class="name">阿斯蒂芬</div>
+                        <div class="name">{{item.nickName}}</div>
                     </div>
                     <div class="right">
-                        <div class="time">4月28日</div>
+                        <div class="time">{{item.createTime}}</div>
                         <div class="comment">
                             <img src="../assets/comment.png">
                             <span>566</span>
@@ -55,87 +56,122 @@
 
 <script>
     import Search from "@/components/search";
+    import Loading from "@/components/loading";
 
     export default {
         name: "result",
         components: {
-            Search
+            Search, Loading
         },
         data() {
             return {
                 items: [],
-                searchValue: ""
+                searchValue: "",
+                start: 0,
+                row: 10,
+                totalNum: 0,
+                isShowLoading: true,
             };
         },
         created() {
-            this.searchValue = this.$route.query.keywords
+            this.searchValue = this.$route.query.keywords;
+            setTimeout(() => {
+                this.getData();
+            }, 1000);
         },
         mounted() {
-            for (let i = 1; i <= 20; i++) {
-                this.items.push({
-                    title: "阿斯蒂芬"
-                });
-            }
-            this.top = 1;
-            this.bottom = 20;
+
         },
         methods: {
+            /*获取列表*/
+            getData() {
+                this.api.http("post", this.api.searchQuestion, {
+                    start: this.start,
+                    row: this.row,
+                    title: this.searchValue
+                }, result => {
+                    this.isShowLoading = false;
+                    if (this.start == 0) {
+                        this.items = result.data;
+                        this.totalNum = result.numFound;
+                    }
+                    else {
+                        if (result.data.length == 0) {
+                            this.start -= this.row + 1;
+                        }
+                        else {
+                            this.items.concat(result.data);
+                        }
+                    }
+                }, error => {
+                    console.log(error);
+                });
+            },
+            /*下拉刷新*/
             refresh(done) {
                 setTimeout(() => {
                     this.items = [];
-                    for (let i = 1; i <= 20; i++) {
-                        this.items.push({
-                            title: "阿斯蒂芬"
-                        });
-                    }
+                    this.start = 0;
+                    this.getData();
                     done();
-                }, 1500);
+                }, 1000);
             },
+            /*上拉刷新*/
             infinite(done) {
                 setTimeout(() => {
-                    for (let i = 1; i <= 20; i++) {
-                        this.items.push({
-                            title: "阿斯蒂芬"
-                        });
-                    }
-                    done();
-                }, 1500);
+                    this.start += this.row + 1;
+                    this.getData();
+                    done(true);
+                }, 1000);
                 return;
             },
-            /*高亮*/
-            ruleTitles(value) {
-                if (!value) return;
-                if (this.searchValue && this.searchValue.length > 0) {
-                    // 匹配关键字正则
-                    let replaceReg = new RegExp(this.searchValue, "g");
-                    // 高亮替换v-html值
-                    let replaceString =
-                        '<span style="color: #5fb62a;font-size:16px;">' + this.searchValue + "</span>";
-                    // 开始替换
-                    value = value.replace(replaceReg, replaceString);
-                }
-                return value;
+            /*分割图片*/
+            splitImg(image) {
+                return image == "" ? [] : image.split(",");
+            },
+            /*接收搜索参数*/
+            searchData(value) {
+                this.searchValue = value;
+                this.isShowLoading = true;
+                this.items = [];
+                setTimeout(() => {
+                    this.start = 0;
+                    this.getData();
+                }, 1000);
             }
         },
-        computed: {}
     };
 </script>
 
 <style lang="scss" scoped>
     #result {
+        height: 100%;
+        position: absolute;
+        width: 100%;
         & .scroller {
             top: 70px;
-            padding: 0 15px;
             box-sizing: border-box;
+            height: 100%;
         }
         & .hint {
             font-size: 12px;
             color: #999999;
             text-align: center;
+            padding-bottom: 15px;
+        }
+        & .more-hint {
+            text-align: center;
+            padding: 15px;
+            color: #999999;
+            font-size: 12px;
+            span {
+                color: #5fb62a;
+            }
         }
         & .row {
             position: relative;
-            padding: 15px 0;
+            padding: 15px;
+            background: #fff;
             &::before {
                 content: "";
                 position: absolute;
@@ -146,15 +182,7 @@
                 transform: scaleY(0.5);
                 background: #e1e1e1;
             }
-            & .more-hint {
-                text-align: center;
-                padding-top: 10px;
-                color: #999999;
-                font-size: 12px;
-                span {
-                    color: #5fb62a;
-                }
-            }
+
             .title {
                 font-size: 16px;
                 color: #000;
@@ -172,11 +200,26 @@
                 line-height: 16px;
                 margin-bottom: 10px;
             }
+            .img-list {
+                display: flex;
+                padding-top: 5px;
+                flex-wrap: wrap;
+                .img-item {
+                    width: calc((100% - 30px) / 4);
+                    height: 58px;
+                    margin: 0 10px 10px 0;
+                    border-radius: 4px;
+                    background: #e6e6e6;
+                }
+                .img-item:nth-child(4n) {
+                    margin-right: 0;
+                }
+            }
             .operation-bar {
                 display: flex;
                 align-items: center;
                 .left {
-                    width: 50%;
+                    width: 30%;
                     display: flex;
                     align-items: center;
                     .head {
@@ -194,7 +237,7 @@
                     }
                 }
                 .right {
-                    width: 50%;
+                    width: 70%;
                     display: flex;
                     justify-content: flex-end;
                     align-items: center;
@@ -226,10 +269,12 @@
             padding: 15px;
             text-align: center;
             .hint-bar {
-                margin-bottom: 10px;
+                margin-bottom: 25px;
                 img {
                     width: calc(32px / 2);
                     height: calc(28px / 2);
+                    position: relative;
+                    top: 3px;
                 }
                 span {
                     font-size: 12px;

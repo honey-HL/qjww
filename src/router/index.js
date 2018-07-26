@@ -29,7 +29,7 @@ Vue.use(VueWechatTitle)
 Vue.use(Router)
 
 const routers = new Router({
-  mode: "history",
+  //mode: "history",
   routes: [
     { path: '/', redirect: "/index/home" },
     {
@@ -65,9 +65,23 @@ const routers = new Router({
 routers.beforeEach((to, from, next) => {
   if (to.matched.length === 0) {                                         //如果未匹配到路由
     from.name ? next({ name: from.name }) : next('/index/home');         //如果上级也未匹配到路由则跳转登录页面，如果上级能匹配到则转上级路由
-  } else {
-    next();                                                             //如果匹配到正确跳转
   }
+  else {
+    if (to.name === "login") {
+      next();
+    }
+    else {
+      if (to.meta.requiresAuth && !localStorage.getItem("accessToken")) {
+        next({ path: "/index/login" });
+      }
+      else {
+        next();
+      }
+    }
+  }
+
+
+
 });
 
 export default routers
