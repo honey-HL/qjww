@@ -33,6 +33,18 @@
 
     </div>
 
+    <transition name="fade">
+      <div class="mask" v-if="isLogin">
+        <div class="login-bg">
+          <div class="title">登录成功</div>
+          <div class="success">登录成功
+            <span>+</span>
+            <span>5</span>
+          </div>
+          <div class="hint">正在跳转...</div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -52,6 +64,7 @@
         isCode: false,
         time: null,
         isAll: false,
+        isLogin: false,
       };
     },
     created() {
@@ -85,14 +98,23 @@
           this.isPhoneError = true;
           return;
         }
-        this.api.http("post", this.api.bindPhone, this.user, result => {
-          this.api.http("post", this.api.login, { openId: this.user.openId }, result => {
-            localStorage.setItem("accessToken");
-            localStorage.setItem("userInfo");
-            this.$router.go(-1);
-          }, error => { });
-        }, error => { });
-
+        this.api.http("post", this.api.login, { openId: this.user.openId }, result => {
+          localStorage.setItem("accessToken", result.token);
+          localStorage.setItem("userInfo", result);
+          this.isLogin = true;
+          setTimeout(() => {
+            this.$router.push({ path: this.$route.query.redirect });
+          }, 1000);
+        }, error => {
+          if (error.code == 1050) {
+            this.api.http("post", this.api.bindPhone, this.user, result => {
+              localStorage.setItem("accessToken", result.token);
+              this.api.http("post", this.api.getInfo, {}, result => {
+                localStorage.setItem("userInfo", result);
+              }, error => { });
+            }, error => { });
+          }
+        });
       },
       /*获取验证码*/
       getCode() {
@@ -101,12 +123,13 @@
           return;
         }
         this.api.http("post", this.api.getBindCode, this.user, result => {
-          console.log(result);
+          alert(result);
           this.isCode = true;
           this.okPhone = this.user.phone;
           this.time = setInterval(() => {
             if (this.count <= 0) {
               this.isCode = false;
+              this.count = 59;
               clearInterval(this.time);
             }
             this.count--;
@@ -141,6 +164,10 @@
 <style lang="scss" scoped>
   .login {
     overflow: hidden;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
     .bg {
       height: 300px;
       background: #64b72a;
@@ -233,6 +260,54 @@
     .fade-enter,
     .fade-leave-to {
       opacity: 0;
+    }
+
+    .mask {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .login-bg {
+        width: calc(460px / 2);
+        height: calc(300px / 2);
+        background: url(../assets/login-bg.png);
+        background-size: cover;
+        background-position: center;
+        padding: 15px;
+        text-align: center;
+        position: relative;
+        box-sizing: border-box;
+        transition: all 0.5s;
+        .title {
+          color: #999999;
+        }
+        .success {
+          font-size: 20px;
+          color: #555555;
+          margin-top: 15px;
+          span:nth-child(1) {
+            color: #5FB62A;
+          }
+          span:nth-child(2) {
+            font-size: 20px;
+            color: #5FB62A;
+          }
+        }
+        .hint {
+          position: absolute;
+          bottom: 15px;
+          left: 0;
+          text-align: center;
+          width: 100%;
+          color: #fff;
+        }
+      }
     }
   }
 </style>

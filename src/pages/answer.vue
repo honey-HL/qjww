@@ -2,70 +2,109 @@
     <div class="answer">
         <div class="top">
             <div class="row">
-                <Search class="input" />
-                <div class="right">
-                    <i class="news-icon"></i>
-                    <div>通知</div>
-                </div>
+                <Search class="input" @searchData="searchData" />
+                <router-link to="/index/news">
+                    <div class="right">
+                        <i class="news-icon"></i>
+                        <div>通知</div>
+                    </div>
+                </router-link>
             </div>
             <div class="menu-row">
                 <div class="item">
-                    <div class="icon"></div>
-                    <div class="name">提问</div>
+                    <router-link to="/index/quiz">
+                        <div class="icon"></div>
+                        <div class="name">提问</div>
+                    </router-link>
                 </div>
                 <div class="item">
-                    <div class="icon"></div>
-                    <div class="name">回答</div>
+                    <router-link to="/index/quiz">
+                        <div class="icon"></div>
+                        <div class="name">回答</div>
+                    </router-link>
                 </div>
                 <div class="item">
-                    <div class="icon"></div>
-                    <div class="name">我的回答</div>
+                    <router-link to="/index/myAnswer">
+                        <div class="icon"></div>
+                        <div class="name">我的回答</div>
+                    </router-link>
                 </div>
             </div>
             <div class="bg"></div>
         </div>
-
-        <div class="answer-list">
-            <div class="item">
-                <div class="title">
-                    <i class="badge video"></i>
-                    如何看待锤子新发布的R1手机？到底有什么自信卖那么贵？
-                </div>
-                <div class="content">
-                    锤子TNT工作站是我见过最强大的手机配件，没有之一。确切的说这是一个手机配件系。锤子TNT工作站是我见过最强大的手机配件，没有之一。确切的说…
-                </div>
-                <div class="img-list">
-                    <div class="img-item"></div>
-                </div>
-                <div class="video-cover">
-
-                </div>
-                <div class="operation-bar">
-                    <div class="left">
-                        <div class="time">8小时前</div>
-                        <div>推广</div>
+        <scroller class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
+            <Loading v-if="isShowLoading" />
+            <div class="answer-list" v-for="item in items">
+                <div class="item">
+                    <div class="title">
+                        <i class="badge video"></i>
+                        <span v-html="item.questionTitle"></span>
                     </div>
-                    <div class="right">
-                        <!-- <div>12个回答</div>
-                        <div>22个赞</div> -->
-                        <div class="icon-div">
-                            <i class="enter"></i>
-                            <span>进入</span>
+                    <div class="content" v-html="item.questionContent"></div>
+                    <div class="img-list">
+                        <div class="img-item" v-for="child in splitImg(item.images)" v-lazy:background-image="child">
+                            <!-- <img v-lazy="child" width="100%" height="100%"> -->
                         </div>
-                        <div class="icon-div">
-                            <i class="comment"></i>
-                            <span>回答</span>
+                    </div>
+
+                    <div class="operation-bar">
+                        <div class="left">
+                            <div class="time">{{item.createTime}}</div>
                         </div>
-                        <div class="icon-div">
-                            <i class="activity"></i>
-                            <span>活动</span>
+                        <div class="right">
+                            <div style="margin-right: 10px">{{item.commentNum}}个回答</div>
+                            <div>{{item.praiseNum}}个赞</div>
+                            <div class="icon-div" @click.stop="comment(item.id, item.questionTitle)">
+                                <i class="comment"></i>
+                                <span>回答</span>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="bg"></div>
             </div>
-            <div class="bg"></div>
+            <div class="answer-list" v-for="item in items">
+                <div class="item">
+                    <div class="title">
+                        <i class="badge video"></i>
+                        如何看待锤子新发布的R1手机？到底有什么自信卖那么贵？
+                    </div>
+                    <div class="content">
+                        锤子TNT工作站是我见过最强大的手机配件，没有之一。确切的说这是一个手机配件系。锤子TNT工作站是我见过最强大的手机配件，没有之一。确切的说…
+                    </div>
+                    <div class="img-list">
+                        <div class="img-item"></div>
+                    </div>
+                    <div class="video-cover">
 
-        </div>
+                    </div>
+                    <div class="operation-bar">
+                        <div class="left">
+                            <div class="time">8小时前</div>
+                            <div>推广</div>
+                        </div>
+                        <div class="right">
+                            <!-- <div>12个回答</div>
+                                <div>22个赞</div> -->
+                            <div class="icon-div">
+                                <i class="enter"></i>
+                                <span>进入</span>
+                            </div>
+                            <div class="icon-div">
+                                <i class="comment"></i>
+                                <span>回答</span>
+                            </div>
+                            <div class="icon-div">
+                                <i class="activity"></i>
+                                <span>活动</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg"></div>
+            </div>
+        </scroller>
+
         <div class="foot-height"></div>
         <MyFooter />
     </div>
@@ -74,12 +113,116 @@
 <script>
     import MyFooter from "@/components/myFooter";
     import Search from "@/components/search";
+    import Loading from "@/components/loading";
 
     export default {
         name: 'answer',
         components: {
-            MyFooter, Search
+            MyFooter, Search, Loading
         },
+        data() {
+            return {
+                items: [],
+                searchValue: "*",
+                start: 0,
+                row: 10,
+                totalNum: 0,
+                isShowLoading: true,
+                imgIp: this.api.imgIp
+            };
+        },
+        created() {
+            setTimeout(() => {
+                this.getData();
+            }, 1000);
+        },
+        methods: {
+            /*获取列表*/
+            getData() {
+                this.api.http("post", this.api.searchQuestion, {
+                    start: this.start,
+                    row: this.row,
+                    title: this.searchValue
+                }, result => {
+                    this.isShowLoading = false;
+                    if (this.start == 0) {
+                        this.items = result.data;
+                        this.totalNum = result.numFound;
+                    }
+                    else {
+                        if (result.data.length == 0) {
+                            this.start -= this.row + 1;
+                        }
+                        else {
+                            this.items.concat(result.data);
+                        }
+                    }
+                }, error => {
+                    console.log(error);
+                });
+            },
+            /*下拉刷新*/
+            refresh(done) {
+                setTimeout(() => {
+                    this.start = 0;
+                    this.getData();
+                    done();
+                }, 1000);
+            },
+            /*上拉刷新*/
+            infinite(done) {
+                setTimeout(() => {
+                    this.start += this.row + 1;
+                    this.getData();
+                    done(true);
+                }, 1000);
+                return;
+            },
+            /*分割图片*/
+            splitImg(image) {
+                return image == "" ? [] : image.split(",");
+            },
+            /*接收搜索参数*/
+            searchData(value) {
+                this.searchValue = value;
+                this.isShowLoading = true;
+                setTimeout(() => {
+                    this.start = 0;
+                    this.getData();
+                }, 1000);
+            },
+            /*评论*/
+            comment(id, title) {
+                this.$router.push({
+                    path: "/index/icomeAnswer",
+                    query: {
+                        keywords: title,
+                        questionId: id,
+                    }
+                });
+            },
+            /*赞*/
+            praise(id) {
+                this.api.http("post", this.api.questionPraise, { questionId: id, }, result => {
+                    for (let i = 0; this.items.length; i++) {
+                        if (this.items[i].id == id) {
+                            this.items[i].praiseNum += 1;
+                            break;
+                        }
+                    }
+                }, error => {
+                    console.log(error);
+                });
+            },
+            /*详情*/
+            detail(item) {
+                this.$store.dispatch("setAnswerDetail", item);
+                this.$router.push({
+                    path: "/index/answerResult"
+                });
+            }
+
+        }
     }
 </script>
 
@@ -89,6 +232,20 @@
     }
 
     .answer {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        top: 0;
+        padding-bottom: 15px;
+        & .scroller {
+            top: 140px;
+            box-sizing: border-box;
+            height: 100%;
+        }
+        .top {
+            background: #fff;
+        }
         .row {
             display: flex;
             .input {
@@ -161,6 +318,9 @@
                     -webkit-box-orient: vertical;
                     -webkit-line-clamp: 2;
                     overflow: hidden;
+                    span {
+                        color: #000 !important
+                    }
                     i {
                         display: inline-block;
                         width: calc(52px / 2);
@@ -171,13 +331,13 @@
                         background-size: cover !important;
                         background-position: center !important;
                     }
-                    i.img{
+                    i.img {
                         background: url(../assets/img.png);
                     }
-                    i.problem{
+                    i.problem {
                         background: url(../assets/problem.png);
                     }
-                    i.video{
+                    i.video {
                         background: url(../assets/video.png);
                     }
                 }
@@ -200,6 +360,8 @@
                         margin: 0 10px 10px 0;
                         border-radius: 4px;
                         background: #e6e6e6;
+                        background-size: cover !important;
+                        background-position: center !important;
                     }
                     .img-item:nth-child(4n) {
                         margin-right: 0;
@@ -245,13 +407,13 @@
                                 background-size: cover !important;
                                 background-position: center !important;
                             }
-                            i.enter{
+                            i.enter {
                                 background: url(../assets/enter.png)
                             }
-                            i.comment{
+                            i.comment {
                                 background: url(../assets/comment.png)
                             }
-                            i.activity{
+                            i.activity {
                                 width: 12px;
                                 height: 15px;
                                 left: 1px;

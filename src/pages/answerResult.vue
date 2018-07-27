@@ -1,85 +1,66 @@
 <template>
     <div id="result">
-        <Search />
-        <div class="row first">
-            <div class="title">
-                <i class="badge problem"></i>
-                阿斯蒂芬噶大概
-            </div>
-            <div class="content">
-                1.阿斯蒂芬的鬼地方大师法规地方个地方个地方鬼地方个电饭锅大范甘迪发 2.阿斯蒂芬的鬼地方大师法规地方个地方个地方鬼地方个电饭锅大范甘迪发
-            </div>
-            <div class="img-list">
-                <div class="img-item"></div>
-                <div class="img-item"></div>
-                <div class="img-item"></div>
-            </div>
-            <div class="video-cover">
-
-            </div>
-            <div class="operation-bar">
-                <div class="left">
-                    <div class="head"></div>
-                    <div class="name">阿斯蒂芬</div>
+        <Search @searchData="searchData" />
+        <scroller class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
+            <div class="row first">
+                <div class="title">
+                    <i class="badge problem"></i>
+                    <span v-html="detail.questionTitle"></span>
                 </div>
-                <div class="right">
-                    <div class="report">
-                        <img src="../assets/report.png">
-                        <span>举报</span>
+                <div class="content" v-html="detail.questionContent"></div>
+                <div class="img-list">
+                    <div class="img-item" v-for="child in splitImg(detail.images)" v-lazy:background-image="child">
+                        <!-- <img v-lazy="child" width="100%" height="100%"> -->
+                    </div>
+                </div>
+                <!-- <div class="video-cover"></div> -->
+                <div class="operation-bar">
+                    <div class="left">
+                        <div class="head" v-lazy:background-image="imgIp + detail.avatar"></div>
+                        <div class="name">{{!detail.anonymity ? detail.nickName : '匿名'}}</div>
+                    </div>
+                    <div class="right">
+                        <div class="report" @click="report">
+                            <img src="../assets/report.png">
+                            <span>举报</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="title-num">
-            <img src="../assets/comment.png">
-            <span>566</span>个回答
-        </div>
-        <div class="row">
-            <div class="content">
-                1.阿斯蒂芬的鬼地方大师法规地方个地方个地方鬼地方个电饭锅大范甘迪发 2.阿斯蒂芬的鬼地方大师法规地方个地方个地方鬼地方个电饭锅大范甘迪发
+            <div class="title-num">
+                <img src="../assets/comment.png">
+                <span>{{totalNum}}</span>个回答
             </div>
-            <div class="video-cover">
-
-            </div>
-            <div class="operation-bar">
-                <div class="left">
-                    <div class="head"></div>
-                    <div class="name">阿斯蒂芬</div>
-                    <div class="time">4月28日</div>
-                </div>
-                <div class="right">
-                    <div class="zan">
-                        <img src="../assets/zan.png">
-                        <span>566</span>
+            <Loading v-if="isShowLoading" />
+            <transition-group name="fade">
+                <div class="row" v-for="(item,index) in items" :key="index">
+                    <div class="content" v-html="item.content"></div>
+                    <!-- <div class="video-cover"></div> -->
+                    <div class="operation-bar">
+                        <div class="left">
+                            <div class="head" v-lazy:background-image="imgIp + item.userAvatar"></div>
+                            <div class="name">{{item.userNickName ? item.userNickName : '匿名'}}</div>
+                            <div class="time">{{item.createTime}}</div>
+                        </div>
+                        <div class="right">
+                            <div class="zan" @click="praise(item.id)">
+                                <img src="../assets/zan.png">
+                                <span>{{item.praiseNum}}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="content">
-                1.阿斯蒂芬的鬼地方大师法规地方个地方个地方鬼地方个电饭锅大范甘迪发 2.阿斯蒂芬的鬼地方大师法规地方个地方个地方鬼地方个电饭锅大范甘迪发
-            </div>
-            <div class="video-cover">
-
-            </div>
-            <div class="operation-bar">
-                <div class="left">
-                    <div class="head"></div>
-                    <div class="name">阿斯蒂芬</div>
-                    <div class="time">4月28日</div>
-                </div>
-                <div class="right">
-                    <div class="zan">
-                        <img src="../assets/zan.png">
-                        <span>566</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+            </transition-group>
+        </scroller>
         <div class="footer-bar">
-            <div class="btn">我来回答</div>
-            <div class="collect">
-                <img src="../assets/collect.png">
+            <router-link :to="{path:'/index/icomeAnswer', query:{keywords:detail.questionTitle,questionId: detail.id}}">
+                <div class="btn">我来回答</div>
+            </router-link>
+            <div class="collect" @click="collect">
+                <transition name="fade">
+                    <img src="../assets/collect.png" v-if="detail.isCollection">
+                    <img src="../assets/collect.png" v-else>
+                </transition>
                 <div class="name">收藏该问题</div>
             </div>
         </div>
@@ -88,23 +69,108 @@
 
 <script>
     import Search from "@/components/search";
+    import Loading from "@/components/loading";
 
     export default {
         name: "answerResult",
         data() {
             return {
                 items: [],
-                searchValue: "阿斯"
+                detail: null,
+                searchValue: "",
+                start: 1,
+                row: 10,
+                totalNum: 0,
+                isShowLoading: true,
+                imgIp: this.api.imgIp
             };
         },
         components: {
-            Search
+            Search, Loading
         },
-        mounted() {
-
+        created() {
+            this.detail = this.$store.state.answerDetail;
+            setTimeout(() => {
+                this.getData();
+            }, 1000);
         },
         methods: {
-
+            /*获取列表*/
+            getData() {
+                this.api.http("post", this.api.findByQuestion, {
+                    pageNo: this.start,
+                    pageSize: this.row,
+                    questionId: this.detail.id
+                }, result => {
+                    this.isShowLoading = false;
+                    if (this.start == 1) {
+                        this.items = result.data;
+                        this.totalNum = result.allNum;
+                    }
+                    else {
+                        if (result.data.length == 0) {
+                            this.start--;
+                        }
+                        else {
+                            this.items.concat(result.data);
+                        }
+                    }
+                }, error => {
+                    console.log(error);
+                });
+            },
+            /*下拉刷新*/
+            refresh(done) {
+                setTimeout(() => {
+                    this.start = 1;
+                    this.getData();
+                    done();
+                }, 1000);
+            },
+            /*上拉刷新*/
+            infinite(done) {
+                setTimeout(() => {
+                    this.start++;
+                    this.getData();
+                    done(true);
+                }, 1000);
+                return;
+            },
+            /*分割图片*/
+            splitImg(image) {
+                return image == "" ? [] : image.split(",");
+            },
+            /*接收搜索参数*/
+            searchData(value) {
+                this.$router.push({ path: '/index/result?keywords=' + value });
+            },
+            /*赞*/
+            praise(id) {
+                this.api.http("post", this.api.praise, { answerId: id, }, result => {
+                    for (let i = 0; this.items.length; i++) {
+                        if (this.items[i].id == id) {
+                            this.items[i].praiseNum += 1;
+                            break;
+                        }
+                    }
+                }, error => {
+                    console.log(error);
+                });
+            },
+            /*收藏*/
+            collect() {
+                this.api.http("post", this.api.collectionSave, { questionId: this.detail.id, }, result => {
+                    this.detail.isCollection = true;
+                }, error => {
+                    console.log(error);
+                });
+            },
+            /*举报*/
+            report() {
+                this.$router.push({
+                    path: "/index/report"
+                });
+            }
         },
         computed: {}
     };
@@ -112,6 +178,16 @@
 
 <style lang="scss" scoped>
     #result {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        top: 0;
+        & .scroller {
+            top: 52px;
+            box-sizing: border-box;
+            height: 100%;
+        }
         & .row.first {
             margin-top: 10px;
             &::before {
@@ -177,15 +253,18 @@
                 flex-flow: wrap;
                 padding-top: 5px;
                 .img-item {
-                    width: calc((100% - 20px) / 2);
+                    width: calc((100% - 10px) / 2);
                     height: 80px;
                     margin: 0 10px 10px 0;
                     border-radius: 4px;
                     background: #e6e6e6;
+                    background-size: cover !important;
+                    background-origin: center !important;
+                    &:nth-child(2n) {
+                        margin-right: 0;
+                    }
                 }
-                .img-item:nth-child(2n) {
-                    margin-right: 0;
-                }
+
             }
             .video-cover {
                 margin-top: 5px;
@@ -198,7 +277,7 @@
                 align-items: center;
                 padding-top: 10px;
                 .left {
-                    width: 50%;
+                    width: 80%;
                     display: flex;
                     align-items: center;
                     .head {
@@ -219,7 +298,7 @@
                     }
                 }
                 .right {
-                    width: 50%;
+                    width: 20%;
                     display: flex;
                     justify-content: flex-end;
                     align-items: center;
@@ -311,5 +390,15 @@
                 }
             }
         }
+    }
+
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: opacity 0.5s;
+    }
+
+    .fade-enter,
+    .fade-leave-to {
+        opacity: 0;
     }
 </style>

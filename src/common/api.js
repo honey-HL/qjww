@@ -6,7 +6,7 @@ import axios from 'axios'
 
 axios.defaults.baseURL = 'http://192.168.1.38:8080/qjww-api/';
 // axios.defaults.baseURL = 'http://192.168.1.66:2345/qjww-api/';
-axios.defaults.headers.common['Authorization'] = '123';
+axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem("accessToken");
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 const http = (method, url, params, successCallback, errorCallback) => {
@@ -15,7 +15,8 @@ const http = (method, url, params, successCallback, errorCallback) => {
         method: method,
         url: url,
         headers: {
-            'Content-type': 'application/x-www-form-urlencoded'
+            'Content-type': 'application/x-www-form-urlencoded',
+            'token': localStorage.getItem("accessToken")
         },
         params: params
     }).then((response) => {
@@ -25,7 +26,7 @@ const http = (method, url, params, successCallback, errorCallback) => {
         }
         else {
             alert(response.data.msg);
-            errorCallback(response);
+            errorCallback(response.data);
         }
     }).catch((error) => {
         console.log(error);
@@ -41,13 +42,27 @@ export default {
 
     searchQuestion: "search/searchQuestion",                                 //搜索问题
     findById: "search/findById",                                             //搜索详情
+    questionSave: "search/save",
+    questionPraise: "search/praise",
+    saveAnswer: "answer/saveAnswer",
+    findByQuestion: "answer/findByQuestion",
+    praise: "answer/praise",
 
     login: "user/login",                                                      //登录
     jsSign: "wxClient/jsSign ",
     getCode: "wxClient/getCode",
+    getInfo: "user/getInfo",
     getOpenId: "wxClient/getOpenId",
     isGetCode: "wxClient/isGetCode",
     getBindCode: "sms/getBindCode",
     bindPhone: "user/bindPhone",
+    bindPhone: "user/bindPhone",
+
+    uploadImage: "uploadImgFile/uploadImage",
+    delFile: "uploadImgFile/delFile",
+    collectionSave: "questionCollection/save",
+
+    getNotification : "notification/list",
+
 
 }

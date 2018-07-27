@@ -2,55 +2,65 @@
     <div id="result">
         <Search :searchValue="searchValue" @searchData="searchData" />
         <scroller class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
-            <div class="hint">最佳匹配答案</div>
-            <div class="row" v-for="(item, index) in items" :key="index" v-if="item.userPush">
-                <div class="title" v-html="item.questionKeyWords"></div>
-                <div class="content" v-html="item.questionContent"></div>
-            </div>
             <Loading v-if="isShowLoading" />
-            <div class="more-hint">
-                <span>{{totalNum}}</span>条相关讨论
-            </div>
-            <div v-for="(item, index) in items" :key="index" class="row" v-if="!item.userPush">
-                <div class="title" v-html="item.questionKeyWords"></div>
-                <div class="content" v-html="item.questionContent"></div>
-                <div class="img-list">
-                    <div class="img-item" v-for="child in splitImg(item.images)" v-lazy:background-image="child">
-                        <img v-lazy="child" width="100%" height="100%">
-                    </div>
+            <div class="hint">最佳匹配答案</div>
+            <transition-group name="fade">
+                <div class="row" v-for="(item, index) in items" :key="index" v-if="item.userPush">
+                    <div class="title" v-html="item.questionTitle"></div>
+                    <div class="content" v-html="item.questionContent"></div>
                 </div>
-                <div class="operation-bar">
-                    <div class="left">
-                        <div class="head"></div>
-                        <div class="name">{{item.nickName}}</div>
-                    </div>
-                    <div class="right">
-                        <div class="time">{{item.createTime}}</div>
-                        <div class="comment">
-                            <img src="../assets/comment.png">
-                            <span>566</span>
-                        </div>
-                        <div class="zan">
-                            <img src="../assets/zan.png">
-                            <span>566</span>
+            </transition-group>
+            <transition name="fade">
+                <div class="more-hint">
+                    <span>{{totalNum}}</span>条相关讨论
+                </div>
+            </transition>
+            <transition-group name="fade">
+                <div v-for="(item, index) in items" :key="index" class="row" v-if="!item.userPush" @click="detail(item)">
+                    <div class="title" v-html="item.questionTitle"></div>
+                    <div class="content" v-html="item.questionContent"></div>
+                    <div class="img-list">
+                        <div class="img-item" v-for="child in splitImg(item.images)" v-lazy:background-image="child">
+                            <img v-lazy="child" width="100%" height="100%">
                         </div>
                     </div>
+                    <div class="operation-bar">
+                        <div class="left">
+                            <div class="head" v-lazy:background-image="imgIp + item.avatar"></div>
+                            <div class="name">{{!item.anonymity ? item.nickName : '匿名'}}</div>
+                        </div>
+                        <div class="right">
+                            <div class="time">{{item.createTime}}</div>
+                            <div class="comment" @click.stop="comment(item.id, item.questionTitle)">
+                                <img src="../assets/comment.png">
+                                <span>{{item.commentNum}}</span>
+                            </div>
+                            <div class="zan" @click.stop="praise(item.id)">
+                                <img src="../assets/zan.png">
+                                <span>{{item.praiseNum}}</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="not-data">
-                <div class="hint-bar">
-                    <img src="../assets/not.png" />
-                    <span>没有找到答案? 您还可以</span>
+            </transition-group>
+            <transition name="fade">
+                <div class="not-data">
+                    <div class="hint-bar">
+                        <img src="../assets/not.png" />
+                        <span>没有找到答案? 您还可以</span>
+                    </div>
+                    <div class="btn-bar">
+                        <router-link to="/index/quiz">
+                            <span>去提问</span>
+                        </router-link>
+                        <router-link to="/index/expert">
+                            <span>找专家</span>
+                        </router-link>
+                    </div>
                 </div>
-                <div class="btn-bar">
-                    <span>去提问</span>
-                    <span>找专家</span>
-                </div>
-            </div>
-
-
+            </transition>
         </scroller>
+
     </div>
 </template>
 
@@ -71,6 +81,7 @@
                 row: 10,
                 totalNum: 0,
                 isShowLoading: true,
+                imgIp: this.api.imgIp
             };
         },
         created() {
@@ -78,9 +89,6 @@
             setTimeout(() => {
                 this.getData();
             }, 1000);
-        },
-        mounted() {
-
         },
         methods: {
             /*获取列表*/
@@ -110,7 +118,6 @@
             /*下拉刷新*/
             refresh(done) {
                 setTimeout(() => {
-                    this.items = [];
                     this.start = 0;
                     this.getData();
                     done();
@@ -133,12 +140,42 @@
             searchData(value) {
                 this.searchValue = value;
                 this.isShowLoading = true;
-                this.items = [];
                 setTimeout(() => {
                     this.start = 0;
                     this.getData();
                 }, 1000);
+            },
+            /*评论*/
+            comment(id, title) {
+                this.$router.push({ 
+                    path: "/index/icomeAnswer",
+                    query: { 
+                        keywords: title,
+                        questionId: id,
+                    } 
+                });
+            },
+            /*赞*/
+            praise(id) {
+                this.api.http("post", this.api.questionPraise, { questionId: id, }, result => {
+                    for (let i = 0; this.items.length; i++) {
+                        if (this.items[i].id == id) {
+                            this.items[i].praiseNum += 1;
+                            break;
+                        }
+                    }
+                }, error => {
+                    console.log(error);
+                });
+            },
+            /*详情*/
+            detail(item) {
+                this.$store.dispatch("setAnswerDetail", item);
+                this.$router.push({
+                    path : "/index/answerResult"
+                });
             }
+
         },
     };
 </script>
@@ -148,6 +185,8 @@
         height: 100%;
         position: absolute;
         width: 100%;
+        overflow: hidden;
+        top: 0;
         & .scroller {
             top: 70px;
             box-sizing: border-box;
@@ -295,5 +334,15 @@
                 }
             }
         }
+    }
+
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: opacity 0.5s;
+    }
+
+    .fade-enter,
+    .fade-leave-to {
+        opacity: 0;
     }
 </style>

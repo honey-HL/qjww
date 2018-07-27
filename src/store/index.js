@@ -5,19 +5,19 @@ Vue.use(Vuex)
 
 const module = {
     state: {
-        //搜索关键字
-        searchValue: "",
+        //详情数据
+        answerDetail: "",
     },
     mutations: {
-        //设置关键字
-        setSearchValue(state, value) {
-            state.searchValue = value;
+        //设置详情数据
+        setAnswerDetail(state, value) {
+            state.answerDetail = value;
         }
     },
     actions: {
-        //设置关键字
-        setSearchValue(context, value) {
-            context.commit("setSearchValue", value);
+        //设置详情数据
+        setAnswerDetail(context, value) {
+            context.commit("setAnswerDetail", value);
         }
     },
     getters: {},
