@@ -71,17 +71,17 @@
                 if (req.status >= 200) {
                     this.images.push(JSON.parse(req.response).body);
                 } else {
-                    alert("请求失败");
+                  this.$toast("上传失败");
                 }
             },
             /*提交*/
             submit() {
                 if (this.util.empty(this.quiz.title)) {
-                    alert("请输入标题");
+                    this.$toast("请输入标题");
                     return;
                 }
                 else if (this.util.empty(this.quiz.content)) {
-                    alert("请输入内容");
+                    this.$toast("请输入内容");
                     return;
                 }
                 this.images.forEach(item => {

@@ -35,11 +35,14 @@
         },
         methods: {
             searchEnterFun(e) {
-                var keyCode = window.event ? e.keyCode : e.which;
+              var keyCode = window.event ? e.keyCode : e.which;
                 if (keyCode == 13 && this.searchValue != "") {
                     //存入状态当中
                     //this.$store.dispatch("setSearchValue", this.searchValue);
                     this.$router.push({ path: '/index/result?keywords=' + this.searchValue });
+                }
+                else {
+                  this.$toast("请输入问题内容");
                 }
             },
         }

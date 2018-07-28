@@ -25,7 +25,7 @@ const http = (method, url, params, successCallback, errorCallback) => {
             successCallback(response.data.body);
         }
         else {
-            alert(response.data.msg);
+            this.$toast(response.data.msg);
             errorCallback(response.data);
         }
     }).catch((error) => {

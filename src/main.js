@@ -5,6 +5,10 @@ import store from './store'
 import util from './common/util'
 import api from './common/api'
 import VueLazyload from 'vue-lazyload'
+import Toast from 'vant/lib/toast'
+import Dialog from 'vant/lib/dialog'
+import 'vant/lib/vant-css/index.css'
+
 
 Vue.prototype.util = util
 Vue.prototype.api = api
@@ -22,6 +26,6 @@ new Vue({
   el: '#app',
   router,
   store,
-  components: { App },
+  components: { App, Toast, Dialog },
   template: '<App/>'
 })

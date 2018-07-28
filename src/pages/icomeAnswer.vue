@@ -56,7 +56,7 @@
             /*文件上传*/
             selectFile() {
                 if (this.images.length >= 8) {
-                    alert("最多可上传8张");
+                    this.$toast("最多可上传8张");
                     return;
                 }
                 document.getElementById("file").click();
@@ -71,13 +71,13 @@
                 if (req.status >= 200) {
                     this.images.push(JSON.parse(req.response).body);
                 } else {
-                    alert("请求失败");
+                    this.$toast("上传失败");
                 }
             },
             /*提交*/
             submit() {
                 if (this.util.empty(this.answer.content)) {
-                    alert("请输入内容");
+                    this.$toast("请输入内容");
                     return;
                 }
                 this.images.forEach(item => {
