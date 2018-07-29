@@ -13,94 +13,119 @@
     <div class="swiper-container" id="swiper">
       <div class="swiper-wrapper">
         <div class="swiper-slide">
-          <div class="row">
-            <div class="top">
-              <div class="head"></div>
-              <div class="name">阿实打实的个</div>
-            </div>
-            <div class="title">
-              阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概
-            </div>
-            <div class="operation-bar">
-              <div class="left">
-                <div class="time">5月16日 16:45</div>
+          <scroller class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
+            <Loading v-if="isShowLoading" style="padding: 30px 0"/>
+            <div class="row">
+              <div class="top">
+                <div class="head"></div>
+                <div class="name">阿实打实的个</div>
               </div>
-              <div class="right">
-                <div class="answer">32回答</div>
+              <div class="title">
+                阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概
               </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="top">
-              <div class="head"></div>
-              <div class="name">阿实打实的个</div>
-            </div>
-            <div class="title">
-              阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概
-            </div>
-            <div class="operation-bar">
-              <div class="left">
-                <div class="time">5月16日 16:45</div>
-              </div>
-              <div class="right">
-                <div class="answer">32回答</div>
+              <div class="operation-bar">
+                <div class="left">
+                  <div class="time">5月16日 16:45</div>
+                </div>
+                <div class="right">
+                  <div class="answer">32回答</div>
+                </div>
               </div>
             </div>
-          </div>
+            <div class="row">
+              <div class="top">
+                <div class="head"></div>
+                <div class="name">阿实打实的个</div>
+              </div>
+              <div class="title">
+                阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概
+              </div>
+              <div class="operation-bar">
+                <div class="left">
+                  <div class="time">5月16日 16:45</div>
+                </div>
+                <div class="right">
+                  <div class="answer">32回答</div>
+                </div>
+              </div>
+            </div>
+          </scroller>
 
-          <Not v-if="true" title="您还没有提问哦" hint="已发布的提问将显示在这里" type="TW">
+          <Not v-if="!true" title="您还没有提问哦" hint="已发布的提问将显示在这里" type="TW">
             <div class="o-btn">
-              <span>去提问</span>
+              <router-link to="/index/quiz"><span>去提问</span></router-link>
             </div>
           </Not>
-
         </div>
+
         <div class="swiper-slide">
-          <Not v-if="true" title="您还没有回答提问哦" hint="快去回答吧" type="HD">
+          <Not v-if="!true" title="您还没有回答提问哦" hint="快去回答吧" type="HD">
             <div class="o-btn">
               <span>去回答</span>
             </div>
           </Not>
-          <div class="row">
-            <div class="top">
-              <div class="head"></div>
-              <div class="name">阿实打实的个</div>
-            </div>
-            <div class="title">
-              <i class="badge problem"></i>
-              阿斯蒂芬噶大概
-            </div>
-            <div class="content">
-              啊地方敢死队风格地方法规和法国恢复规划法规好大飞哥啊地方敢死队风格地方法规和法国恢复规划法规好大飞哥
-            </div>
-            <div class="operation-bar">
-              <div class="left">
-                <div class="time">5月16日 16:45</div>
+          <scroller class="scroller" :on-refresh="refresh2" :on-infinite="infinite2" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
+            <Loading v-if="isShowLoading2" style="padding: 30px 0"/>
+            <div class="row">
+              <div class="top">
+                <div class="head"></div>
+                <div class="name">阿实打实的个</div>
               </div>
-              <div class="right">
-                <div class="answer">删除该回答</div>
+              <div class="title">
+                <i class="badge problem"></i>
+                阿斯蒂芬噶大概
+              </div>
+              <div class="content">
+                啊地方敢死队风格地方法规和法国恢复规划法规好大飞哥啊地方敢死队风格地方法规和法国恢复规划法规好大飞哥
+              </div>
+              <div class="operation-bar">
+                <div class="left">
+                  <div class="time">5月16日 16:45</div>
+                </div>
+                <div class="right">
+                  <div class="answer" @click="del">删除该回答</div>
+                </div>
               </div>
             </div>
-          </div>
+          </scroller>
+
         </div>
       </div>
     </div>
+
+    <transition name="fade">
+      <div class="mask" v-if="isShow">
+        <div class="login-bg">
+          <div class="success">删除成功</div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 <script>
   import "swiper/dist/css/swiper.css";
   import Swiper from "swiper";
   import Not from "@/components/notData";
+  import Loading from "@/components/loading";
   export default {
     name: "myAnswewr",
     components: {
-      Not
+      Not, Loading
     },
     data() {
       return {
         meunList: [{ id: 1, name: "提问" }, { id: 2, name: "回答" }],
         current: 0,
-        swiper: null
+        swiper: null,
+        isShow: false,
+        pageNO1: 1,
+        pageNO2: 1,
+        pageSize: 10,
+        isShowLoading: true,
+        isShowLoading2: true,
+        dataList: [],
+        dataList2: [],
+        isFrist: false,
       };
     },
     mounted() {
@@ -108,16 +133,96 @@
       this.swiper = new Swiper(".swiper-container", {
         on: {
           slideChangeTransitionStart: function () {
+            if (this.activeIndex == 1 && !thas.isFrist) {
+              thas.isFrist = true;
+              thas.getData(1);
+            }
             thas.current = this.activeIndex;
           }
         }
       });
     },
     methods: {
+      /*切换tab*/
       setCurrent(index) {
         this.current = index;
         this.swiper.slideTo(index);
-      }
+      },
+      /*获取列表*/
+      getData(type) {
+        this.api.http("post", this.api.searchQuestion, {
+          pageNO: type == 0 ? this.pageNO1 : this.pageNO2,
+          pageSize: this.pageSize
+        }, result => {
+          if (type == 0) {
+            this.isShowLoading = false;
+            if (this.pageNO1 == 1) {
+              this.dataList = result;
+            }
+            else {
+              if (result.length == 0) {
+                this.pageNO1 --;
+              }
+              else {
+                this.dataList.concat(result);
+              }
+            }
+          }
+          else {
+            this.isShowLoading2 = false;
+            if (this.pageNO2 == 1) {
+              this.dataList2 = result;
+            }
+            else {
+              if (result.length == 0) {
+                this.pageNO2 --;
+              }
+              else {
+                this.dataList2.concat(result);
+              }
+            }
+          }
+        }, error => {
+          console.log(error);
+        });
+      },
+      /*下拉刷新*/
+      refresh(done) {
+        setTimeout(() => {
+          this.pageNO1 = 1;
+          this.getData(0);
+          done();
+        }, 1000);
+      },
+      /*上拉刷新*/
+      infinite(done) {
+        setTimeout(() => {
+          this.pageNO1 ++;
+          this.getData(0);
+          done(true);
+        }, 1000);
+        return;
+      },
+      /*下拉刷新*/
+      refresh2(done) {
+        setTimeout(() => {
+          this.pageNO2 = 1;
+          this.getData(1);
+          done();
+        }, 1000);
+      },
+      /*上拉刷新*/
+      infinite2(done) {
+        setTimeout(() => {
+          this.pageNO2 ++;
+          this.getData(1);
+          done(true);
+        }, 1000);
+        return;
+      },
+      del() {
+        this.isShow = true;
+      },
     },
     computed: {
       countLeft() {
@@ -131,6 +236,7 @@
     position: absolute;
     width: 100%;
     height: 100%;
+    top: 0;
     & .tabbar {
       position: relative;
       height: 50px;
@@ -172,7 +278,7 @@
       width: 100%;
       height: calc(100% - 50px);
       & .swiper-slide {
-        padding: 15px 10px;
+        padding: 15px 0;
         box-sizing: border-box;
         & .o-btn {
           text-align: center;
@@ -191,6 +297,9 @@
           background: #fff;
           box-shadow: 0 3px 10px 0 rgba(190, 190, 190, 0.2);
           margin-top: 10px;
+          margin-left: 10px;
+          margin-right: 10px;
+          box-sizing: border-box;
           &:first-child {
             margin-top: 0;
           }
@@ -283,6 +392,42 @@
             }
           }
         }
+      }
+    }
+  }
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.5s;
+  }
+
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
+  }
+
+  .mask {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .login-bg {
+      padding: 15px 50px;
+      border-radius: 6px;
+      background: #fff;
+      text-align: center;
+      position: relative;
+      box-sizing: border-box;
+      transition: all 0.5s;
+      .success {
+        padding: 15px 0;
+        font-size: 20px;
+        color: #555555;
       }
     }
   }

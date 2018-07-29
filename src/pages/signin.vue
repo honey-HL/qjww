@@ -44,7 +44,24 @@
                 <i class="right-icon"></i>
             </div>
         </div>
-
+      <transition name="fade">
+        <div class="mask" v-if="true">
+          <div class="signnin-bg">
+            <div class="title">签到成功</div>
+            <div class="sig-row">
+              <div class="success">签到积分
+                <span>+</span>
+                <span>5</span>
+              </div>
+              <div class="success">连续签到
+                <span>+</span>
+                <span>5</span>
+              </div>
+            </div>
+            <img src="../assets/signin.png" alt="">
+          </div>
+        </div>
+      </transition>
     </div>
 </template>
 <script>
@@ -54,6 +71,10 @@
 </script>
 <style lang="scss" scoped>
     #signin {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
         .bg {
             height: calc(434px / 2);
             background: url(../assets/bg2.png);
@@ -164,6 +185,60 @@
                 }
             }
         }
+      .fade-enter-active,
+      .fade-leave-active {
+        transition: opacity 0.5s;
+      }
+      .fade-enter,
+      .fade-leave-to {
+        opacity: 0;
+      }
 
+      .mask {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .signnin-bg{
+          width: 200px;
+          height: 187px;
+          background: #FFFFFF;
+          border-radius: 4px;
+          padding: 15px;
+          padding-bottom: 0;
+          img{
+            width: calc(318px / 2);
+            height: calc(186px / 2);
+            display: block;
+            margin: 0 auto;
+          }
+          .title {
+            font-size: 16px;
+            color: #555555;
+          }
+          .sig-row{
+            display: flex;
+            .success {
+              color: #555555;
+              margin-top: 15px;
+              width: 50%;
+              text-align: center;
+              span:nth-child(1) {
+                color: #5FB62A;
+              }
+              span:nth-child(2) {
+                font-size: 20px;
+                color: #5FB62A;
+              }
+            }
+          }
+        }
+      }
     }
 </style>

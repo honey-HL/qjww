@@ -24,48 +24,22 @@
                 <i></i>
               </div>
             </div>
-            <div class="mask" v-if="isScreen" @click="switchMask">
-              <div class="input-bar" @click.stop>
-                <div class="input-div">
-                  <input type="text" placeholder="请选择地址" readonly>
+            <transition name="fade">
+              <div class="mask" v-if="isScreen" @click="switchMask">
+                <div class="input-bar" @click.stop>
+                  <div class="input-div">
+                    <input type="text" placeholder="请选择地址" readonly>
+                  </div>
+                  <div class="search-bar">
+                    <input placeholder="输入地区、师傅名字" maxlength="30" v-model="searchValue">
+                    <img src="../assets/search.png" />
+                  </div>
                 </div>
-                <div class="search-bar">
-                  <input placeholder="输入地区、师傅名字" maxlength="30" v-model="searchValue">
-                  <img src="../assets/search.png" />
-                </div>
               </div>
-            </div>
+            </transition>
           </div>
-          <div class="row">
-            <div class="head">
-              <i class="b"></i>
-            </div>
-            <div class="info">
-              <div class="name-bar">
-                <span class="name">李师傅</span>
-                <span class="address">啥都好过分打手犯规放大个</span>
-                <span class="range">0.03KM</span>
-              </div>
-              <div class="address-bar">
-                <span class="answer-num">已回答50次</span>
-                <span class="zan-num">304人点赞</span>
-                <span class="add-detail">温江区-涌泉店</span>
-              </div>
-            </div>
-          </div>
-          <Not v-if="true" title="网络出现故障" hint="网络出现故障，请刷新一下" type="YC">
-            <div class="o-btn">
-              <span>刷新</span>
-            </div>
-          </Not>
-        </div>
-        <div class="swiper-slide">
-          <Not v-if="true" title="暂无专家咨询" hint="已咨询过的专家将显示在这里" type="ZX">
-            <div class="o-btn">
-              <span>找专家咨询</span>
-            </div>
-          </Not>
-          <div class="item">
+          <scroller v-if="!isNetwork" class="scroller" style="top: 46px;" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
+            <Loading v-if="isShowLoading" style="padding: 30px 0"/>
             <div class="row">
               <div class="head">
                 <i class="b"></i>
@@ -73,18 +47,63 @@
               <div class="info">
                 <div class="name-bar">
                   <span class="name">李师傅</span>
-                  <span class="address2">啥都好过分打手犯规放大个</span>
+                  <span class="address">啥都好过分打手犯规放大个</span>
+                  <span class="range">0.03KM</span>
                 </div>
                 <div class="address-bar">
-                  <span class="detail">啥都好过分打手犯规放大个</span>
+                  <span class="answer-num">已回答50次</span>
+                  <span class="zan-num">304人点赞</span>
+                  <span class="add-detail">温江区-涌泉店</span>
                 </div>
               </div>
             </div>
-            <div class="phone-bar">
-              <div></div>
-              <div></div>
+          </scroller>
+          <transition name="fade">
+            <Not v-if="isNetwork" title="网络出现故障" hint="网络出现故障，请刷新一下" type="YC">
+              <div class="o-btn">
+                <span @click="refreshRouter(0)">刷新</span>
+              </div>
+            </Not>
+          </transition>
+        </div>
+        <div class="swiper-slide">
+          <Not v-if="!true" title="暂无专家咨询" hint="已咨询过的专家将显示在这里" type="ZX">
+            <div class="o-btn">
+              <span>找专家咨询</span>
             </div>
-          </div>
+          </Not>
+          <scroller v-if="!isNetwork" class="scroller" :on-refresh="refresh2" :on-infinite="infinite2" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
+            <Loading v-if="isShowLoading2" style="padding: 30px 0"/>
+            <div class="item">
+              <div class="row">
+                <div class="head">
+                  <i class="b"></i>
+                </div>
+                <div class="info">
+                  <div class="name-bar">
+                    <span class="name">李师傅</span>
+                    <span class="address2">啥都好过分打手犯规放大个</span>
+                  </div>
+                  <div class="address-bar">
+                    <span class="detail">啥都好过分打手犯规放大个</span>
+                  </div>
+                </div>
+              </div>
+              <div class="phone-bar">
+                <div></div>
+                <div @click="phone"></div>
+              </div>
+            </div>
+          </scroller>
+
+          <transition name="fade">
+            <Not v-if="isNetwork" title="网络出现故障" hint="网络出现故障，请刷新一下" type="YC">
+              <div class="o-btn">
+                <span @click="refreshRouter(1)">刷新</span>
+              </div>
+            </Not>
+          </transition>
+
         </div>
       </div>
     </div>
@@ -94,10 +113,12 @@
   import "swiper/dist/css/swiper.css";
   import Swiper from "swiper";
   import Not from "@/components/notData";
+  import Loading from "@/components/loading";
+
   export default {
     name: "expert",
     components: {
-      Not
+      Not, Loading
     },
     data() {
       return {
@@ -106,6 +127,16 @@
         swiper: null,
         isScreen: false,
         searchValue: "",
+        isShow: false,
+        pageNO1: 1,
+        pageNO2: 1,
+        pageSize: 10,
+        isShowLoading: true,
+        isShowLoading2: true,
+        dataList: [],
+        dataList2: [],
+        isFrist: false,
+        isNetwork: false,
       };
     },
     mounted() {
@@ -113,6 +144,10 @@
       this.swiper = new Swiper(".swiper-container", {
         on: {
           slideChangeTransitionStart: function () {
+            if (this.activeIndex == 1 && !thas.isFrist) {
+              thas.isFrist = true;
+              thas.getData(1);
+            }
             thas.current = this.activeIndex;
           }
         }
@@ -127,7 +162,102 @@
       /*切换遮罩*/
       switchMask() {
         this.isScreen = !this.isScreen;
-      }
+      },
+      /*获取列表*/
+      getData(type) {
+        this.api.http("post", this.api.searchQuestion, {
+          pageNO: type == 0 ? this.pageNO1 : this.pageNO2,
+          pageSize: this.pageSize
+        }, result => {
+          if (type == 0) {
+            this.isShowLoading = false;
+            if (this.pageNO1 == 1) {
+              this.dataList = result;
+            }
+            else {
+              if (result.length == 0) {
+                this.pageNO1 --;
+              }
+              else {
+                this.dataList.concat(result);
+              }
+            }
+          }
+          else {
+            this.isShowLoading2 = false;
+            if (this.pageNO2 == 1) {
+              this.dataList2 = result;
+            }
+            else {
+              if (result.length == 0) {
+                this.pageNO2 --;
+              }
+              else {
+                this.dataList2.concat(result);
+              }
+            }
+          }
+        }, error => {
+          this.isNetwork = true;
+        });
+      },
+      /*下拉刷新*/
+      refresh(done) {
+        setTimeout(() => {
+          this.pageNO1 = 1;
+          this.getData(0);
+          done();
+        }, 1000);
+      },
+      /*上拉刷新*/
+      infinite(done) {
+        setTimeout(() => {
+          this.pageNO1 ++;
+          this.getData(0);
+          done(true);
+        }, 1000);
+        return;
+      },
+      /*下拉刷新*/
+      refresh2(done) {
+        setTimeout(() => {
+          this.pageNO2 = 1;
+          this.getData(1);
+          done();
+        }, 1000);
+      },
+      /*上拉刷新*/
+      infinite2(done) {
+        setTimeout(() => {
+          this.pageNO2 ++;
+          this.getData(1);
+          done(true);
+        }, 1000);
+        return;
+      },
+      phone() {
+        this.$dialog.confirm({
+          title: '电话直连',
+            message: '确定拨打电话:028-4156456 吗？'
+        }).then(() => {
+          // on confirm
+        }).catch(() => {
+          // on cancel
+        });
+      },
+      refreshRouter (type) {
+        this.isNetwork = false;
+        if (type == 0) {
+          this.pageNO1 = 1;
+          this.isShowLoading = true;
+          this.getData(0);
+        }
+        else {
+          this.pageNO2 = 1;
+          this.isShowLoading2 = true;
+          this.getData(1);
+        }
+      },
     },
     computed: {
       countLeft() {
@@ -141,6 +271,7 @@
     position: absolute;
     width: 100%;
     height: 100%;
+    top: 0;
     & .tabbar {
       position: relative;
       height: 50px;
@@ -414,5 +545,14 @@
 
       }
     }
+  }
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.5s;
+  }
+
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
   }
 </style>

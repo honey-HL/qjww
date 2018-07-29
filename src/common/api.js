@@ -8,6 +8,7 @@ axios.defaults.baseURL = 'http://192.168.1.38:8080/qjww-api/';
 // axios.defaults.baseURL = 'http://192.168.1.66:2345/qjww-api/';
 axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem("accessToken");
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+axios.defaults.timeout =  3000;
 
 const http = (method, url, params, successCallback, errorCallback) => {
     console.log(params);
@@ -30,6 +31,7 @@ const http = (method, url, params, successCallback, errorCallback) => {
         }
     }).catch((error) => {
         console.log(error);
+        errorCallback(error);
     });
 }
 

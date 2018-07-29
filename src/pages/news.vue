@@ -3,6 +3,7 @@
         <scroller v-if="items.length > 0" class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A"
             loading-layer-color="#5FB62A">
             <Loading v-if="isShowLoading" />
+          <transition-group name="fade">
             <div class="row" v-for="item in items">
                 <div class="title">
                     <i :class="[{'news-zan': item.type == 0},{'news-comment': item.type == 1},{'news-activity': item.type == 2}]"></i>
@@ -11,6 +12,7 @@
                 </div>
                 <div class="time">{{item.createTime}}</div>
             </div>
+          </transition-group>
         </scroller>
         <div class="not" v-else>
             <Not title="暂未收到通知" hint="您收到的通知都在这里汇集" />
@@ -18,11 +20,12 @@
     </div>
 </template>
 <script>
-    import Not from "@/components/notData";
+  import Not from "@/components/notData";
+  import Loading from "@/components/loading";
     export default {
         name: "news",
         components: {
-            Not
+            Not, Loading
         },
         data() {
             return {
@@ -146,5 +149,14 @@
         .row:last-child {
             margin-bottom: 0;
         }
+    }
+    .fade-enter-active,
+    .fade-leave-active {
+      transition: opacity 0.5s;
+    }
+
+    .fade-enter,
+    .fade-leave-to {
+      opacity: 0;
     }
 </style>

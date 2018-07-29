@@ -15,8 +15,8 @@ Vue.prototype.api = api
 
 Vue.use(VueLazyload, {
   preLoad: 1.3,
-  error: '',
-  loading: '',
+  error: '', //配置错误图片
+  loading: '', //配置加载图片
   attempt: 1
 })
 

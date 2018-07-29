@@ -1,12 +1,12 @@
 <template>
-    <div>
+    <div id="my">
         <div class="bg"></div>
         <div class="wrop">
             <div class="top">
                 <div class="head"></div>
                 <div class="name">阿斯蒂芬</div>
                 <div>
-                    <span class="btn">签到</span>
+                  <router-link tag="span" class="btn" to="/index/signin">签到</router-link>
                 </div>
                 <div class="total-bar">
                     <div class="left">
@@ -25,33 +25,37 @@
                     <div class="icon">
                         <img src="../assets/1.png" />
                     </div>
-                    <div class="name">我的消息
-                        <i class="right-icon"></i>
-                    </div>
+                  <router-link tag="div" class="name" to="/index/news">
+                      我的消息
+                      <i class="right-icon"></i>
+                  </router-link>
                 </div>
                 <div class="row">
                     <div class="icon">
                         <img src="../assets/2.png" />
                     </div>
-                    <div class="name">我的收藏
-                        <i class="right-icon"></i>
-                    </div>
+                  <router-link tag="div" class="name" to="/index/myCollection">
+                      我的收藏
+                      <i class="right-icon"></i>
+                  </router-link>
                 </div>
                 <div class="row">
                     <div class="icon">
                         <img src="../assets/3.png" />
                     </div>
-                    <div class="name">我的问答
+                    <router-link tag="div" class="name" to="/index/myAnswer">
+                        我的问答
                         <i class="right-icon"></i>
-                    </div>
+                    </router-link>
                 </div>
                 <div class="row">
                     <div class="icon">
                         <img src="../assets/4.png" />
                     </div>
-                    <div class="name">意见反馈
-                        <i class="right-icon"></i>
-                    </div>
+                  <router-link tag="div" class="name" to="/index/feedback">
+                      意见反馈
+                      <i class="right-icon"></i>
+                  </router-link>
                 </div>
             </div>
 
@@ -72,11 +76,16 @@
 </script>
 
 <style lang="scss" scoped>
+  #my {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+  }
     .bg {
         height: 100px;
         background: #5FB62A;
     }
-
     .wrop {
         padding: 10px 15px;
         position: absolute;

@@ -55,11 +55,14 @@
             searchData(value) {
                 this.$router.push({ path: '/index/result?keywords=' + value });
             },
-
+            /*文件上传*/
             selectFile() {
+                if (this.images.length >= 8) {
+                  this.$toast("最多可上传8张");
+                  return;
+                }
                 document.getElementById("file").click();
             },
-            /*文件上传*/
             upload(e) {
                 let formdata = new FormData();
                 formdata.append('file', e.target.files[0]);
