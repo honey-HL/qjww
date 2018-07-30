@@ -52,7 +52,7 @@ const routers = new Router({
         { path: 'icomeAnswer', name: 'icomeAnswer', component: IcomeAnswer, meta: { title: "我来回答", requireAuth: true } },
         { path: 'myAnswer', name: 'myAnswer', component: MyAnswer, meta: { title: "我的回答", requireAuth: true } },
         { path: 'expert', name: 'expert', component: Expert, meta: { title: "专家", requireAuth: true } },
-        { path: 'expertDetail', name: 'expertDetail', component: ExpertDetail, meta: { title: "专家--王师傅", requireAuth: true } },
+        { path: 'expertDetail', name: 'expertDetail', component: ExpertDetail, meta: { title: "专家--详情", requireAuth: true } },
         { path: 'myCollection', name: 'myCollection', component: MyCollection, meta: { title: "我的收藏", requireAuth: true } },
         { path: 'feedback', name: 'feedback', component: Feedback, meta: { title: "意见反馈", requireAuth: true } },
         { path: 'signin', name: 'signin', component: Signin, meta: { title: "签到", requireAuth: true } },

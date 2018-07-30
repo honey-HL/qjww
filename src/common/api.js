@@ -11,6 +11,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 axios.defaults.timeout =  5000;
 
 const http = (method, url, params, successCallback, errorCallback) => {
+  console.log(params);
   axios({
     method: method,
     url: url,
@@ -77,6 +78,7 @@ export default {
   saveReport: "report/save",
 
   getSpecialist: "specialist/list",
+  getSpeciainfo: "specialist/info",
 
   getAdList: "advertisement/list ",
 
@@ -87,6 +89,8 @@ export default {
   getSignHistory: "sign/getSignHistory",
   isSign: "sign/isSign",
   sign: "sign/sign",
+
+
 
 
 

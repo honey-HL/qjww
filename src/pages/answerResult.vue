@@ -138,7 +138,7 @@
             },
             /*分割图片*/
             splitImg(image) {
-                return image == "" ? [] : image.split(",");
+                return image == "" || image == null ? [] : image.split(",");
             },
             /*接收搜索参数*/
             searchData(value) {

@@ -4,23 +4,31 @@ import Vuex from "vuex"
 Vue.use(Vuex)
 
 const module = {
-    state: {
-        //详情数据
-        answerDetail: "",
+  state: {
+    //问题详情
+    answerDetail: null,
+    //专家详情
+    expertDetail: null,
+  },
+  mutations: {
+    //设置问题详情
+    setAnswerDetail(state, value) {
+      state.answerDetail = value;
     },
-    mutations: {
-        //设置详情数据
-        setAnswerDetail(state, value) {
-            state.answerDetail = value;
-        }
+    //设置专家详情
+    setExpertDetail(state, value) {
+      state.expertDetail = value;
     },
-    actions: {
-        //设置详情数据
-        setAnswerDetail(context, value) {
-            context.commit("setAnswerDetail", value);
-        }
+  },
+  actions: {
+    setAnswerDetail(context, value) {
+      context.commit("setAnswerDetail", value);
     },
-    getters: {},
+    setExpertDetail(context, value) {
+      context.commit("setExpertDetail", value);
+    },
+  },
+  getters: {},
 }
 
 const store = new Vuex.Store(module)

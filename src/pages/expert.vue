@@ -38,42 +38,39 @@
               </div>
             </transition>
           </div>
-          <scroller v-if="!isNetwork" class="scroller" style="top: 46px;" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
-            <Loading v-if="isShowLoading" style="padding: 30px 0"/>
-            <div class="row">
-              <div class="head">
-                <i class="b"></i>
-              </div>
-              <div class="info">
-                <div class="name-bar">
-                  <span class="name">李师傅</span>
-                  <span class="address">啥都好过分打手犯规放大个</span>
-                  <span class="range">0.03KM</span>
+          <Loading v-if="isShowLoading" style="padding: 30px 0"/>
+          <scroller v-else-if="dataList.length > 0" class="scroller" style="top: 46px;" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
+            <transition-group name="fade">
+              <div class="row" v-for="(item, index) in dataList" :key="index" @click="detail(item)">
+                <div class="head" v-lazy:background-image="imgIp + item.avatar">
+                  <i class="b"></i>
                 </div>
-                <div class="address-bar">
-                  <span class="answer-num">已回答50次</span>
-                  <span class="zan-num">304人点赞</span>
-                  <span class="add-detail">温江区-涌泉店</span>
+                <div class="info">
+                  <div class="name-bar">
+                    <span class="name">{{item.userName}}</span>
+                    <span class="address">{{item.detailAdd}}</span>
+                    <span class="range">{{countKM(item.distance)}}KM</span>
+                  </div>
+                  <div class="address-bar">
+                    <span class="answer-num">已回答{{item.answerNum}}次</span>
+                    <span class="zan-num">{{item.praiseNum == null ? 0 : item.praiseNum}}人点赞</span>
+                    <span class="add-detail">{{item.storeName}}</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </transition-group>
           </scroller>
-          <transition name="fade">
-            <Not v-if="isNetwork" title="网络出现故障" hint="网络出现故障，请刷新一下" type="YC">
-              <div class="o-btn">
-                <span @click="refreshRouter(0)">刷新</span>
-              </div>
-            </Not>
-          </transition>
-        </div>
-        <div class="swiper-slide">
-          <Not v-if="!true" title="暂无专家咨询" hint="已咨询过的专家将显示在这里" type="ZX">
+          <Not v-else-if="isNetwork" title="网络出现故障" hint="网络出现故障，请刷新一下" type="YC">
             <div class="o-btn">
-              <span>找专家咨询</span>
+              <span @click="refreshRouter(0)">刷新</span>
             </div>
           </Not>
-          <scroller v-if="!isNetwork" class="scroller" :on-refresh="refresh2" :on-infinite="infinite2" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
-            <Loading v-if="isShowLoading2" style="padding: 30px 0"/>
+          <Not v-else-if="dataList.length == 0" title="暂无专家" hint="当前位置暂无专家" type="ZX"></Not>
+
+        </div>
+        <div class="swiper-slide">
+          <Loading v-if="isShowLoading2" style="padding: 30px 0"/>
+          <scroller v-else-if="dataList2.length > 0" class="scroller" :on-refresh="refresh2" :on-infinite="infinite2" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
             <div class="item">
               <div class="row">
                 <div class="head">
@@ -95,14 +92,16 @@
               </div>
             </div>
           </scroller>
-
-          <transition name="fade">
-            <Not v-if="isNetwork" title="网络出现故障" hint="网络出现故障，请刷新一下" type="YC">
-              <div class="o-btn">
-                <span @click="refreshRouter(1)">刷新</span>
-              </div>
-            </Not>
-          </transition>
+          <Not v-else-if="isNetwork" title="网络出现故障" hint="网络出现故障，请刷新一下" type="YC">
+            <div class="o-btn">
+              <span @click="refreshRouter(1)">刷新</span>
+            </div>
+          </Not>
+          <Not v-else-if="dataList2.length == 0" title="暂无专家咨询" hint="已咨询过的专家将显示在这里" type="ZX">
+            <div class="o-btn">
+              <span>找专家咨询</span>
+            </div>
+          </Not>
 
         </div>
       </div>
@@ -122,6 +121,7 @@
     },
     data() {
       return {
+        imgIp: this.api.imgIp,
         meunList: [{ id: 1, name: "专家" }, { id: 2, name: "我的咨询" }],
         current: 0,
         swiper: null,
@@ -137,7 +137,35 @@
         dataList2: [],
         isFrist: false,
         isNetwork: false,
+        lng: 30.652090,
+        lat: 104.066277,
       };
+    },
+    created () {
+      this.api.http("post", this.api.jsSign, {}, (result) => {
+        wx.config({
+          debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+          appId: result.appId, // 必填，公众号的唯一标识
+          timestamp: result.timestamp, // 必填，生成签名的时间戳
+          nonceStr: result.noncestr, // 必填，生成签名的随机串
+          signature: result.signature,// 必填，签名，见附录1
+          jsApiList: ["getLocation","openLocation"] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+        });
+        wx.ready(function(){
+          wx.getLocation({
+            type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+            success: function (res) {
+              console.log(res);
+              let latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+              let longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+              alert("腾讯：" + latitude + "," + longitude);
+            }
+          });
+        });
+        wx.error(function(res){
+          alert(JSON.stringify(res));
+        });
+      }, () => {})
     },
     mounted() {
       let thas = this;
@@ -152,6 +180,10 @@
           }
         }
       });
+
+      setTimeout(() => {
+        this.getData(0);
+      }, 1000)
     },
     methods: {
       /*切换tab卡*/
@@ -167,7 +199,9 @@
       getData(type) {
         this.api.http("post", this.api.getSpecialist, {
           pageNO: type == 0 ? this.pageNO1 : this.pageNO2,
-          pageSize: this.pageSize
+          pageSize: this.pageSize,
+          lng: this.lng,
+          lat: this.lat
         }, result => {
           if (type == 0) {
             this.isShowLoading = false;
@@ -198,6 +232,12 @@
             }
           }
         }, error => {
+          if (type == 0) {
+            this.isShowLoading = false;
+          }
+          else {
+            this.isShowLoading2 = false;
+          }
           this.isNetwork = true;
         });
       },
@@ -258,11 +298,23 @@
           this.getData(1);
         }
       },
+
+      /*计算公里*/
+      countKM (km) {
+        return (Number(km) / 1000).toFixed(2);
+      },
+      /*详情*/
+      detail (item) {
+        this.$store.dispatch("setExpertDetail", item);
+        this.$router.push({
+          path : "/index/expertDetail",
+        });
+      },
     },
     computed: {
       countLeft() {
         return this.current == 0 ? this.current : 50;
-      }
+      },
     }
   };
 </script>

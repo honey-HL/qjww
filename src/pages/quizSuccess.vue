@@ -11,7 +11,9 @@
             <div class="consult">
                 <div class="title">想快速解决问题</div>
                 <div class="title-min">您还可以直接
+                  <router-link to="/index/expert">
                     <span>向专家咨询</span>
+                  </router-link>
                 </div>
                 <span class="right-icon"></span>
             </div>

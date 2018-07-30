@@ -123,7 +123,10 @@
           return;
         }
         this.api.http("post", this.api.getBindCode, this.user, result => {
-          this.user.code(result);
+          //Test
+          this.user.code = result;
+          this.isAll = true;
+
           this.isCode = true;
           this.okPhone = this.user.phone;
           this.time = setInterval(() => {
@@ -169,8 +172,11 @@
     height: 100%;
     top: 0;
     .bg {
-      height: 300px;
+      height: calc(520px / 2);
       background: #64b72a;
+      background: url("../assets/login.png");
+      background-size: cover;
+      background-position: center;
       position: absolute;
       width: 100%;
     }
@@ -181,13 +187,14 @@
       width: 100%;
       height: 100%;
       padding: 30px;
-      padding-top: 100px;
+      padding-top: 130px;
       box-sizing: border-box;
       .login-model {
         background: #ffffff;
         border-radius: 20px;
         width: 100%;
         height: 100%;
+        min-height: 150px;
         padding: 20px 30px;
         box-sizing: border-box;
         .title {

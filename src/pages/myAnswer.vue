@@ -111,7 +111,6 @@
     created() {
       setTimeout(() => {
         this.getData(0);
-        this.isShowLoading = false;
       }, 1000);
     },
     mounted() {

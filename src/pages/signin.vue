@@ -24,6 +24,7 @@
         </div>
       </div>
     </div>
+    <div class="ad-bg"></div>
     <div class="worp">
       <div class="sign-bg">
         <div class="title">{{month}}月签到日历</div>
@@ -204,6 +205,13 @@
           }
         }
       }
+    }
+    .ad-bg{
+      height: 80px;
+      background: #fff;
+      padding: 10px;
+      box-sizing: border-box;
+      margin-top: 10px;
     }
     .worp {
       padding: 15px;
