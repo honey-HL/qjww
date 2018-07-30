@@ -2,11 +2,11 @@
     <div class="report">
         <div class="content">
             <div class="hint">举报内容</div>
-            <div class="title">阿道夫噶大鬼地方广东省个单方事故大飞哥大飞哥大飞哥</div>
+            <div class="title" v-html="detail.questionTitle"></div>
             <input type="text" placeholder="请选择举报分类" readonly>
             <div class="text-div">
-                <textarea name="" id="" cols="30" rows="10" placeholder="问题描述（选填）" v-model="report.content" maxlength="200"></textarea>
-                <span class="num">{{report.content.length}}
+                <textarea name="" id="" cols="30" rows="10" placeholder="问题描述（选填）" v-model="report.describe" maxlength="200"></textarea>
+                <span class="num">{{report.describe.length}}
                     <span class="font-hint">字</span>
                 </span>
             </div>
@@ -18,7 +18,7 @@
             </div>
             <div class="num-hint">最多可上传8张</div>
             <div class="btn">
-              <span v-if="report.content != ''" class="active" @click="submit">提交</span>
+              <span v-if="report.describe != ''" class="active" @click="submit">提交</span>
               <span v-else>提交</span>
             </div>
             <div class="footer-hint">请正确提交举报信息，不实举报将对您的信用产生影响</div>
@@ -43,27 +43,35 @@
         },
         data() {
             return {
+              detail: null,
               report: {
-                content: "",
-                images: [],
-                questionId: this.$route.query.questionId,
+                describe: "",
+                imgs: [],
+                id: 0,
+                reportType: 3,
+                type: 1,
+
               },
               isShow: false,
               images: [],
             }
         },
+      created() {
+        this.detail = this.$store.state.answerDetail;
+        this.report.id = this.detail.id;
+      },
       methods: {
         /*提交*/
         submit() {
-          if (this.util.empty(this.report.content)) {
+          if (this.util.empty(this.report.describe)) {
             this.$toast("请输入内容");
             return;
           }
           this.images.forEach(item => {
-            this.report.images.push(item.url);
+            this.report.imgs.push(item.url);
           });
-          this.report.images = this.report.images.toString();
-          this.api.http("post", this.api.questionSave, this.report, result => {
+          this.report.imgs = this.report.imgs.toString();
+          this.api.http("post", this.api.saveReport, this.report, result => {
             this.isShow = true;
             setTimeout(() => {
               this.$router.go(-1);
@@ -86,7 +94,7 @@
           req.open("post", this.api.ip + this.api.uploadImage, false);
           req.send(formdata);
           console.log(JSON.parse(req.response));
-          if (req.status >= 200) {
+          if (req.status == 200) {
             this.images.push(JSON.parse(req.response).body);
           } else {
             this.$toast("上传失败");
@@ -108,6 +116,10 @@
 </script>
 <style lang="scss" scoped>
     .report {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      top: 0;
         .content {
             padding: 0 15px;
             .hint {
@@ -166,6 +178,8 @@
                     margin: 0 10px 10px 0;
                     height: 78px;
                     background: #e6e6e6;
+                  background-size: cover !important;
+                  background-position: center !important;
                     &:nth-child(4n) {
                         margin-right: 0;
                     }

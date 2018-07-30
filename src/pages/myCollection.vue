@@ -1,29 +1,28 @@
 <template>
   <div id="myCollection">
-    <scroller v-if="items.length > 0" class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A">
-      <transition name="fade">
-        <div class="row">
+    <Loading v-if="isShowLoading" />
+    <scroller v-else-if="items.length > 0" class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A">
+      <transition-group name="fade">
+        <div class="row" v-for="(item, index) in items" :key="index" @click="detail(item)">
           <div class="top">
-            <div class="head"></div>
-            <div class="name">阿实打实的个</div>
+            <div class="head" v-lazy:background-image="imgIp + item.userAvatar"></div>
+            <div class="name">{{item.nikeName}}</div>
           </div>
           <div class="title">
             <i class="badge problem"></i>
-            阿斯蒂芬噶大概
+            <span v-html="item.questionTitle"></span>
           </div>
-          <div class="content">
-            啊地方敢死队风格地方法规和法国恢复规划法规好大飞哥啊地方敢死队风格地方法规和法国恢复规划法规好大飞哥
-          </div>
+          <div class="content" v-html="item.questionContent"></div>
           <div class="operation-bar">
             <div class="left">
-              <div class="time">5月16日 16:45</div>
+              <div class="time">{{item.publishTime}}</div>
             </div>
             <div class="right">
-              <div class="answer">删除该回答</div>
+              <div class="answer"><span @click.stop="del(item.questionId)">删除收藏</span></div>
             </div>
           </div>
         </div>
-      </transition>
+      </transition-group>
     </scroller>
     <div class="not" v-else>
       <Not title="暂未收藏" hint="快去收藏吧" />
@@ -41,23 +40,26 @@
     },
     data() {
       return {
+        imgIp: this.api.imgIp,
         items: [],
         pageNO: 1,
         pageSize: 10,
         isShowLoading: true,
       };
     },
-    mounted() {
-
+    created() {
+      setTimeout(() => {
+        this.getData();
+        this.isShowLoading = false;
+      }, 1000);
     },
     methods: {
       /*获取列表*/
       getData() {
-        this.api.http("post", this.api.getNotification, {
+        this.api.http("get", this.api.getCollectionList, {
           pageNO: this.pageNO,
           pageSize: this.pageSize
         }, result => {
-          this.isShowLoading = false;
           if (this.pageNO == 1) {
             this.items = result;
           }
@@ -90,6 +92,29 @@
         }, 1000);
         return;
       },
+      /*详情*/
+      detail(item) {
+        // this.$store.dispatch("setAnswerDetail", item);
+        // this.$router.push({
+        //   path: "/index/answerResult"
+        // });
+      },
+      del (id) {
+        this.$dialog.confirm({
+          title: '确认提示',
+          message: '您确定要删除该收藏吗？'
+        }).then(() => {
+          this.api.http("get", this.api.delCollection + id, {}, (result) => {
+            this.$toast("删除成功");
+            for (let i = 0; i < this.items.length; i++) {
+              if (this.items[i].questionId == id) {
+                this.items.splice(i, 1);
+                break;
+              }
+            }
+          }, (error) => {})
+        }).catch(() => {});
+      },
     },
     computed: {
 
@@ -113,9 +138,6 @@
       box-sizing: border-box;
       margin: 10px 15px;
       margin-bottom: 0;
-      &:first-child {
-        margin-top: 0;
-      }
       .top {
         padding: 10px;
         display: flex;

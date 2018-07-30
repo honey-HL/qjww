@@ -34,7 +34,7 @@
         </div>
         <scroller class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
             <Loading v-if="isShowLoading" />
-            <div class="answer-list" v-for="item in items">
+            <div class="answer-list" v-for="item in items" @click="detail(item)">
                 <div class="item">
                     <div class="title">
                         <i class="badge video"></i>

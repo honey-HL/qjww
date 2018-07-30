@@ -1,10 +1,10 @@
 <template>
     <div class="news">
-        <scroller v-if="items.length > 0" class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A"
+        <Loading v-if="isShowLoading" />
+        <scroller v-else-if="items.length > 0" class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A"
             loading-layer-color="#5FB62A">
-            <Loading v-if="isShowLoading" />
           <transition-group name="fade">
-            <div class="row" v-for="item in items">
+            <div class="row" v-for="(item, index) in items" :key="index">
                 <div class="title">
                     <i :class="[{'news-zan': item.type == 0},{'news-comment': item.type == 1},{'news-activity': item.type == 2}]"></i>
                     {{item.userName == null ? '匿名' : item.userName}} 回答了您提出的问题
@@ -36,9 +36,9 @@
             }
         },
         created() {
-            this.searchValue = this.$route.query.keywords;
             setTimeout(() => {
                 this.getData();
+                this.isShowLoading = false;
             }, 1000);
         },
         methods: {
@@ -48,7 +48,6 @@
                     pageNO: this.pageNO,
                     pageSize: this.pageSize
                 }, result => {
-                    this.isShowLoading = false;
                     if (this.pageNO == 1) {
                         this.items = result;
                     }

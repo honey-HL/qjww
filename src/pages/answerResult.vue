@@ -161,6 +161,7 @@
             collect() {
                 this.api.http("post", this.api.collectionSave, { questionId: this.detail.id, }, result => {
                     this.detail.isCollection = true;
+                    this.$toast("收藏成功");
                 }, error => {
                     console.log(error);
                 });

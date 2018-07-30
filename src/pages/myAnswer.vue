@@ -13,45 +13,27 @@
     <div class="swiper-container" id="swiper">
       <div class="swiper-wrapper">
         <div class="swiper-slide">
-          <scroller class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
-            <Loading v-if="isShowLoading" style="padding: 30px 0"/>
-            <div class="row">
-              <div class="top">
-                <div class="head"></div>
-                <div class="name">阿实打实的个</div>
-              </div>
-              <div class="title">
-                阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概
-              </div>
-              <div class="operation-bar">
-                <div class="left">
-                  <div class="time">5月16日 16:45</div>
+          <Loading v-if="isShowLoading" style="padding: 30px 0"/>
+          <scroller v-else-if="dataList.length > 0" class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
+            <transition-group name="fade">
+              <div class="row" v-for="(item, index) in dataList" :key="index">
+                <div class="top">
+                  <div class="head" v-lazy:background-image="imgIp + item.userAvatar"></div>
+                  <div class="name">{{item.nikeName}}</div>
                 </div>
-                <div class="right">
-                  <div class="answer">32回答</div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="top">
-                <div class="head"></div>
-                <div class="name">阿实打实的个</div>
-              </div>
-              <div class="title">
-                阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概阿斯蒂芬噶大概
-              </div>
-              <div class="operation-bar">
-                <div class="left">
-                  <div class="time">5月16日 16:45</div>
-                </div>
-                <div class="right">
-                  <div class="answer">32回答</div>
+                <div class="title" v-html="item.questionTitle"></div>
+                <div class="operation-bar">
+                  <div class="left">
+                    <div class="time">{{item.publishTime}}</div>
+                  </div>
+                  <div class="right">
+                    <div class="answer">{{item.answerNum}}回答</div>
+                  </div>
                 </div>
               </div>
-            </div>
+            </transition-group>
           </scroller>
-
-          <Not v-if="!true" title="您还没有提问哦" hint="已发布的提问将显示在这里" type="TW">
+          <Not v-else title="您还没有提问哦" hint="已发布的提问将显示在这里" type="TW">
             <div class="o-btn">
               <router-link to="/index/quiz"><span>去提问</span></router-link>
             </div>
@@ -59,36 +41,33 @@
         </div>
 
         <div class="swiper-slide">
-          <Not v-if="!true" title="您还没有回答提问哦" hint="快去回答吧" type="HD">
-            <div class="o-btn">
-              <span>去回答</span>
-            </div>
-          </Not>
-          <scroller class="scroller" :on-refresh="refresh2" :on-infinite="infinite2" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
-            <Loading v-if="isShowLoading2" style="padding: 30px 0"/>
-            <div class="row">
+          <Loading v-if="isShowLoading2" style="padding: 30px 0"/>
+          <scroller v-else-if="dataList2.length > 0" class="scroller" :on-refresh="refresh2" :on-infinite="infinite2" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
+            <div class="row" v-for="(item, index) in dataList2" :key="index">
               <div class="top">
-                <div class="head"></div>
-                <div class="name">阿实打实的个</div>
+                <div class="head" v-lazy:background-image="imgIp + item.userAvatar"></div>
+                <div class="name">{{item.userNickName}}</div>
               </div>
               <div class="title">
                 <i class="badge problem"></i>
-                阿斯蒂芬噶大概
+                <span v-html="item.questionTitle"></span>
               </div>
-              <div class="content">
-                啊地方敢死队风格地方法规和法国恢复规划法规好大飞哥啊地方敢死队风格地方法规和法国恢复规划法规好大飞哥
-              </div>
+              <div class="content" v-html="item.content"></div>
               <div class="operation-bar">
                 <div class="left">
-                  <div class="time">5月16日 16:45</div>
+                  <div class="time">{{item.createTime}}</div>
                 </div>
                 <div class="right">
-                  <div class="answer" @click="del">删除该回答</div>
+                  <div class="answer"><span @click.stop="del(item.id)">删除该回答</span></div>
                 </div>
               </div>
             </div>
           </scroller>
-
+          <Not v-else title="您还没有回答提问哦" hint="快去回答吧" type="HD">
+            <div class="o-btn">
+              <span>去回答</span>
+            </div>
+          </Not>
         </div>
       </div>
     </div>
@@ -114,6 +93,7 @@
     },
     data() {
       return {
+        imgIp: this.api.imgIp,
         meunList: [{ id: 1, name: "提问" }, { id: 2, name: "回答" }],
         current: 0,
         swiper: null,
@@ -127,6 +107,12 @@
         dataList2: [],
         isFrist: false,
       };
+    },
+    created() {
+      setTimeout(() => {
+        this.getData(0);
+        this.isShowLoading = false;
+      }, 1000);
     },
     mounted() {
       let thas = this;
@@ -150,7 +136,8 @@
       },
       /*获取列表*/
       getData(type) {
-        this.api.http("post", this.api.searchQuestion, {
+        let url = type == 1 ? this.api.getSelfAnswer : this.api.getSelfQuestion;
+        this.api.http("post", url, {
           pageNO: type == 0 ? this.pageNO1 : this.pageNO2,
           pageSize: this.pageSize
         }, result => {
@@ -220,8 +207,24 @@
         }, 1000);
         return;
       },
-      del() {
-        this.isShow = true;
+      del(id) {
+        this.$dialog.confirm({
+          title: '确认提示',
+          message: '您确定要删除该回答吗？'
+        }).then(() => {
+          this.api.http("post", this.api.delAnswer, {id: id}, (result) => {
+            this.isShow = true;
+            setTimeout(() => {
+              this.isShow = false;
+            }, 1500)
+            for (let i = 0; i < this.dataList2.length; i++) {
+              if (this.dataList2[i].id == id) {
+                this.dataList2.splice(i, 1);
+                break;
+              }
+            }
+          }, (error) => {})
+        }).catch(() => {});
       },
     },
     computed: {
@@ -300,9 +303,6 @@
           margin-left: 10px;
           margin-right: 10px;
           box-sizing: border-box;
-          &:first-child {
-            margin-top: 0;
-          }
           .top {
             padding: 10px;
             display: flex;

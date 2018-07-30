@@ -71,7 +71,7 @@
                 req.open("post", this.api.ip + this.api.uploadImage, false);
                 req.send(formdata);
                 console.log(JSON.parse(req.response));
-                if (req.status >= 200) {
+                if (req.status == 200) {
                     this.images.push(JSON.parse(req.response).body);
                 } else {
                   this.$toast("上传失败");

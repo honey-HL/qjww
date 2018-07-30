@@ -21,42 +21,42 @@
             </div>
 
             <div class="meun">
-                <div class="row">
-                    <div class="icon">
-                        <img src="../assets/1.png" />
-                    </div>
-                  <router-link tag="div" class="name" to="/index/news">
-                      我的消息
-                      <i class="right-icon"></i>
-                  </router-link>
+              <router-link tag="div" to="/index/news" class="row">
+                <div class="icon">
+                  <img src="../assets/1.png" />
                 </div>
-                <div class="row">
-                    <div class="icon">
-                        <img src="../assets/2.png" />
-                    </div>
-                  <router-link tag="div" class="name" to="/index/myCollection">
-                      我的收藏
-                      <i class="right-icon"></i>
-                  </router-link>
+                <div class="name">
+                  我的消息
+                  <i class="right-icon"></i>
                 </div>
-                <div class="row">
-                    <div class="icon">
-                        <img src="../assets/3.png" />
-                    </div>
-                    <router-link tag="div" class="name" to="/index/myAnswer">
-                        我的问答
-                        <i class="right-icon"></i>
-                    </router-link>
+              </router-link>
+              <router-link tag="div" to="/index/myCollection" class="row">
+                <div class="icon">
+                  <img src="../assets/2.png" />
                 </div>
-                <div class="row">
-                    <div class="icon">
-                        <img src="../assets/4.png" />
-                    </div>
-                  <router-link tag="div" class="name" to="/index/feedback">
-                      意见反馈
-                      <i class="right-icon"></i>
-                  </router-link>
+                <div class="name">
+                  我的收藏
+                  <i class="right-icon"></i>
                 </div>
+              </router-link>
+              <router-link tag="div" to="/index/myAnswer" class="row">
+                <div class="icon">
+                  <img src="../assets/3.png" />
+                </div>
+                <div class="name">
+                  我的问答
+                  <i class="right-icon"></i>
+                </div>
+              </router-link>
+              <router-link tag="div" to="/index/feedback" class="row">
+                <div class="icon">
+                  <img src="../assets/4.png" />
+                </div>
+                <div class="name">
+                  意见反馈
+                  <i class="right-icon"></i>
+                </div>
+              </router-link>
             </div>
 
         </div>
