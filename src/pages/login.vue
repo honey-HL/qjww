@@ -100,7 +100,7 @@
         }
         this.api.http("post", this.api.login, { openId: this.user.openId }, result => {
           localStorage.setItem("accessToken", result.token);
-          localStorage.setItem("userInfo", result);
+          localStorage.setItem("userInfo", JSON.stringify(result));
           this.isLogin = true;
           setTimeout(() => {
             this.$router.push({ path: this.$route.query.redirect });
@@ -110,7 +110,7 @@
             this.api.http("post", this.api.bindPhone, this.user, result => {
               localStorage.setItem("accessToken", result.token);
               this.api.http("post", this.api.getInfo, {}, result => {
-                localStorage.setItem("userInfo", result);
+                localStorage.setItem("userInfo", JSON.stringify(result));
               }, error => { });
             }, error => { });
           }
@@ -123,7 +123,7 @@
           return;
         }
         this.api.http("post", this.api.getBindCode, this.user, result => {
-          alert(result);
+          this.user.code(result);
           this.isCode = true;
           this.okPhone = this.user.phone;
           this.time = setInterval(() => {

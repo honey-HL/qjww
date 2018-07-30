@@ -1,14 +1,16 @@
 <template>
     <div class="home">
-        <img class="logo" src="../assets/qjww.png">
-        <p class="title">手机问题，就来千机问问</p>
-        <div class="search-bar">
+        <div id="top" class="top">
+          <img class="logo" src="../assets/qjww.png">
+          <p class="title">手机问题，就来千机问问</p>
+          <div class="search-bar">
             <img src="../assets/search.png" />
             <input type="text" placeholder="请输入您遇到的手机问题" maxlength="30" v-model="searchValue" @keyup.enter="searchEnterFun">
-        </div>
-        <div class="solve">
+          </div>
+          <div class="solve">
             已有
             <span>5466545</span>个问题被解决
+          </div>
         </div>
         <div class="bottom-bar">
             <div class="title">不止解答·直至解决</div>
@@ -31,7 +33,14 @@
         data() {
             return {
                 searchValue: "",
+                top:50,
             };
+        },
+        created() {
+          this.top = window.innerHeight;
+          // this.api.http("get", this.api.getAdList, {}, (result) => {
+          //
+          // }, (error) => {})
         },
         methods: {
             searchEnterFun(e) {
@@ -51,7 +60,9 @@
 
 <style lang="scss" scoped>
     .home {
-        padding-top: 100px;
+        .top{
+          padding-top: 100px;
+        }
         .logo {
             display: block;
             margin: 0 auto;
@@ -99,7 +110,7 @@
             }
         }
         .bottom-bar {
-            margin-top: 50px;
+            padding-top: 50px;
             width: 100%;
             text-align: center;
             & .title {

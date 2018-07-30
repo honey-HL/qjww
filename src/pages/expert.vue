@@ -165,7 +165,7 @@
       },
       /*获取列表*/
       getData(type) {
-        this.api.http("post", this.api.searchQuestion, {
+        this.api.http("post", this.api.getSpecialist, {
           pageNO: type == 0 ? this.pageNO1 : this.pageNO2,
           pageSize: this.pageSize
         }, result => {

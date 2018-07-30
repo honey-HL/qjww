@@ -6,12 +6,11 @@ import axios from 'axios'
 
 axios.defaults.baseURL = 'http://192.168.1.33:8080/qjww-api/';
 // axios.defaults.baseURL = 'http://192.168.1.66:2345/qjww-api/';
-axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem("accessToken");
+// axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem("accessToken");
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.defaults.timeout =  5000;
 
 const http = (method, url, params, successCallback, errorCallback) => {
-  console.log(params);
   axios({
     method: method,
     url: url,
@@ -21,6 +20,7 @@ const http = (method, url, params, successCallback, errorCallback) => {
     },
     params: params
   }).then((response) => {
+    console.log(url);
     console.log(response);
     if (response.data.code == 200) {
       successCallback(response.data.body);
@@ -76,8 +76,17 @@ export default {
 
   saveReport: "report/save",
 
+  getSpecialist: "specialist/list",
 
+  getAdList: "advertisement/list ",
 
+  getAdDetail: "advertisement/get/",
+
+  getCountScore: "sign/getCountScore",
+  getSignData: "sign/getSignData",
+  getSignHistory: "sign/getSignHistory",
+  isSign: "sign/isSign",
+  sign: "sign/sign",
 
 
 
