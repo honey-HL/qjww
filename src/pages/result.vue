@@ -173,7 +173,6 @@
       },
       /*详情*/
       detail(item) {
-        console.log("哈哈");
         this.$store.dispatch("setAnswerDetail", item);
         this.$router.push({
           path : "/index/answerResult"

@@ -2,35 +2,36 @@
   <div class="login">
     <div class="bg"></div>
     <div class="login-bar">
-      <div class="login-model">
-        <div class="title">请绑定手机，获取更多品质服务</div>
-        <div class="title-min">绑定手机后，您将收到问题动态提醒</div>
-        <div class="row">
-          <input type="tel" placeholder="请输入您的手机号" v-model="user.phone" maxlength="11" @keyup="check(0)">
-          <div class="error-hint">
-            <transition name="fade">
-              <span v-if="isPhoneError">请检查并正确输入11位手机号</span>
-            </transition>
+      <div>
+        <div class="login-model">
+          <div class="title">请绑定手机，获取更多品质服务</div>
+          <div class="title-min">绑定手机后，您将收到问题动态提醒</div>
+          <div class="row">
+            <input type="tel" placeholder="请输入您的手机号" v-model="user.phone" maxlength="11" @keyup="check(0)">
+            <div class="error-hint">
+              <transition name="fade">
+                <span v-if="isPhoneError">请检查并正确输入11位手机号</span>
+              </transition>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <input type="text" placeholder="请输入验证码" v-model="user.code" maxlength="6" @keyup="check(1)">
-          <div class="error-hint">
-            <transition name="fade">
-              <span v-if="isCodeError">请输入正确的验证码</span>
-            </transition>
+          <div class="row">
+            <input type="text" placeholder="请输入验证码" v-model="user.code" maxlength="6" @keyup="check(1)">
+            <div class="error-hint">
+              <transition name="fade">
+                <span v-if="isCodeError">请输入正确的验证码</span>
+              </transition>
+            </div>
           </div>
-        </div>
-        <div class="code-bar">
-          <span @click="getCode" v-if="!isCode">获取验证码</span>
-          <span class="hint" v-else>验证码已发送，{{count}}秒后可重新获取</span>
+          <div class="code-bar">
+            <span @click="getCode" v-if="!isCode">获取验证码</span>
+            <span class="hint" v-else>验证码已发送，{{count}}秒后可重新获取</span>
+          </div>
         </div>
         <div class="login-btn">
           <span v-if="!isAll">登录</span>
           <span class="active" @click="submit" v-else>登录</span>
         </div>
       </div>
-
     </div>
 
     <transition name="fade">
@@ -182,6 +183,7 @@
     }
     .login-bar {
       display: flex;
+      justify-content: center;
       position: relative;
       top: 0;
       width: 100%;
@@ -193,10 +195,10 @@
         background: #ffffff;
         border-radius: 20px;
         width: 100%;
-        height: 100%;
-        min-height: 150px;
+        height: 250px;
         padding: 20px 30px;
         box-sizing: border-box;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         .title {
           font-size: 16px;
           color: #666;
@@ -243,19 +245,20 @@
             color: #adb4ad;
           }
         }
-        .login-btn {
-          padding-top: 50px;
-          text-align: center;
-          span {
-            padding: 10px 30px;
-            background: #c2c2c2;
-            font-size: 13px;
-            color: #fff;
-            border-radius: 30px;
-          }
-          span.active {
-            background: #64b729;
-          }
+
+      }
+      .login-btn {
+        padding-top: 50px;
+        text-align: center;
+        span {
+          padding: 10px 30px;
+          background: #c2c2c2;
+          font-size: 13px;
+          color: #fff;
+          border-radius: 30px;
+        }
+        span.active {
+          background: #64b729;
         }
       }
     }
