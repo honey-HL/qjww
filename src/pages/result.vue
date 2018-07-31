@@ -43,23 +43,21 @@
           </div>
         </div>
       </transition-group>
-      <transition name="fade">
-        <div class="not-data">
-          <div class="hint-bar">
-            <img src="../assets/not.png" />
-            <span>没有找到答案? 您还可以</span>
-          </div>
-          <div class="btn-bar">
-            <router-link to="/index/quiz">
-              <span>去提问</span>
-            </router-link>
-            <router-link to="/index/expert">
-              <span>找专家</span>
-            </router-link>
-          </div>
-        </div>
-      </transition>
     </scroller>
+    <div class="not-data">
+      <div class="hint-bar">
+        <img src="../assets/not.png" />
+        <span>没有找到答案? 您还可以</span>
+      </div>
+      <div class="btn-bar">
+        <router-link tag="div" to="/index/quiz">
+          <span>去提问</span>
+        </router-link>
+        <router-link tag="div" to="/index/expert">
+          <span>找专家</span>
+        </router-link>
+      </div>
+    </div>
 
   </div>
 </template>
@@ -103,6 +101,9 @@
           if (this.start == 0) {
             this.items = result.data;
             this.totalNum = result.numFound;
+            if (result.data.length == 0) {
+              this.isEnd = true;
+            }
           }
           else {
             if (result.data.length == 0) {
@@ -193,7 +194,7 @@
     & .scroller {
       top: 70px;
       box-sizing: border-box;
-      height: 100%;
+      margin-bottom: 88px;
     }
     & .hint {
       font-size: 12px;
@@ -308,10 +309,16 @@
       }
     }
     .not-data {
-      padding: 15px;
+      background: #fff;
+      position: fixed;
+      width: 100%;
+      box-sizing: border-box;
+      bottom: 0;
+      z-index: 1;
+      padding: 10px;
       text-align: center;
       .hint-bar {
-        margin-bottom: 25px;
+        padding-bottom: 25px;
         img {
           width: calc(32px / 2);
           height: calc(28px / 2);
@@ -324,6 +331,10 @@
         }
       }
       .btn-bar {
+        padding-bottom: 10px;
+        display: flex;
+        justify-content: center;
+        width: calc(100% - 30px);
         span {
           font-size: 12px;
           background: #63B729;

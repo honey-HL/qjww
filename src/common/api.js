@@ -4,7 +4,7 @@
 
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://192.168.1.33:8080/qjww-api/';
+axios.defaults.baseURL = 'http://192.168.1.110:8181/qjww-api/';
 // axios.defaults.baseURL = 'http://192.168.1.66:2345/qjww-api/';
 // axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem("accessToken");
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -26,6 +26,11 @@ const http = (method, url, params, successCallback, errorCallback) => {
     if (response.data.code == 200) {
       successCallback(response.data.body);
     }
+    // else if (response.data.code == 1005) {
+    //   localStorage.removeItem("accessToken");
+    //   this.$router.push({path: '/index/login'});
+    //   errorCallback(response.data);
+    // }
     else {
       alert(response.data.msg);
       errorCallback(response.data);
@@ -39,7 +44,7 @@ const http = (method, url, params, successCallback, errorCallback) => {
 
 export default {
   http: http,
-  ip: "http://192.168.1.33:8080/qjww-api/",
+  ip: "http://192.168.1.110:8181/qjww-api/",
   // ip: "http://192.168.1.66:2345/qjww-api/",
   imgIp: "http://192.168.1.110:8088/qjww-api/",
 
@@ -80,7 +85,7 @@ export default {
   getSpecialist: "specialist/list",
   getSpeciainfo: "specialist/info",
 
-  getAdList: "advertisement/list ",
+  getAdList: "advertisement/list",
 
   getAdDetail: "advertisement/get/",
 
@@ -89,6 +94,7 @@ export default {
   getSignHistory: "sign/getSignHistory",
   isSign: "sign/isSign",
   sign: "sign/sign",
+
 
 
 

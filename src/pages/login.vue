@@ -56,6 +56,7 @@
     data() {
       return {
         user: { phone: "", code: "", openId: "ot23W05_9NC1bfllkCWiAS7Fuexw", },
+        //user: { phone: "", code: "", openId: "", },
         okPhone: "",
         showToast: false,
         isPhoneError: false,
@@ -68,21 +69,27 @@
         isLogin: false,
       };
     },
-    created() {
-      // this.api.http("post", this.api.isGetCode, {}, result => {
-      //   if (result == 1) {
-      //     if (this.code == null) {
-      //       location.href = this.api.ip + "wxClient/getCode?redirectUrl=" + location.href;
+    mounted() {
+      // if (this.$store.state.openId == null) {
+      //   this.api.http("post", this.api.isGetCode, {}, result => {
+      //     if (result == 1) {
+      //       if (this.code == null) {
+      //         location.href = this.api.ip + "wxClient/getCode?redirectUrl=" + location.href;
+      //       }
+      //       else {
+      //         this.api.http("post", this.api.getOpenId, { code: this.code }, result => {
+      //           result = JSON.parse(result);
+      //           this.$store.dispatch("setOpenId", result.openid);
+      //           this.user.openId = result.openid;
+      //         }, error => { });
+      //       }
       //     }
-      //     else {
-      //       this.api.http("post", this.api.getOpenId, { code: this.code }, result => {
-      //         result = JSON.parse(result);
-      //         alert(result.openid);
-      //         this.user.openId = result.openid;
-      //       }, error => { });
-      //     }
-      //   }
-      // }, error => { });
+      //   }, error => { });
+      // }
+      // else {
+      //   this.user.openId = this.$store.state.openId;
+      // }
+
     },
     methods: {
       /*登录*/
@@ -188,7 +195,7 @@
       top: 0;
       width: 100%;
       height: 100%;
-      padding: 30px;
+      padding: 15px;
       padding-top: 130px;
       box-sizing: border-box;
       .login-model {
@@ -196,7 +203,7 @@
         border-radius: 20px;
         width: 100%;
         height: 250px;
-        padding: 20px 30px;
+        padding: 20px;
         box-sizing: border-box;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         .title {

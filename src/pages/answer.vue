@@ -145,6 +145,9 @@
           this.isShowLoading = false;
           if (this.start == 0) {
             this.items = result.data;
+            if (result.data.length == 0) {
+              this.isEnd = true;
+            }
           }
           else {
             if (result.data.length == 0) {

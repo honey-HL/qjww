@@ -9,6 +9,8 @@ const module = {
     answerDetail: null,
     //专家详情
     expertDetail: null,
+    //openId
+    openId: null,
   },
   mutations: {
     //设置问题详情
@@ -19,6 +21,10 @@ const module = {
     setExpertDetail(state, value) {
       state.expertDetail = value;
     },
+    //openId
+    setOpenId(state, value) {
+      state.openId = value;
+    },
   },
   actions: {
     setAnswerDetail(context, value) {
@@ -26,6 +32,9 @@ const module = {
     },
     setExpertDetail(context, value) {
       context.commit("setExpertDetail", value);
+    },
+    setOpenId(context, value) {
+      context.commit("setOpenId", value);
     },
   },
   getters: {},

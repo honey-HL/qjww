@@ -10,6 +10,23 @@ const getWeekNumber = (dateString) => {
   return Number("1234567".charAt(date.getDay()));
 }
 
+const changeURLArg = (url, arg, arg_val) => {
+  let pattern=arg+'=([^&]*)';
+  let replaceText=arg+'='+arg_val;
+  if(url.match(pattern)){
+    let tmp='/('+ arg+'=)([^&]*)/gi';
+    tmp=url.replace(eval(tmp),replaceText);
+    return tmp;
+  }else{
+    if(url.match('[\?]')){
+      return url+'&'+replaceText;
+    }else{
+      return url+'?'+replaceText;
+    }
+  }
+  return url+'\n'+arg+'\n'+arg_val;
+}
+
 export default {
   /**1开头的手机号**/
   isMobile : /^1\d{10}$/,
@@ -33,6 +50,7 @@ export default {
     }
   },
   getWeekNumber: getWeekNumber,
+  changeURLArg: changeURLArg,
 }
 
 
