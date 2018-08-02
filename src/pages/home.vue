@@ -40,21 +40,26 @@
       };
     },
     created() {
-      this.top = window.innerHeight;
       this.api.http("get", this.api.getAdList, {position: 1, pageNO: 1, pageSize: 1}, (result) => {
         this.adBottom = result.records[0];
       }, (error) => {})
     },
     methods: {
       searchEnterFun(e) {
-        var keyCode = window.event ? e.keyCode : e.which;
-        if (keyCode == 13 && this.searchValue != "") {
-          //存入状态当中
+        let keyCode = window.event ? e.keyCode : e.which;
+        if (keyCode == 13) {
           //this.$store.dispatch("setSearchValue", this.searchValue);
-          this.$router.push({ path: '/index/result?keywords=' + this.searchValue });
-        }
-        else {
-          this.$toast("请输入问题内容");
+          if (this.searchValue.trim() == "") {
+            this.searchValue = "";
+            this.$toast("请输入问题内容");
+          }
+          else if (this.util.isEmoji.test(this.searchValue)) {
+            this.$toast("暂不支持emoji");
+            this.searchValue = "";
+          }
+          else {
+            this.$router.push({ path: '/index/result?keywords=' + this.searchValue });
+          }
         }
       },
       focusInput() {
@@ -114,7 +119,7 @@
         height: 40px;
         font-size: 12px;
         line-height: 40px;
-        border: 1px solid #e1e1e1;
+        border: 1px solid rgba(153, 153, 153, 0.1);
         border-radius: 30px;
         padding-left: 45px;
         box-sizing: border-box;
@@ -149,7 +154,7 @@
         margin: 0 auto;
         height: calc(242px / 2);
         background-size: cover !important;
-        background-origin: center !important;
+        background-position: center !important;
         background: #ddd;
       }
 

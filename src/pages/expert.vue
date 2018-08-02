@@ -17,7 +17,7 @@
             <div class="screen-top">
               <div class="left">
                 <span class="hint">您的位置：</span>
-                四川成都
+                {{currentAddress.province + currentAddress.city}}
               </div>
               <div class="right" @click="switchMask">
                 切换地区
@@ -27,9 +27,7 @@
             <transition name="fade">
               <div class="mask" v-if="isScreen" @click="switchMask">
                 <div class="input-bar" @click.stop>
-                  <div class="input-div">
-                    <input type="text" placeholder="请选择地址" readonly>
-                  </div>
+                  <div class="input-div"><span @click="showPopup = !showPopup">请选择地址</span></div>
                   <div class="search-bar">
                     <input placeholder="输入地区、师傅名字" maxlength="30" v-model="searchValue">
                     <img src="../assets/search.png" />
@@ -106,6 +104,11 @@
         </div>
       </div>
     </div>
+
+    <van-popup v-model="showPopup" position="bottom">
+      <van-area :area-list="areaList" :columns-num="2" title="选择城市" @confirm="confirmArea" @cancel="cancelArea"/>
+    </van-popup>
+
   </div>
 </template>
 <script>
@@ -113,6 +116,7 @@
   import Swiper from "swiper";
   import Not from "@/components/notData";
   import Loading from "@/components/loading";
+  import areaList from "../common/area"
 
   export default {
     name: "expert",
@@ -139,6 +143,13 @@
         isNetwork: false,
         lng: 30.652090,
         lat: 104.066277,
+        showPopup: false,
+        areaList: areaList,
+        currentAddress: {
+          province: "四川省",
+          city: "成都市",
+          cityId: 510100
+        },
       };
     },
     created () {
@@ -298,10 +309,22 @@
           this.getData(1);
         }
       },
-
       /*计算公里*/
       countKM (km) {
         return (Number(km) / 1000).toFixed(2);
+      },
+      /*选择地址回调*/
+      confirmArea(arr) {
+        this.showPopup = false;
+        this.isScreen = false;
+        this.currentAddress = {
+          province: arr[0].name,
+          city: arr[1].name,
+          cityId: arr[1].code
+        }
+      },
+      cancelArea() {
+        this.showPopup = false;
       },
       /*详情*/
       detail (item) {
@@ -556,7 +579,9 @@
               padding: 15px;
               padding-top: 0;
               .input-div {
-                input {
+                span {
+                  color: #999;
+                  display: inline-block;
                   height: 32px;
                   line-height: 32px;
                   background: #fff;

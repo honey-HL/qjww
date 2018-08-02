@@ -14,7 +14,9 @@
         <div class="item" v-for="item in images" v-lazy:background-image="item.url">
           <i class="del" @click="delImg(item.fileName)"></i>
         </div>
-        <div class="item add-icon" @click="selectFile"></div>
+        <UploadFile @uploadCall="onRead">
+          <div class="item add-icon"></div>
+        </UploadFile>
       </div>
       <div class="num-hint">最多可上传8张</div>
       <div class="anonymous">
@@ -27,25 +29,17 @@
       </div>
     </div>
 
-    <input type="file" id="file" @change="upload" style="display: none;">
-    <transition name="fade">
-      <div class="mask" v-if="isFileLoading">
-        <div class="loading-bg">
-          <Loading />
-          <div class="success">上传中</div>
-        </div>
-      </div>
-    </transition>
   </div>
 </template>
+
 <script>
-  import axios from 'axios'
-  import Search from "@/components/search"
-  import Loading from "@/components/loading"
+  import Search from "../components/search"
+  import Loader from "../components/loader"
+  import UploadFile from "../components/uploadFile"
   export default {
     name: "quiz",
     components: {
-      Search, Loading
+      Search, Loader, UploadFile
     },
     data() {
       return {
@@ -60,51 +54,12 @@
       }
     },
     methods: {
+      onRead(image) {
+        this.images.push(image);
+      },
       /*接收搜索参数*/
       searchData(value) {
         this.$router.push({ path: '/index/result?keywords=' + value });
-      },
-      /*文件上传*/
-      selectFile() {
-        if (this.images.length >= 8) {
-          this.$toast("最多可上传8张");
-          return;
-        }
-        document.getElementById("file").click();
-      },
-      upload(e) {
-        let formData = new FormData();
-        let file = e.target.files[0];
-        formData.append('file', e.target.files[0]);
-        let name = file.name;
-        let size = Math.round(file.size / 1024 / 1024 * 100) / 100;
-        if(size >= 10){
-          this.$toast("照片最大尺寸为10MB，请重新上传!");
-          return;
-        }
-        else if(name.indexOf("jpg") != -1
-          || name.indexOf("jpeg") != -1
-          || name.indexOf("gif") != -1
-          || name.indexOf("png") != -1) {
-          this.isFileLoading = true;
-          let req = new XMLHttpRequest();
-          req.open("post", this.api.ip + this.api.uploadImage, true);
-          req.onreadystatechange = () => {
-            if (req.readyState == 4 && (req.status == 200 || req.status == 304)) {
-              let result = JSON.parse(req.response);
-              if (result.code == 200) {
-                this.images.push(result.body);
-              } else {
-                this.$toast("上传失败");
-              }
-              this.isFileLoading = false;
-            }
-          }
-          req.send(formData);
-        }
-        else {
-          this.$toast("您选择的图片格式暂不支持");
-        }
       },
       /*提交*/
       submit() {
@@ -202,11 +157,14 @@
           }
           .del {
             position: absolute;
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             right: 5px;
             top: 5px;
             background: #ddd;
+            background: url("../assets/close.png");
+            background-size: cover;
+            background-position: center;
             border-radius: 100%;
           }
         }
@@ -270,39 +228,6 @@
 
   }
 
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 0.5s;
-  }
 
-  .fade-enter,
-  .fade-leave-to {
-    opacity: 0;
-  }
-  .mask {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 9;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .loading-bg {
-      padding: 15px 50px;
-      border-radius: 6px;
-      background: #fff;
-      text-align: center;
-      position: relative;
-      box-sizing: border-box;
-      transition: all 0.5s;
-      .success {
-        padding-top: 10px;
-        font-size: 16px;
-        color: #555555;
-      }
-    }
-  }
+
 </style>

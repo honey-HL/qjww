@@ -1,7 +1,6 @@
 <template>
     <div class="news">
-        <Loading v-if="isShowLoading" />
-        <scroller v-else-if="items.length > 0" class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A"
+        <scroller class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A"
             loading-layer-color="#5FB62A">
           <transition-group name="fade">
             <div class="row" v-for="(item, index) in items" :key="index">
@@ -14,32 +13,25 @@
             </div>
           </transition-group>
         </scroller>
-        <div class="not" v-else>
+        <div class="not" v-if="isShow">
             <Not title="暂未收到通知" hint="您收到的通知都在这里汇集" />
         </div>
     </div>
 </template>
 <script>
   import Not from "@/components/notData";
-  import Loading from "@/components/loading";
     export default {
         name: "news",
         components: {
-            Not, Loading
+            Not
         },
         data() {
             return {
                 items: [],
-                pageNO: 1,
+                pageNO: 0,
                 pageSize: 10,
-                isShowLoading: true,
+                isShow: false,
             }
-        },
-        created() {
-            setTimeout(() => {
-                this.getData();
-                this.isShowLoading = false;
-            }, 1000);
         },
         methods: {
             /*获取列表*/
@@ -50,6 +42,9 @@
                 }, result => {
                     if (this.pageNO == 1) {
                         this.items = result;
+                        if (result.length == 0) {
+                          this.isShow = true;
+                        }
                     }
                     else {
                         if (result.length == 0) {

@@ -2,7 +2,6 @@
   <div id="result">
     <Search :searchValue="searchValue" @searchData="searchData" />
     <scroller class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
-      <Loading v-if="isShowLoading" />
       <div class="hint">最佳匹配答案</div>
       <transition-group name="fade">
         <div class="row" v-for="(item, index) in items" :key="index" v-if="item.userPush" @click="detail(item)">
@@ -78,16 +77,12 @@
         start: 0,
         row: 10,
         totalNum: 0,
-        isShowLoading: true,
         imgIp: this.api.imgIp,
         isEnd: false,
       };
     },
     created() {
       this.searchValue = this.$route.query.keywords;
-      // setTimeout(() => {
-      //     this.getData();
-      // }, 1000);
     },
     methods: {
       /*获取列表*/
@@ -97,7 +92,6 @@
           row: this.row,
           title: this.searchValue
         }, result => {
-          this.isShowLoading = false;
           if (this.start == 0) {
             this.items = result.data;
             this.totalNum = result.numFound;
@@ -143,7 +137,6 @@
       /*接收搜索参数*/
       searchData(value) {
         this.searchValue = value;
-        this.isShowLoading = true;
         setTimeout(() => {
           this.start = 0;
           this.getData();
@@ -194,7 +187,7 @@
     & .scroller {
       top: 70px;
       box-sizing: border-box;
-      margin-bottom: 88px;
+      bottom: 88px;
     }
     & .hint {
       font-size: 12px;
@@ -242,6 +235,10 @@
         color: #9a9a9a;
         line-height: 16px;
         margin-bottom: 10px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
       }
       .img-list {
         display: flex;
@@ -313,6 +310,7 @@
       position: fixed;
       width: 100%;
       box-sizing: border-box;
+      box-shadow: 0 4px 15px 0 #CCCCCC;
       bottom: 0;
       z-index: 1;
       padding: 10px;

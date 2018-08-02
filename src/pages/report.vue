@@ -3,7 +3,10 @@
     <div class="content">
       <div class="hint">举报内容</div>
       <div class="title" v-html="detail.questionTitle"></div>
-      <input type="text" placeholder="请选择举报分类" readonly>
+      <div class="title select-div" @click="show = !show">
+        <span class="hint" v-if="typeName == ''">请选择举报分类</span>
+        <span v-else>{{typeName}}</span>
+      </div>
       <div class="text-div">
         <textarea name="" id="" cols="30" rows="10" placeholder="问题描述（选填）" v-model="report.describe" maxlength="200"></textarea>
         <span class="num">{{report.describe.length}}
@@ -40,6 +43,9 @@
         </div>
       </div>
     </transition>
+
+    <van-actionsheet v-model="show" :actions="actions" />
+
   </div>
 </template>
 <script>
@@ -59,12 +65,19 @@
           imgs: [],
           id: 0,
           reportType: 3,
-          type: 1,
-
+          type: null,
         },
         isShow: false,
         images: [],
         isFileLoading: false,
+        show: false,
+        typeName: "",
+        actions: [
+          {name: '选择举报分类',callback: this.onClick,disabled: true},
+          {name: '黄',callback: this.onClick,type: 1,},
+          {name: '嫖',callback: this.onClick,type: 2,},
+          {name: '赌',callback: this.onClick,type: 3,},
+        ]
       }
     },
     created() {
@@ -141,6 +154,11 @@
             }
           }
         }, error => { });
+      },
+      onClick(item) {
+        this.report.type = item.type;
+        this.typeName = item.name;
+        this.show = false;
       }
     }
   }
@@ -165,17 +183,12 @@
         border-radius: 4px;
         font-size: 16px;
       }
-      input {
-        height: 32px;
-        line-height: 32px;
-        background: #fff;
-        border: 1px solid rgba(153, 153, 153, 0.10);
-        border-radius: 4px;
-        font-size: 12px;
-        width: 100%;
+      .select-div {
         margin: 10px 0;
-        padding-left: 10px;
-        box-sizing: border-box;
+        font-size: 12px;
+        span.hint{
+          color: #999;
+        }
       }
       .text-div {
         position: relative;
@@ -217,11 +230,14 @@
           }
           .del {
             position: absolute;
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             right: 5px;
             top: 5px;
             background: #ddd;
+            background: url("../assets/close.png");
+            background-size: cover;
+            background-position: center;
             border-radius: 100%;
           }
         }

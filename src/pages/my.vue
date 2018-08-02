@@ -3,7 +3,7 @@
     <div class="bg"></div>
     <div class="wrop">
       <div class="top">
-        <div class="head" v-lazy:background-image="imgIp + userInfo.avatar"></div>
+        <div class="head" v-lazy:background-image="imgIp + userInfo.avatar" @click="edit"></div>
         <div class="name">{{userInfo.nickName}}</div>
         <div>
           <router-link tag="span" class="btn" to="/index/signin">签到</router-link>
@@ -78,6 +78,13 @@
         userInfo: JSON.parse(localStorage.getItem("userInfo"))
       }
     },
+    methods: {
+      edit() {
+        this.$router.push({
+          path: "/index/edit"
+        })
+      },
+    }
 
   }
 </script>

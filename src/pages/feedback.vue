@@ -196,11 +196,14 @@
           }
           .del {
             position: absolute;
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             right: 5px;
             top: 5px;
             background: #ddd;
+            background: url("../assets/close.png");
+            background-size: cover;
+            background-position: center;
             border-radius: 100%;
           }
         }

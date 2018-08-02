@@ -10,21 +10,15 @@ const getWeekNumber = (dateString) => {
   return Number("1234567".charAt(date.getDay()));
 }
 
-const changeURLArg = (url, arg, arg_val) => {
-  let pattern=arg+'=([^&]*)';
-  let replaceText=arg+'='+arg_val;
-  if(url.match(pattern)){
-    let tmp='/('+ arg+'=)([^&]*)/gi';
-    tmp=url.replace(eval(tmp),replaceText);
-    return tmp;
+/**获取url中的参数**/
+const getUrlParam = (name) => {
+  let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+  let r = window.location.search.substr(1).match(reg); //匹配目标参数
+  if(r != null){
+    return unescape(r[2]);
   }else{
-    if(url.match('[\?]')){
-      return url+'&'+replaceText;
-    }else{
-      return url+'?'+replaceText;
-    }
+    return null; //返回参数值
   }
-  return url+'\n'+arg+'\n'+arg_val;
 }
 
 export default {
@@ -34,23 +28,14 @@ export default {
   isPhone : /^(((13[0-9]{1})|(18[0-9]{1})|(17[6-9]{1})|(15[0-9]{1}))+\d{8})$/,
   /**6-16的密码**/
   isPwd : /[A-Za-z0-9]{6,16}/,
+  isEmoji : /\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g,
 
   /**验证空**/
   empty: function (value) {
     return value == null || value == "" || typeof(value) == "undefined";
   },
-  /**获取url中的参数**/
-  getUrlParam : function(name) {
-    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
-    var r = window.location.search.substr(1).match(reg); //匹配目标参数
-    if(r != null){
-      return unescape(r[2]);
-    }else{
-      return null; //返回参数值
-    }
-  },
+  getUrlParam: getUrlParam,
   getWeekNumber: getWeekNumber,
-  changeURLArg: changeURLArg,
 }
 
 

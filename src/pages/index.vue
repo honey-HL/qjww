@@ -16,7 +16,6 @@
         },
         /*页面切换效果*/
         beforeRouteUpdate(to, from, next) {
-            console.log("路由名字：" + to.name);
             if (to.name == "home" || to.name == "answer" || to.name == "my") {
                 this.transitionName = 'opacity';
             }

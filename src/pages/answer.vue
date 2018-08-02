@@ -33,7 +33,6 @@
       <div class="bg"></div>
     </div>
     <scroller class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
-      <Loading v-if="isShowLoading" />
       <div class="answer-list" v-for="item in items" @click="detail(item)">
         <div class="item">
           <div class="title">
@@ -53,7 +52,7 @@
             </div>
             <div class="right">
               <div style="margin-right: 10px">{{item.commentNum}}个回答</div>
-              <div>{{item.praiseNum}}个赞</div>
+              <div style="margin-right: 5px">{{item.praiseNum}}个赞</div>
               <div class="icon-div" @click.stop="comment(item.id, item.questionTitle)">
                 <i class="comment"></i>
                 <span>回答</span>
@@ -63,7 +62,7 @@
         </div>
         <div class="bg"></div>
       </div>
-      <div class="answer-list" v-for="item in items">
+      <!--<div class="answer-list" v-for="item in items">
         <div class="item">
           <div class="title">
             <i class="badge video"></i>
@@ -84,8 +83,8 @@
               <div>推广</div>
             </div>
             <div class="right">
-              <!-- <div>12个回答</div>
-                  <div>22个赞</div> -->
+              &lt;!&ndash; <div>12个回答</div>
+                  <div>22个赞</div> &ndash;&gt;
               <div class="icon-div">
                 <i class="enter"></i>
                 <span>进入</span>
@@ -102,7 +101,7 @@
           </div>
         </div>
         <div class="bg"></div>
-      </div>
+      </div>-->
     </scroller>
 
     <div class="foot-height"></div>
@@ -113,12 +112,11 @@
 <script>
   import MyFooter from "@/components/myFooter";
   import Search from "@/components/search";
-  import Loading from "@/components/loading";
 
   export default {
     name: 'answer',
     components: {
-      MyFooter, Search, Loading
+      MyFooter, Search
     },
     data() {
       return {
@@ -126,13 +124,9 @@
         searchValue: "*",
         start: 0,
         row: 10,
-        isShowLoading: true,
         imgIp: this.api.imgIp,
         isEnd: false,
       };
-    },
-    created() {
-
     },
     methods: {
       /*获取列表*/
@@ -142,7 +136,6 @@
           row: this.row,
           title: this.searchValue
         }, result => {
-          this.isShowLoading = false;
           if (this.start == 0) {
             this.items = result.data;
             if (result.data.length == 0) {
@@ -187,7 +180,6 @@
       /*接收搜索参数*/
       searchData(value) {
         this.searchValue = value;
-        this.isShowLoading = true;
         setTimeout(() => {
           this.start = 0;
           this.getData();
@@ -212,9 +204,7 @@
               break;
             }
           }
-        }, error => {
-          console.log(error);
-        });
+        }, error => {});
       },
       /*详情*/
       detail(item) {
@@ -284,7 +274,7 @@
           width: calc(96px / 2);
           height: calc(96px / 2);
           background-size: cover !important;
-          background-origin: center !important;
+          background-position: center !important;
         }
         .name {
           font-family: PingFangSC-Light;
@@ -413,6 +403,7 @@
                 background: url(../assets/enter.png)
               }
               i.comment {
+                top: 3px;
                 background: url(../assets/comment.png)
               }
               i.activity {

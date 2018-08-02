@@ -7,7 +7,16 @@ import api from './common/api'
 import VueLazyload from 'vue-lazyload'
 import Toast from 'vant/lib/toast'
 import Dialog from 'vant/lib/dialog'
+import Area from 'vant/lib/area'
+import Popup from 'vant/lib/popup'
+import Actionsheet from 'vant/lib/actionsheet'
+import Uploader from 'vant/lib/uploader'
 import 'vant/lib/vant-css/index.css'
+
+Vue.use(Area);
+Vue.use(Popup);
+Vue.use(Actionsheet);
+Vue.use(Uploader);
 
 
 Vue.prototype.util = util

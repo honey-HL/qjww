@@ -37,13 +37,15 @@
           <div>五</div>
           <div>六</div>
         </div>
-        <div class="day-row" v-for="(item, index) in signHistory.monthArr" :key="index">
-          <div class="day-item" :class="{active: childItem.isSign}" v-for="(childItem, index) in item" :key="index">{{childItem.days}}</div>
-        </div>
+        <transition-group name="fade">
+          <div class="day-row" v-for="(item, index) in signHistory.monthArr" :key="index">
+              <div class="day-item" :class="{active: childItem.isSign}" v-for="(childItem, index) in item" :key="index">{{childItem.days}}</div>
+          </div>
+        </transition-group>
       </div>
     </div>
-    <div class="title">查看积分规则说明</div>
-    <div class="row">
+    <div class="title" @click="mall">查看积分规则说明</div>
+    <div class="row" @click="mall">
       <div class="name">积分商城
         <i class="right-icon"></i>
       </div>
@@ -131,16 +133,24 @@
       }, (error) => {})
     },
     updated() {
-      let childArr = document.getElementsByClassName("active");
-      if (childArr.length > 1) {
-        let firstDiv = childArr[0];
-        firstDiv.style.cssText = "border-radius: 50px 0 0 50px;";
-        let lastDiv = childArr[childArr.length - 1];
-        lastDiv.style.cssText = "border-radius: 0 50px 50px 0;";
+      try {
+        let childArr = document.getElementsByClassName("active");
+        if (childArr.length > 1) {
+          let firstDiv = childArr[0];
+          firstDiv.style.cssText = "border-radius: 50px 0 0 50px;";
+          let lastDiv = childArr[childArr.length - 1];
+          lastDiv.style.cssText = "border-radius: 0 50px 50px 0;";
+        }
+        else {
+          let firstDiv = childArr[0];
+          firstDiv.style.cssText = "border-radius: 50px;";
+        }
       }
-      else {
-        let firstDiv = childArr[0];
-        firstDiv.style.cssText = "border-radius: 50px;";
+      catch (e) { }
+    },
+    methods: {
+      mall() {
+        this.$toast('正在开发...')
       }
     }
   }

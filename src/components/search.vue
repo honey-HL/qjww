@@ -24,17 +24,30 @@
     },
     methods: {
       searchEnterFun(e) {
-        var keyCode = window.event ? e.keyCode : e.which;
-        if (keyCode == 13 && this.searchValue != "") {
-          //TODO 
-          //alert(this.searchValue);
-          this.$emit("searchData", this.searchValue);
+        let keyCode = window.event ? e.keyCode : e.which;
+
+        if (keyCode == 13) {
+          if (this.searchValue.trim() == "") {
+            this.searchValue = "";
+          }
+          else if (this.util.isEmoji.test(this.searchValue)) {
+            this.$toast("暂不支持emoji");
+            this.searchValue = "";
+          }
+          else {
+            this.$emit("searchData", this.searchValue);
+          }
         }
       },
       search() {
-        if (this.searchValue != "") {
-          this.$emit("searchData", this.searchValue);
+        if (this.searchValue.trim() == "") {
+          this.searchValue = "";
         }
+        if (this.util.isEmoji.test(this.searchValue)) {
+          this.$toast("暂不支持emoji");
+          this.searchValue = "";
+        }
+        this.$emit("searchData", this.searchValue);
       }
     }
   };
@@ -66,7 +79,7 @@
         height: 32px;
         font-size: 12px;
         line-height: 32px;
-        border: 1px solid #e1e1e1;
+        border: 1px solid rgba(153, 153, 153, 0.1);
         border-radius: 30px;
         padding-left: 15px;
         box-sizing: border-box;

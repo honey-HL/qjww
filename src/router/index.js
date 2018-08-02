@@ -22,6 +22,8 @@ import ExpertDetail from '@/pages/expertDetail'
 import MyCollection from '@/pages/myCollection'
 import Feedback from '@/pages/feedback'
 import Signin from '@/pages/signin'
+import Edit from '@/pages/edit'
+import LoadMore from '@/pages/loadMore'
 
 
 Vue.use(VueScroller)
@@ -56,6 +58,8 @@ const routers = new Router({
         { path: 'myCollection', name: 'myCollection', component: MyCollection, meta: { title: "我的收藏", requireAuth: true } },
         { path: 'feedback', name: 'feedback', component: Feedback, meta: { title: "意见反馈", requireAuth: true } },
         { path: 'signin', name: 'signin', component: Signin, meta: { title: "签到", requireAuth: true } },
+        { path: 'edit', name: 'edit', component: Edit, meta: { title: "编辑资料", requireAuth: true } },
+        { path: 'loadMore', name: 'loadMore', component: LoadMore, meta: { title: "加载更多"} },
       ]
     },
   ]
