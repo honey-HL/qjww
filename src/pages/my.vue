@@ -6,6 +6,7 @@
         <div class="head" v-lazy:background-image="userInfo.avatar" @click="edit"></div>
         <div class="name">{{userInfo.nickName}}</div>
         <div>
+          <div class="role" v-if="userInfo.roleId == 1">已认证</div>
           <router-link tag="span" class="btn" to="/index/signin">签到</router-link>
         </div>
         <div class="total-bar">
@@ -137,6 +138,11 @@
         font-size: 16px;
         color: #555555;
         margin: 10px 0;
+      }
+      .role{
+        padding-bottom: 5px;
+        text-align: center;
+        color: #999999;
       }
       .btn {
         display: inline-block;
