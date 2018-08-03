@@ -114,8 +114,8 @@
 <script>
   import "swiper/dist/css/swiper.css";
   import Swiper from "swiper";
-  import Not from "@/components/notData";
-  import Loading from "@/components/loading";
+  import Not from "../components/notData";
+  import Loading from "../components/loading";
   import areaList from "../common/area"
 
   export default {
@@ -140,6 +140,8 @@
         dataList: [],
         dataList2: [],
         isFrist: false,
+        isEnd: false,
+        isEnd2: false,
         isNetwork: false,
         lng: 30.652090,
         lat: 104.066277,
@@ -218,13 +220,19 @@
             this.isShowLoading = false;
             if (this.pageNO1 == 1) {
               this.dataList = result;
+              if (result.length == 0) {
+                this.isEnd = true;
+              }
             }
             else {
               if (result.length == 0) {
                 this.pageNO1 --;
+                this.isEnd = true;
               }
               else {
-                this.dataList.concat(result);
+                result.forEach(item => {
+                  this.dataList.push(item);
+                })
               }
             }
           }
@@ -232,13 +240,19 @@
             this.isShowLoading2 = false;
             if (this.pageNO2 == 1) {
               this.dataList2 = result;
+              if (result.length == 0) {
+                this.isEnd2 = true;
+              }
             }
             else {
               if (result.length == 0) {
                 this.pageNO2 --;
+                this.isEnd2 = true;
               }
               else {
-                this.dataList2.concat(result);
+                result.forEach(item => {
+                  this.dataList2.push(item);
+                })
               }
             }
           }
@@ -265,7 +279,7 @@
         setTimeout(() => {
           this.pageNO1 ++;
           this.getData(0);
-          done(true);
+          done(this.isEnd);
         }, 1000);
         return;
       },
@@ -282,7 +296,7 @@
         setTimeout(() => {
           this.pageNO2 ++;
           this.getData(1);
-          done(true);
+          done(this.isEnd2);
         }, 1000);
         return;
       },
@@ -622,14 +636,5 @@
 
       }
     }
-  }
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 0.5s;
-  }
-
-  .fade-enter,
-  .fade-leave-to {
-    opacity: 0;
   }
 </style>

@@ -20,12 +20,12 @@
           <div class="content" v-html="item.questionContent"></div>
           <div class="img-list">
             <div class="img-item" v-for="child in splitImg(item.images)" v-lazy:background-image="child">
-              <img v-lazy="child" width="100%" height="100%">
+              <!--<img v-lazy="child" width="100%" height="100%">-->
             </div>
           </div>
           <div class="operation-bar">
             <div class="left">
-              <div class="head" v-lazy:background-image="imgIp + item.avatar"></div>
+              <div class="head" v-lazy:background-image="item.avatar"></div>
               <div class="name">{{!item.anonymity ? item.nickName : '匿名'}}</div>
             </div>
             <div class="right">
@@ -34,7 +34,7 @@
                 <img src="../assets/comment.png">
                 <span>{{item.commentNum}}</span>
               </div>
-              <div class="zan" @click.stop="praise(item.id)">
+              <div class="zan">
                 <img src="../assets/zan.png">
                 <span>{{item.praiseNum}}</span>
               </div>
@@ -62,8 +62,8 @@
 </template>
 
 <script>
-  import Search from "@/components/search";
-  import Loading from "@/components/loading";
+  import Search from "../components/search";
+  import Loading from "../components/loading";
 
   export default {
     name: "result",
@@ -77,7 +77,6 @@
         start: 0,
         row: 10,
         totalNum: 0,
-        imgIp: this.api.imgIp,
         isEnd: false,
       };
     },
@@ -150,19 +149,6 @@
             keywords: title,
             questionId: id,
           }
-        });
-      },
-      /*赞*/
-      praise(id) {
-        this.api.http("post", this.api.questionPraise, { questionId: id, }, result => {
-          for (let i = 0; this.items.length; i++) {
-            if (this.items[i].id == id) {
-              this.items[i].praiseNum += 1;
-              break;
-            }
-          }
-        }, error => {
-          console.log(error);
         });
       },
       /*详情*/
@@ -250,6 +236,8 @@
           margin: 0 10px 10px 0;
           border-radius: 4px;
           background: #e6e6e6;
+          background-size: cover !important;
+          background-position: center !important;
         }
         .img-item:nth-child(4n) {
           margin-right: 0;
@@ -346,15 +334,5 @@
         }
       }
     }
-  }
-
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 0.5s;
-  }
-
-  .fade-enter,
-  .fade-leave-to {
-    opacity: 0;
   }
 </style>

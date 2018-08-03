@@ -4,10 +4,10 @@
 
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://1ek8059026.51mypc.cn:13773/qjww-api/';
+axios.defaults.baseURL = 'http://1ek8059026.51mypc.cn:13776/qjww-api/';
 // axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem("accessToken");
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-axios.defaults.timeout =  5000;
+axios.defaults.timeout =  10000;
 
 const http = (method, url, params, successCallback, errorCallback) => {
   axios({
@@ -43,7 +43,7 @@ const http = (method, url, params, successCallback, errorCallback) => {
 
 export default {
   http: http,
-  ip: "http://1ek8059026.51mypc.cn:13773/qjww-api/",
+  ip: "http://1ek8059026.51mypc.cn:13776/qjww-api/",
   imgIp: "http://1ek8059026.51mypc.cn:13599/qjww-api/",
 
   searchQuestion: "search/searchQuestion",
@@ -63,6 +63,10 @@ export default {
   isGetCode: "wxClient/isGetCode",
   getBindCode: "sms/getBindCode",
   bindPhone: "user/bindPhone",
+  updateUser: "user/update",
+  getLike: "user/getLike",
+  getScore: "user/getScore",
+  getGroupAuth: "user/getGroupAuth",
 
   uploadImage: "uploadImgFile/uploadImage",
   delFile: "uploadImgFile/delFile",
@@ -83,15 +87,16 @@ export default {
   getSpecialist: "specialist/list",
   getSpeciainfo: "specialist/info",
 
-  getAdList: "advertisement/list",
-
-  getAdDetail: "advertisement/get/",
+  getAdList: "advertisement/getAdv",
+  getAdDetail: "advertisement/getAdvDetail",
 
   getCountScore: "sign/getCountScore",
   getSignData: "sign/getSignData",
   getSignHistory: "sign/getSignHistory",
   isSign: "sign/isSign",
   sign: "sign/sign",
+
+  getText: "systemText/getText",
 
 
 

@@ -42,8 +42,8 @@
 </template>
 
 <script>
-    import MyFooter from "@/components/myFooter";
-    import Search from "@/components/search";
+    import MyFooter from "../components/myFooter";
+    import Search from "../components/search";
 
     export default {
         name: 'forAnswer',

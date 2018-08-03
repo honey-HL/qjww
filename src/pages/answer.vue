@@ -18,13 +18,11 @@
           </router-link>
         </div>
         <div class="item">
-          <router-link to="/index/quiz">
-            <div class="icon"></div>
-            <div class="name">回答</div>
-          </router-link>
+          <div class="icon"></div>
+          <div class="name">回答</div>
         </div>
         <div class="item">
-          <router-link to="/index/myAnswer">
+          <router-link :to="{path: '/index/myAnswer', query: {tab : 1}}">
             <div class="icon"></div>
             <div class="name">我的回答</div>
           </router-link>
@@ -110,8 +108,8 @@
 </template>
 
 <script>
-  import MyFooter from "@/components/myFooter";
-  import Search from "@/components/search";
+  import MyFooter from "../components/myFooter";
+  import Search from "../components/search";
 
   export default {
     name: 'answer',
@@ -228,8 +226,8 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
-    top: 0;
     padding-bottom: 15px;
+    box-sizing: border-box;
     & .scroller {
       top: 140px;
       box-sizing: border-box;
@@ -254,7 +252,7 @@
           height: calc(32px / 2);
           background: url(../assets/news.png);
           background-size: cover;
-          background-origin: center;
+          background-position: center;
         }
         div {
           color: #555;

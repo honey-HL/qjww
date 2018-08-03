@@ -1,11 +1,10 @@
 <template>
   <div id="myCollection">
-    <Loading v-if="isShowLoading" />
-    <scroller v-else-if="items.length > 0" class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A">
+    <scroller v-if="!isShow" class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A">
       <transition-group name="fade">
-        <div class="row" v-for="(item, index) in items" :key="index" @click="detail(item)">
+        <div class="row" v-for="(item, index) in items" :key="index" @click="detail(item.questionId)">
           <div class="top">
-            <div class="head" v-lazy:background-image="imgIp + item.userAvatar"></div>
+            <div class="head" v-lazy:background-image="item.userAvater"></div>
             <div class="name">{{item.nikeName}}</div>
           </div>
           <div class="title">
@@ -18,40 +17,32 @@
               <div class="time">{{item.publishTime}}</div>
             </div>
             <div class="right">
-              <div class="answer"><span @click.stop="del(item.questionId)">删除收藏</span></div>
+              <div class="answer"><span @click.stop="del(item.id)">删除收藏</span></div>
             </div>
           </div>
         </div>
       </transition-group>
     </scroller>
-    <div class="not" v-else>
+    <div class="not" v-if="isShow">
       <Not title="暂未收藏" hint="快去收藏吧" />
     </div>
   </div>
 </template>
 <script>
-  import Not from "@/components/notData";
-  import Loading from "@/components/loading";
-
+  import Not from "../components/notData";
   export default {
     name: "myCollection",
     components: {
-      Not, Loading
+      Not
     },
     data() {
       return {
-        imgIp: this.api.imgIp,
         items: [],
-        pageNO: 1,
+        pageNO: 0,
         pageSize: 10,
-        isShowLoading: true,
+        isShow: false,
+        isEnd: false,
       };
-    },
-    created() {
-      setTimeout(() => {
-        this.getData();
-        this.isShowLoading = false;
-      }, 1000);
     },
     methods: {
       /*获取列表*/
@@ -62,13 +53,20 @@
         }, result => {
           if (this.pageNO == 1) {
             this.items = result;
+            if (result.length == 0) {
+              this.isShow = true;
+              this.isEnd = true;
+            }
           }
           else {
             if (result.length == 0) {
               this.pageNO--;
+              this.isEnd = true;
             }
             else {
-              this.items.concat(result);
+              result.forEach((item) => {
+                this.items.push(item);
+              })
             }
           }
         }, error => {
@@ -88,16 +86,9 @@
         setTimeout(() => {
           this.pageNO++;
           this.getData();
-          done(true);
+          done(this.isEnd);
         }, 1000);
         return;
-      },
-      /*详情*/
-      detail(item) {
-        // this.$store.dispatch("setAnswerDetail", item);
-        // this.$router.push({
-        //   path: "/index/answerResult"
-        // });
       },
       del (id) {
         this.$dialog.confirm({
@@ -107,13 +98,21 @@
           this.api.http("get", this.api.delCollection + id, {}, (result) => {
             this.$toast("删除成功");
             for (let i = 0; i < this.items.length; i++) {
-              if (this.items[i].questionId == id) {
+              if (this.items[i].id == id) {
                 this.items.splice(i, 1);
                 break;
               }
             }
           }, (error) => {})
         }).catch(() => {});
+      },
+      detail(id) {
+        this.api.http("post", this.api.findById, {id: id}, (result) => {
+          this.$store.dispatch("setAnswerDetail", result.question);
+          this.$router.push({
+            path : "/index/answerResult"
+          });
+        });
       },
     },
     computed: {
@@ -157,9 +156,9 @@
           width: 26px;
           height: 26px;
           border-radius: 50%;
-          background-size: cover !important;
-          background-origin: center !important;
           background: #ddd;
+          background-size: cover !important;
+          background-position: center !important;
         }
         .name {
           padding-left: 10px;
@@ -227,14 +226,5 @@
         }
       }
     }
-  }
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 0.5s;
-  }
-
-  .fade-enter,
-  .fade-leave-to {
-    opacity: 0;
   }
 </style>

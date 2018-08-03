@@ -51,8 +51,9 @@
     </scroller>
   </div>
 </template>
+
 <script>
-  import Loading from "@/components/loading";
+  import Loading from "../components/loading";
   export default {
     name: "expertDetail",
     components: {
@@ -266,7 +267,7 @@
           height: 26px;
           border-radius: 50%;
           background-size: cover !important;
-          background-origin: center !important;
+          background-position: center !important;
           background: #ddd;
         }
         .name {

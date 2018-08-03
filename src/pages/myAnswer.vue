@@ -16,9 +16,9 @@
           <Loading v-if="isShowLoading" style="padding: 30px 0"/>
           <scroller v-else-if="dataList.length > 0" class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
             <transition-group name="fade">
-              <div class="row" v-for="(item, index) in dataList" :key="index">
+              <div class="row" v-for="(item, index) in dataList" :key="index" @click="detail(item.questionId)">
                 <div class="top">
-                  <div class="head" v-lazy:background-image="imgIp + item.userAvatar"></div>
+                  <div class="head" v-lazy:background-image="item.userAvater"></div>
                   <div class="name">{{item.nikeName}}</div>
                 </div>
                 <div class="title" v-html="item.questionTitle"></div>
@@ -43,9 +43,9 @@
         <div class="swiper-slide">
           <Loading v-if="isShowLoading2" style="padding: 30px 0"/>
           <scroller v-else-if="dataList2.length > 0" class="scroller" :on-refresh="refresh2" :on-infinite="infinite2" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
-            <div class="row" v-for="(item, index) in dataList2" :key="index">
+            <div class="row" v-for="(item, index) in dataList2" :key="index" @click="detail(item.questionId)">
               <div class="top">
-                <div class="head" v-lazy:background-image="imgIp + item.userAvatar"></div>
+                <div class="head" v-lazy:background-image="item.userAvatar"></div>
                 <div class="name">{{item.userNickName}}</div>
               </div>
               <div class="title">
@@ -84,8 +84,8 @@
 <script>
   import "swiper/dist/css/swiper.css";
   import Swiper from "swiper";
-  import Not from "@/components/notData";
-  import Loading from "@/components/loading";
+  import Not from "../components/notData";
+  import Loading from "../components/loading";
   export default {
     name: "myAnswewr",
     components: {
@@ -93,7 +93,6 @@
     },
     data() {
       return {
-        imgIp: this.api.imgIp,
         meunList: [{ id: 1, name: "提问" }, { id: 2, name: "回答" }],
         current: 0,
         swiper: null,
@@ -106,6 +105,8 @@
         dataList: [],
         dataList2: [],
         isFrist: false,
+        isEnd: false,
+        isEnd2: false,
       };
     },
     created() {
@@ -126,6 +127,9 @@
           }
         }
       });
+      if (this.$route.query.tab) {
+        this.setCurrent(1);
+      }
     },
     methods: {
       /*切换tab*/
@@ -144,13 +148,19 @@
             this.isShowLoading = false;
             if (this.pageNO1 == 1) {
               this.dataList = result;
+              if (result.length == 0) {
+                this.isEnd = true;
+              }
             }
             else {
               if (result.length == 0) {
                 this.pageNO1 --;
+                this.isEnd = true;
               }
               else {
-                this.dataList.concat(result);
+                result.forEach(item => {
+                  this.dataList.push(item);
+                })
               }
             }
           }
@@ -158,13 +168,19 @@
             this.isShowLoading2 = false;
             if (this.pageNO2 == 1) {
               this.dataList2 = result;
+              if (result.length == 0) {
+                this.isEnd2 = true;
+              }
             }
             else {
               if (result.length == 0) {
                 this.pageNO2 --;
+                this.isEnd2 = true;
               }
               else {
-                this.dataList2.concat(result);
+                result.forEach(item => {
+                  this.dataList2.push(item);
+                })
               }
             }
           }
@@ -185,7 +201,7 @@
         setTimeout(() => {
           this.pageNO1 ++;
           this.getData(0);
-          done(true);
+          done(this.isEnd);
         }, 1000);
         return;
       },
@@ -202,7 +218,7 @@
         setTimeout(() => {
           this.pageNO2 ++;
           this.getData(1);
-          done(true);
+          done(this.isEnd2);
         }, 1000);
         return;
       },
@@ -224,6 +240,14 @@
             }
           }, (error) => {})
         }).catch(() => {});
+      },
+      detail(id) {
+        this.api.http("post", this.api.findById, {id: id}, (result) => {
+          this.$store.dispatch("setAnswerDetail", result.question);
+          this.$router.push({
+            path : "/index/answerResult"
+          });
+        });
       },
     },
     computed: {
@@ -321,9 +345,9 @@
               width: 26px;
               height: 26px;
               border-radius: 50%;
-              background-size: cover !important;
-              background-origin: center !important;
               background: #ddd;
+              background-size: cover !important;
+              background-position: center !important;
             }
             .name {
               padding-left: 10px;
@@ -393,15 +417,6 @@
         }
       }
     }
-  }
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 0.5s;
-  }
-
-  .fade-enter,
-  .fade-leave-to {
-    opacity: 0;
   }
 
   .mask {

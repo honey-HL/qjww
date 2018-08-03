@@ -22,7 +22,7 @@
 </template>
 
 <script>
-  import MyFooter from "@/components/myFooter";
+  import MyFooter from "../components/myFooter";
 
   export default {
     name: "home",
@@ -39,8 +39,12 @@
         isShow: true,
       };
     },
-    created() {
-      this.api.http("get", this.api.getAdList, {position: 1, pageNO: 1, pageSize: 1}, (result) => {
+    mounted() {
+      this.api.http("post", this.api.getAdList, {position: 0}, (result) => {
+        this.logo = result;
+      }, (error) => {})
+
+      this.api.http("post", this.api.getAdList, {position: 1}, (result) => {
         this.adBottom = result.records[0];
       }, (error) => {})
     },

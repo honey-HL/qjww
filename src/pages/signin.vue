@@ -44,7 +44,7 @@
         </transition-group>
       </div>
     </div>
-    <div class="title" @click="mall">查看积分规则说明</div>
+    <div class="title"><router-link to="/index/rule" tag="span">查看积分规则说明</router-link></div>
     <div class="row" @click="mall">
       <div class="name">积分商城
         <i class="right-icon"></i>
@@ -150,7 +150,7 @@
     },
     methods: {
       mall() {
-        this.$toast('正在开发...')
+        this.$toast('功能后续上线中,暂时无法访问')
       }
     }
   }
@@ -298,14 +298,6 @@
 
         }
       }
-    }
-    .fade-enter-active,
-    .fade-leave-active {
-      transition: opacity 0.5s;
-    }
-    .fade-enter,
-    .fade-leave-to {
-      opacity: 0;
     }
 
     .mask {

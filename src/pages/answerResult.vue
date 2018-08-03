@@ -16,7 +16,7 @@
         <!-- <div class="video-cover"></div> -->
         <div class="operation-bar">
           <div class="left">
-            <div class="head" v-lazy:background-image="imgIp + detail.avatar"></div>
+            <div class="head" v-lazy:background-image="detail.avatar"></div>
             <div class="name">{{!detail.anonymity ? detail.nickName : '匿名'}}</div>
           </div>
           <div class="right">
@@ -37,15 +37,18 @@
           <!-- <div class="video-cover"></div> -->
           <div class="operation-bar">
             <div class="left">
-              <div class="head" v-lazy:background-image="imgIp + item.userAvatar"></div>
-              <div class="name">{{item.userNickName ? item.userNickName : '匿名'}}</div>
+              <div class="head" v-lazy:background-image="item.userAvatar"></div>
+              <div class="name">{{item.userNickName}}</div>
               <div class="time">{{item.createTime}}</div>
             </div>
             <div class="right">
-              <div class="zan" @click="praise(item.id)">
-                <img src="../assets/zan.png">
-                <span>{{item.praiseNum}}</span>
-              </div>
+              <transition name="fade">
+                <div class="zan" @click="praise(item.id)">
+                  <img src="../assets/news-zan.png" v-if="item.praise">
+                  <img src="../assets/zan.png" v-else>
+                  <span>{{item.praiseNum}}</span>
+                </div>
+              </transition>
             </div>
           </div>
         </div>
@@ -71,8 +74,7 @@
 </template>
 
 <script>
-  import Search from "@/components/search";
-  import Loading from "@/components/loading";
+  import Search from "../components/search";
 
   export default {
     name: "answerResult",
@@ -84,11 +86,11 @@
         start: 0,
         row: 10,
         totalNum: 0,
-        imgIp: this.api.imgIp
+        isEnd: false,
       };
     },
     components: {
-      Search, Loading
+      Search
     },
     created() {
       this.detail = this.$store.state.answerDetail;
@@ -104,13 +106,19 @@
           if (this.start == 1) {
             this.items = result.data;
             this.totalNum = result.allNum;
+            if (result.data.length == 0) {
+              this.isEnd = true;
+            }
           }
           else {
             if (result.data.length == 0) {
               this.start--;
+              this.isEnd = true;
             }
             else {
-              this.items.concat(result.data);
+              result.data.forEach(item => {
+                this.items.push(item);
+              })
             }
           }
         }, error => {
@@ -130,7 +138,7 @@
         setTimeout(() => {
           this.start++;
           this.getData();
-          done(true);
+          done(this.isEnd);
         }, 1000);
       },
       /*分割图片*/
@@ -146,7 +154,8 @@
         this.api.http("post", this.api.praise, { answerId: id, }, result => {
           for (let i = 0; this.items.length; i++) {
             if (this.items[i].id == id) {
-              this.items[i].praiseNum += 1;
+              this.items[i].praiseNum = this.items[i].praise ? this.items[i].praiseNum - 1 : this.items[i].praiseNum + 1;
+              this.items[i].praise = !this.items[i].praise;
               break;
             }
           }
@@ -257,7 +266,7 @@
           border-radius: 4px;
           background: #e6e6e6;
           background-size: cover !important;
-          background-origin: center !important;
+          background-position: center !important;
           &:nth-child(2n) {
             margin-right: 0;
           }
@@ -283,7 +292,7 @@
             height: 26px;
             border-radius: 50%;
             background-size: cover !important;
-            background-origin: center !important;
+            background-position: center !important;
             background: #ddd;
           }
           .name {
@@ -308,7 +317,6 @@
             width: calc(26px / 2);
             height: calc(26px / 2);
             margin-left: 15px;
-            vertical-align: center;
             position: relative;
             top: 2px;
           }
@@ -394,13 +402,4 @@
     }
   }
 
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 0.5s;
-  }
-
-  .fade-enter,
-  .fade-leave-to {
-    opacity: 0;
-  }
 </style>

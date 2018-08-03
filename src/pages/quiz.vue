@@ -14,20 +14,22 @@
         <div class="item" v-for="item in images" v-lazy:background-image="item.url">
           <i class="del" @click="delImg(item.fileName)"></i>
         </div>
-        <UploadFile @uploadCall="onRead">
+        <UploadFile @uploadCall="onRead" v-if="images.length < 8">
           <div class="item add-icon"></div>
         </UploadFile>
       </div>
       <div class="num-hint">最多可上传8张</div>
       <div class="anonymous">
-        <i :class="{active: quiz.isAnonymity}"></i>
+        <i @click="quiz.isAnonymity = !quiz.isAnonymity" :class="{active: quiz.isAnonymity}"></i>
         <span @click="quiz.isAnonymity = !quiz.isAnonymity">匿名提问</span>
       </div>
       <div class="btn">
-        <span v-if="quiz.title != '' && quiz.content != ''" class="active" @click="submit">发表提问</span>
+        <span v-if="quiz.title != ''" class="active" @click="submit">发表提问</span>
         <span v-else>发表提问</span>
       </div>
     </div>
+
+    <Loader v-if="isLoading" title="提交中"/>
 
   </div>
 </template>
@@ -50,7 +52,7 @@
           isAnonymity: false
         },
         images: [],
-        isFileLoading: false,
+        isLoading: false,
       }
     },
     methods: {
@@ -71,12 +73,12 @@
           this.$toast("请输入内容");
           return;
         }
+        this.isLoading = true;
         this.images.forEach(item => {
           this.quiz.images.push(item.url);
         });
         this.quiz.images = this.quiz.images.toString();
         this.quiz.isAnonymity = this.quiz.isAnonymity ? 1 : 0;
-        console.log(this.quiz);
         this.api.http("post", this.api.questionSave, this.quiz, result => {
           this.$router.push({ path: '/index/quizSuccess?keywords=' + this.quiz.title });
         }, error => { });

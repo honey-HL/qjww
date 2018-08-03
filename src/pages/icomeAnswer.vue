@@ -12,7 +12,9 @@
         <div class="item" v-for="item in images" v-lazy:background-image="item.url">
           <i class="del" @click="delImg(item.fileName)"></i>
         </div>
-        <div class="item add-icon" @click="selectFile"></div>
+        <UploadFile @uploadCall="onRead" v-if="images.length < 8">
+          <div class="item add-icon"></div>
+        </UploadFile>
       </div>
       <div class="num-hint">最多可上传8张</div>
       <div class="btn">
@@ -20,7 +22,6 @@
         <span v-else>提交</span>
       </div>
     </div>
-    <input type="file" id="file" accept="image/png,image/gif,image/jpeg" @change="upload" style="display: none;">
     <transition name="fade">
       <div class="mask" v-if="isShow">
         <div class="login-bg">
@@ -32,23 +33,18 @@
         </div>
       </div>
     </transition>
-    <transition name="fade">
-      <div class="mask" v-if="isFileLoading">
-        <div class="loading-bg">
-          <Loading />
-          <div class="success">上传中</div>
-        </div>
-      </div>
-    </transition>
+
+    <Loader v-if="isLoading" title="提交中"/>
+
   </div>
 </template>
 <script>
-  import Loading from "@/components/loading"
-
+  import Loader from "../components/loader"
+  import UploadFile from "../components/uploadFile"
   export default {
     name: "report",
     components: {
-      Loading
+      Loader,UploadFile
     },
     data() {
       return {
@@ -60,54 +56,15 @@
         isShow: false,
         images: [],
         keywords: "",
-        isFileLoading: false,
+        isLoading: false,
       }
     },
     created() {
       this.keywords = this.$route.query.keywords;
     },
     methods: {
-      /*文件上传*/
-      selectFile() {
-        if (this.images.length >= 8) {
-          this.$toast("最多可上传8张");
-          return;
-        }
-        document.getElementById("file").click();
-      },
-      upload(e) {
-        let formData = new FormData();
-        let file = e.target.files[0];
-        formData.append('file', e.target.files[0]);
-        let name = file.name;
-        let size = Math.round(file.size / 1024 / 1024 * 100) / 100;
-        if(size >= 10){
-          this.$toast("照片最大尺寸为10MB，请重新上传!");
-          return;
-        }
-        else if(name.indexOf("jpg") != -1
-          || name.indexOf("jpeg") != -1
-          || name.indexOf("gif") != -1
-          || name.indexOf("png") != -1) {
-          this.isFileLoading = true;
-          let req = new XMLHttpRequest();
-          req.open("post", this.api.ip + this.api.uploadImage, true);
-          req.onreadystatechange = () => {
-            if (req.readyState == 4 && (req.status == 200 || req.status == 304)) {
-              let result = JSON.parse(req.response);
-              if (result.code == 200) {
-                this.images.push(result.body);
-              } else {
-                this.$toast("上传失败");
-              }
-              this.isFileLoading = false;
-            }
-          }
-          req.send(formData);
-        }
-        else {
-          this.$toast("您选择的图片格式暂不支持");
-        }
+      onRead(image) {
+        this.images.push(image);
       },
       /*提交*/
       submit() {
@@ -115,12 +72,15 @@
           this.$toast("请输入内容");
           return;
         }
+        this.isLoading = true;
         this.images.forEach(item => {
           this.answer.imgs.push(item.url);
         });
         this.answer.imgs = this.answer.imgs.toString();
         this.api.http("post", this.api.saveAnswer, this.answer, result => {
+          this.isLoading = false;
           this.isShow = true;
+          this.$toast("请耐心等待审核");
           setTimeout(() => {
             this.$router.go(-1);
           }, 1000);
@@ -238,17 +198,6 @@
     }
 
   }
-
-  .fade-enter-active,
-  .fade-leave-active {
-    transition: opacity 0.5s;
-  }
-
-  .fade-enter,
-  .fade-leave-to {
-    opacity: 0;
-  }
-
   .mask {
     position: fixed;
     width: 100%;
@@ -282,20 +231,6 @@
           font-size: 20px;
           color: #5FB62A;
         }
-      }
-    }
-    .loading-bg {
-      padding: 15px 50px;
-      border-radius: 6px;
-      background: #fff;
-      text-align: center;
-      position: relative;
-      box-sizing: border-box;
-      transition: all 0.5s;
-      .success {
-        padding-top: 10px;
-        font-size: 16px;
-        color: #555555;
       }
     }
   }

@@ -3,18 +3,18 @@
     <div class="bg"></div>
     <div class="wrop">
       <div class="top">
-        <div class="head" v-lazy:background-image="imgIp + userInfo.avatar" @click="edit"></div>
+        <div class="head" v-lazy:background-image="userInfo.avatar" @click="edit"></div>
         <div class="name">{{userInfo.nickName}}</div>
         <div>
           <router-link tag="span" class="btn" to="/index/signin">签到</router-link>
         </div>
         <div class="total-bar">
           <div class="left">
-            <div class="num">1354</div>
+            <div class="num">{{score}}</div>
             <div class="hint">积分</div>
           </div>
           <div class="right">
-            <div class="num">1354</div>
+            <div class="num">{{like}}</div>
             <div class="hint">赞</div>
           </div>
         </div>
@@ -65,7 +65,7 @@
 </template>
 
 <script>
-  import MyFooter from "@/components/myFooter";
+  import MyFooter from "../components/myFooter";
 
   export default {
     name: 'my',
@@ -75,8 +75,19 @@
     data() {
       return {
         imgIp: this.api.imgIp,
-        userInfo: JSON.parse(localStorage.getItem("userInfo"))
+        userInfo: JSON.parse(localStorage.getItem("userInfo")),
+        like: 0,
+        score: 0,
       }
+    },
+    created() {
+      this.api.http("post", this.api.getLike, {}, result => {
+        this.like = result;
+      }, error => { });
+
+      this.api.http("post", this.api.getScore, {}, result => {
+        this.score = result;
+      }, error => { });
     },
     methods: {
       edit() {
@@ -119,6 +130,8 @@
         border-radius: 100%;
         margin-top: -20px;
         box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+        background-size: cover !important;
+        background-position: center !important;
       }
       .name {
         font-size: 16px;
@@ -206,7 +219,7 @@
             height: 14px;
             background: url(../assets/right-icon.png);
             background-size: cover;
-            background-origin: center;
+            background-position: center;
 
           }
         }
