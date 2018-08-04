@@ -47,6 +47,7 @@
       this.api.http("post", this.api.getAdList, {position: 1}, (result) => {
         this.adBottom = result.records[0];
       }, (error) => {})
+
     },
     methods: {
       searchEnterFun(e) {

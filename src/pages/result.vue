@@ -29,7 +29,7 @@
               <div class="name">{{!item.anonymity ? item.nickName : '匿名'}}</div>
             </div>
             <div class="right">
-              <div class="time">{{item.createTime}}</div>
+              <div class="time">{{formatting(item.createTime)}}</div>
               <div class="comment" @click.stop="comment(item.id, item.questionTitle)">
                 <img src="../assets/comment.png">
                 <span>{{item.commentNum}}</span>
@@ -84,6 +84,9 @@
       this.searchValue = this.$route.query.keywords;
     },
     methods: {
+      formatting (time) {
+        return this.util.formatting(time);
+      },
       /*获取列表*/
       getData() {
         this.api.http("post", this.api.searchQuestion, {

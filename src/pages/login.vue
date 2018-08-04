@@ -92,6 +92,12 @@
 
     },
     methods: {
+      /**获取权限配置*/
+      getGroupAuth() {
+        this.api.http("post", this.api.getGroupAuth, {}, (result) => {
+          localStorage.setItem("config", JSON.stringify(result));
+        }, (error) => {})
+      },
       /*登录*/
       submit() {
         if (this.util.empty(this.user.phone) || !this.util.isPhone.test(this.user.phone)) {
@@ -109,6 +115,10 @@
         this.api.http("post", this.api.login, { openId: this.user.openId }, result => {
           localStorage.setItem("accessToken", result.token);
           localStorage.setItem("userInfo", JSON.stringify(result));
+
+          //TODO 权限配置
+          this.getGroupAuth();
+
           this.isLogin = true;
           setTimeout(() => {
             this.$router.push({ path: this.$route.query.redirect });
@@ -120,6 +130,10 @@
               this.api.http("post", this.api.getInfo, {}, result => {
                 localStorage.setItem("userInfo", JSON.stringify(result));
               }, error => { });
+
+              //TODO 权限配置
+              this.getGroupAuth();
+
             }, error => { });
           }
         });

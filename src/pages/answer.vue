@@ -46,7 +46,7 @@
 
           <div class="operation-bar">
             <div class="left">
-              <div class="time">{{item.createTime}}</div>
+              <div class="time">{{formatting(item.createTime)}}</div>
             </div>
             <div class="right">
               <div style="margin-right: 10px">{{item.commentNum}}个回答</div>
@@ -210,8 +210,10 @@
         this.$router.push({
           path: "/index/answerResult"
         });
+      },
+      formatting (time) {
+        return this.util.formatting(time);
       }
-
     }
   }
 </script>

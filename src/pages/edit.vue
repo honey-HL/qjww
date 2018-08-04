@@ -16,14 +16,14 @@
     <div class="row">
       <div class="left">名称</div>
       <div class="right">
-        <span class="name">用户名字</span>
+        <span class="name">{{userInfo.nickName}}</span>
         <i class="icon"></i>
       </div>
     </div>
     <div class="row">
       <div class="left">绑定手机</div>
       <div class="right">
-        <span class="name">15200000000</span>
+        <span class="name">{{userInfo.phone}}</span>
         <i class="icon"></i>
       </div>
     </div>
@@ -40,6 +40,7 @@
     data() {
       return {
         isFileLoading: false,
+        userInfo: JSON.parse(localStorage.getItem("userInfo")),
         avatar: JSON.parse(localStorage.getItem("userInfo")).avatar,
         nickName: "",
       };

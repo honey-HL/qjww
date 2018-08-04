@@ -20,26 +20,24 @@
       <div class="bg"></div>
       <div class="list-title">相关问题</div>
       <transition-group name="fade">
-        <div v-for="(item, index) in items" :key="index" class="row" v-if="!item.userPush" @click="detail(item)">
+        <div v-for="(item, index) in items" :key="index" class="row" @click="detail(item)">
           <div class="title" v-html="item.questionTitle"></div>
           <div class="content" v-html="item.questionContent"></div>
           <div class="img-list">
-            <div class="img-item" v-for="child in splitImg(item.images)" v-lazy:background-image="child">
-              <img v-lazy="child" width="100%" height="100%">
-            </div>
+            <div class="img-item" v-for="child in splitImg(item.images)" v-lazy:background-image="child"></div>
           </div>
           <div class="operation-bar">
             <div class="left">
-              <div class="head"></div>
-              <div class="name">{{item.nickName ? item.nickName : '匿名'}}</div>
+              <div class="head" v-lazy:background-image="item.avatar"></div>
+              <div class="name">{{item.nickName}}</div>
             </div>
             <div class="right">
-              <div class="time">{{item.createTime}}</div>
+              <div class="time">{{formatting(item.createTime)}}</div>
               <div class="comment" @click.stop="comment(item.id, item.questionTitle)">
                 <img src="../assets/comment.png">
                 <span>{{item.commentNum}}</span>
               </div>
-              <div class="zan" @click.stop="praise(item.id)">
+              <div class="zan">
                 <img src="../assets/zan.png">
                 <span>{{item.praiseNum}}</span>
               </div>
@@ -67,6 +65,9 @@
       this.searchValue = this.$route.query.keywords;
     },
     methods: {
+      formatting (time) {
+        return this.util.formatting(time);
+      },
       /*获取列表*/
       getData() {
         this.api.http("post", this.api.searchQuestion, {
@@ -86,7 +87,9 @@
               this.isEnd = true;
             }
             else {
-              this.items.concat(result.data);
+              result.data.forEach((item) => {
+                this.items.push(item);
+              })
             }
           }
         }, error => {
@@ -121,19 +124,6 @@
             keywords: title,
             questionId: id,
           }
-        });
-      },
-      /*赞*/
-      praise(id) {
-        this.api.http("post", this.api.questionPraise, { questionId: id, }, result => {
-          for (let i = 0; this.items.length; i++) {
-            if (this.items[i].id == id) {
-              this.items[i].praiseNum += 1;
-              break;
-            }
-          }
-        }, error => {
-          console.log(error);
         });
       },
       /*详情*/
@@ -307,6 +297,8 @@
         margin: 0 10px 10px 0;
         border-radius: 4px;
         background: #e6e6e6;
+        background-size: cover !important;
+        background-position: center !important;
       }
       .img-item:nth-child(4n) {
         margin-right: 0;

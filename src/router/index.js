@@ -26,6 +26,11 @@ import Edit from '@/pages/edit'
 import Rule from '@/pages/rule'
 
 
+Router.prototype.goBack = function () {
+  this.isBack = true
+  window.history.go(-1)
+}
+
 Vue.use(VueScroller)
 Vue.use(VueWechatTitle)
 Vue.use(Router)

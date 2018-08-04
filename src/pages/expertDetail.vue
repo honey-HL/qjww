@@ -13,21 +13,20 @@
           <div class="hint">专业资深的手机维修专家，精通iPhone、安卓等设备维修，最值得信赖的XXX认证专家。</div>
           <div class="total-bar">
             <div class="left">
-              <span class="num">{{item.answerNum}}</span>
+              <span class="num">{{item.answerNum == null ? 0 : item.answerNum}}</span>
               <span class="font">回答</span>
             </div>
             <div class="right">
-              <span class="num">{{item.praiseNum}}</span>
+              <span class="num">{{item.praiseNum == null ? 0 : item.praiseNum}}</span>
               <span class="font">赞</span>
             </div>
           </div>
         </div>
       </div>
       <transition-group name="fade">
-        <Loading v-if="isShowLoading" style="padding: 30px 0"/>
         <div class="row" v-for="(child, index) in items" :key="index">
           <div class="top">
-            <div class="head" v-lazy:background-image="imgIp + child.userAvatar"></div>
+            <div class="head" v-lazy:background-image="child.userAvatar"></div>
             <div class="name">{{child.userNickName}}</div>
           </div>
           <div class="title">
@@ -46,35 +45,28 @@
       </transition-group>
       <div class="bottom">
         <div class="btn">在线咨询</div>
-        <div class="btn" @click="phone">电话直连</div>
+        <div class="btn" @click="openPhone">电话直连</div>
       </div>
     </scroller>
   </div>
 </template>
 
 <script>
-  import Loading from "../components/loading";
   export default {
     name: "expertDetail",
-    components: {
-      Loading
-    },
     data() {
       return {
         imgIp: this.api.imgIp,
         item: null,
         items: [],
-        pageNo: 1,
+        pageNo: 0,
         pageSize: 10,
-        isShowLoading: true,
         phone: null,
+        isEnd: false,
       }
     },
     created() {
       this.item = this.$store.state.expertDetail;
-      setTimeout(()=> {
-        this.getData();
-      }, 1000)
     },
     methods: {
       /*获取列表*/
@@ -84,17 +76,22 @@
           pageSize: this.pageSize,
           id: this.item.id
         }, result => {
-          this.isShowLoading = false;
           if (this.pageNo == 1) {
             this.items = result.data;
             this.phone = result.phone;
+            if (result.data.length == 0) {
+              this.isEnd = true;
+            }
           }
           else {
             if (result.data.length == 0) {
               this.pageNo--;
+              this.isEnd = true;
             }
             else {
-              this.items.concat(result.data);
+              result.data.forEach((item) => {
+                this.items.push(item);
+              })
             }
           }
         }, error => {
@@ -104,26 +101,25 @@
       /*下拉刷新*/
       refresh(done) {
         setTimeout(() => {
-          this.start = 1;
+          this.pageNo = 1;
           this.getData();
           done();
-        }, 1000);
+        }, 1500);
       },
       /*上拉刷新*/
       infinite(done) {
         setTimeout(() => {
-          this.start++;
+          this.pageNo++;
           this.getData();
-          done(true);
-        }, 1000);
-        return;
+          done(this.isEnd);
+        }, 1500);
       },
-      phone() {
+      openPhone() {
         this.$dialog.confirm({
           title: '电话直连',
-          message: '确定拨打电话:' + this.phone + ' 吗？'
+          message: '确定拨打电话:<span style="color: #5FB62A;">' + this.phone + '</span> 吗？'
         }).then(() => {
-          // on confirm
+          window.location.href = 'tel://' + this.phone;
         }).catch(() => {
           // on cancel
         });
