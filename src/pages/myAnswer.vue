@@ -24,7 +24,7 @@
                 <div class="title" v-html="item.questionTitle"></div>
                 <div class="operation-bar">
                   <div class="left">
-                    <div class="time">{{item.publishTime}}</div>
+                    <div class="time">{{formatting(item.publishTime)}}</div>
                   </div>
                   <div class="right">
                     <div class="answer">{{item.answerNum}}回答</div>
@@ -55,7 +55,7 @@
               <div class="content" v-html="item.content"></div>
               <div class="operation-bar">
                 <div class="left">
-                  <div class="time">{{item.createTime}}</div>
+                  <div class="time">{{formatting(item.createTime)}}</div>
                 </div>
                 <div class="right">
                   <div class="answer"><span @click.stop="del(item.id)">删除该回答</span></div>
@@ -136,6 +136,9 @@
       setCurrent(index) {
         this.current = index;
         this.swiper.slideTo(index);
+      },
+      formatting (time) {
+        return this.util.formatting(time);
       },
       /*获取列表*/
       getData(type) {

@@ -1,7 +1,8 @@
 <template>
   <div class="home">
     <div id="top" class="top">
-      <img class="logo" src="../assets/qjww.png">
+      <img class="logo" v-if="logo == null" src="../assets/qjww.png">
+      <img class="logo" v-else v-lazy="imgIp + logo.img">
       <p class="title">手机问题，就来千机问问</p>
       <div class="search-bar">
         <img src="../assets/search.png" />
@@ -9,12 +10,12 @@
       </div>
       <div class="solve">
         已有
-        <span>5466545</span>个问题被解决
+        <span>5466545</span> 个问题被解决
       </div>
     </div>
     <div class="bottom-bar" v-show="isShow">
       <div class="title">不止解答·直至解决</div>
-      <div class="ad" v-lazy:background-image="imgIp + adBottom.img"></div>
+      <div class="ad" v-if="adBottom != null" v-lazy:background-image="imgIp + adBottom.img"></div>
     </div>
     <MyFooter />
 
@@ -34,8 +35,8 @@
         imgIp: this.api.imgIp,
         searchValue: "",
         top:50,
-        adBottom: {},
-        logo: {},
+        adBottom: null,
+        logo: null,
         isShow: true,
       };
     },
@@ -45,7 +46,7 @@
       }, (error) => {})
 
       this.api.http("post", this.api.getAdList, {position: 1}, (result) => {
-        this.adBottom = result.records[0];
+        this.adBottom = result;
       }, (error) => {})
 
     },

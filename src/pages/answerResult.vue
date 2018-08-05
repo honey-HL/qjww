@@ -1,7 +1,7 @@
 <template>
   <div id="result">
     <Search @searchData="searchData" />
-    <scroller class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
+    <scroller :style="{height : scrollHeight}" class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
       <div class="row first">
         <div class="title">
           <i class="badge problem"></i>
@@ -39,7 +39,7 @@
             <div class="left">
               <div class="head" v-lazy:background-image="item.userAvatar"></div>
               <div class="name">{{item.userNickName}}</div>
-              <div class="time">{{item.createTime}}</div>
+              <div class="time">{{formatting(item.createTime)}}</div>
             </div>
             <div class="right">
               <transition name="fade">
@@ -87,6 +87,7 @@
         row: 10,
         totalNum: 0,
         isEnd: false,
+        scrollHeight: "100%"
       };
     },
     components: {
@@ -94,6 +95,9 @@
     },
     created() {
       this.detail = this.$store.state.answerDetail;
+    },
+    mounted() {
+      this.scrollHeight = (window.innerHeight - 52 - 54) + "px";
     },
     methods: {
       /*获取列表*/
@@ -177,6 +181,9 @@
         this.$router.push({
           path: "/index/report"
         });
+      },
+      formatting (time) {
+        return this.util.formatting(time);
       }
     },
     computed: {}

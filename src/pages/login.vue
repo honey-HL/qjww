@@ -55,8 +55,8 @@
     name: "login",
     data() {
       return {
-        user: { phone: "", code: "", openId: "ot23W05_9NC1bfllkCWiAS7Fuexw", },
-        //user: { phone: "", code: "", openId: "", },
+        // user: { phone: "", code: "", openId: "ot23W05_9NC1bfllkCWiAS7Fuexw", },
+        user: { phone: "", code: "", openId: "", },
         okPhone: "",
         showToast: false,
         isPhoneError: false,
@@ -70,25 +70,25 @@
       };
     },
     mounted() {
-      // if (this.$store.state.openId == null) {
-      //   this.api.http("post", this.api.isGetCode, {}, result => {
-      //     if (result == 1) {
-      //       if (this.code == null) {
-      //         location.href = this.api.ip + "wxClient/getCode?redirectUrl=" + location.href;
-      //       }
-      //       else {
-      //         this.api.http("post", this.api.getOpenId, { code: this.code }, result => {
-      //           result = JSON.parse(result);
-      //           this.$store.dispatch("setOpenId", result.openid);
-      //           this.user.openId = result.openid;
-      //         }, error => { });
-      //       }
-      //     }
-      //   }, error => { });
-      // }
-      // else {
-      //   this.user.openId = this.$store.state.openId;
-      // }
+      if (this.$store.state.openId == null) {
+        this.api.http("post", this.api.isGetCode, {}, result => {
+          if (result == 1) {
+            if (this.code == null) {
+              location.href = this.api.ip + "wxClient/getCode?redirectUrl=" + location.href;
+            }
+            else {
+              this.api.http("post", this.api.getOpenId, { code: this.code }, result => {
+                result = JSON.parse(result);
+                this.$store.dispatch("setOpenId", result.openid);
+                this.user.openId = result.openid;
+              }, error => { });
+            }
+          }
+        }, error => { });
+      }
+      else {
+        this.user.openId = this.$store.state.openId;
+      }
 
     },
     methods: {

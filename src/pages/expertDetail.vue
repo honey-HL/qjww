@@ -1,6 +1,6 @@
 <template>
   <div id="expertDetail">
-    <scroller class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
+    <scroller :style="{height: scrollHeight}" class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
       <div class="bg">
         <div class="worp">
           <div class="head-bar">
@@ -43,11 +43,11 @@
           </div>
         </div>
       </transition-group>
-      <div class="bottom">
-        <div class="btn">在线咨询</div>
-        <div class="btn" @click="openPhone">电话直连</div>
-      </div>
     </scroller>
+    <div class="bottom">
+      <div class="btn">在线咨询</div>
+      <div class="btn" @click="openPhone">电话直连</div>
+    </div>
   </div>
 </template>
 
@@ -63,10 +63,14 @@
         pageSize: 10,
         phone: null,
         isEnd: false,
+        scrollHeight: "100%"
       }
     },
     created() {
       this.item = this.$store.state.expertDetail;
+    },
+    mounted() {
+      this.scrollHeight = (window.innerHeight - 62) + "px";
     },
     methods: {
       /*获取列表*/
@@ -117,7 +121,7 @@
       openPhone() {
         this.$dialog.confirm({
           title: '电话直连',
-          message: '确定拨打电话:<span style="color: #5FB62A;">' + this.phone + '</span> 吗？'
+          message: '确定拨打电话: <span style="color: #5FB62A;">' + this.phone + '</span> 吗？'
         }).then(() => {
           window.location.href = 'tel://' + this.phone;
         }).catch(() => {
@@ -335,7 +339,11 @@
     .bottom {
       display: flex;
       justify-content: center;
-      margin-top: 15px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      padding: 15px 0;
+      background: #fff;
       .btn {
         background-image: linear-gradient(-90deg, #5FB62A 0%, #78BC28 100%);
         border-radius: 100px;

@@ -14,7 +14,7 @@
           <div class="content" v-html="item.questionContent"></div>
           <div class="operation-bar">
             <div class="left">
-              <div class="time">{{item.publishTime}}</div>
+              <div class="time">{{formatting(item.publishTime)}}</div>
             </div>
             <div class="right">
               <div class="answer"><span @click.stop="del(item.id)">删除收藏</span></div>
@@ -45,6 +45,9 @@
       };
     },
     methods: {
+      formatting (time) {
+        return this.util.formatting(time);
+      },
       /*获取列表*/
       getData() {
         this.api.http("get", this.api.getCollectionList, {

@@ -29,8 +29,8 @@
                 <div class="input-bar" @click.stop>
                   <div class="input-div"><span @click="showPopup = !showPopup">请选择地址</span></div>
                   <div class="search-bar">
-                    <input placeholder="输入地区、师傅名字" maxlength="30" v-model="searchValue">
-                    <img src="../assets/search.png" />
+                    <input placeholder="输入地区、师傅名字" maxlength="30" v-model="searchValue" @keyup.enter="searchEnterFun">
+                    <img src="../assets/search.png" @click="search"/>
                   </div>
                 </div>
               </div>
@@ -86,7 +86,7 @@
               </div>
               <div class="phone-bar">
                 <div></div>
-                <div @click="phone"></div>
+                <div @click="openPhone(15208322308)"></div>
               </div>
             </div>
           </scroller>
@@ -204,6 +204,27 @@
         this.current = index;
         this.swiper.slideTo(index);
       },
+      /**搜索回调*/
+      searchEnterFun(e) {
+        let keyCode = window.event ? e.keyCode : e.which;
+
+        if (keyCode == 13) {
+          this.search();
+        }
+      },
+      search() {
+        if (this.searchValue.trim() == "") {
+          this.searchValue = "";
+        }
+        else if (this.util.isEmoji.test(this.searchValue)) {
+          this.$toast("暂不支持emoji");
+          this.searchValue = "";
+        }
+        else {
+          this.pageNO1 = 1;
+          this.getData(0);
+        }
+      },
       /*切换遮罩*/
       switchMask() {
         this.isScreen = !this.isScreen;
@@ -300,12 +321,12 @@
         }, 1000);
         return;
       },
-      phone() {
+      openPhone(phone) {
         this.$dialog.confirm({
           title: '电话直连',
-            message: '确定拨打电话:028-4156456 吗？'
+          message: '确定拨打电话: <span style="color: #5FB62A;">' + phone + '</span> 吗？'
         }).then(() => {
-          // on confirm
+          window.location.href = 'tel://' + this.phone;
         }).catch(() => {
           // on cancel
         });
@@ -323,11 +344,11 @@
           this.getData(1);
         }
       },
-      /*计算公里*/
+      /**计算公里*/
       countKM (km) {
         return (Number(km) / 1000).toFixed(2);
       },
-      /*选择地址回调*/
+      /**选择地址回调*/
       confirmArea(arr) {
         this.showPopup = false;
         this.isScreen = false;
@@ -336,11 +357,13 @@
           city: arr[1].name,
           cityId: arr[1].code
         }
+        this.pageNO1 = 1;
+        this.getData(0);
       },
       cancelArea() {
         this.showPopup = false;
       },
-      /*详情*/
+      /**详情*/
       detail (item) {
         this.$store.dispatch("setExpertDetail", item);
         this.$router.push({

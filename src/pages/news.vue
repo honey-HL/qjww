@@ -9,7 +9,7 @@
             {{item.userName == null ? '匿名' : item.userName}} 回答了您提出的问题
             <span v-html="item.title"></span>
           </div>
-          <div class="time">{{item.createTime}}</div>
+          <div class="time">{{formatting(item.createTime)}}</div>
         </div>
       </transition-group>
     </scroller>
@@ -35,6 +35,9 @@
       }
     },
     methods: {
+      formatting (time) {
+        return this.util.formatting(time);
+      },
       /*获取列表*/
       getData() {
         this.api.http("post", this.api.getNotification, {

@@ -1,7 +1,7 @@
 <template>
   <div id="result">
     <Search :searchValue="searchValue" @searchData="searchData" />
-    <scroller class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
+    <scroller :style="{height : scrollHeight}" class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
       <div class="hint">最佳匹配答案</div>
       <transition-group name="fade">
         <div class="row" v-for="(item, index) in items" :key="index" v-if="item.userPush" @click="detail(item)">
@@ -78,10 +78,14 @@
         row: 10,
         totalNum: 0,
         isEnd: false,
+        scrollHeight: "100%"
       };
     },
     created() {
       this.searchValue = this.$route.query.keywords;
+    },
+    mounted() {
+      this.scrollHeight = (window.innerHeight - 52 - 88) + "px";
     },
     methods: {
       formatting (time) {

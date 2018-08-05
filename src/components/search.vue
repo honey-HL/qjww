@@ -27,27 +27,20 @@
         let keyCode = window.event ? e.keyCode : e.which;
 
         if (keyCode == 13) {
-          if (this.searchValue.trim() == "") {
-            this.searchValue = "";
-          }
-          else if (this.util.isEmoji.test(this.searchValue)) {
-            this.$toast("暂不支持emoji");
-            this.searchValue = "";
-          }
-          else {
-            this.$emit("searchData", this.searchValue);
-          }
+          this.search();
         }
       },
       search() {
         if (this.searchValue.trim() == "") {
           this.searchValue = "";
         }
-        if (this.util.isEmoji.test(this.searchValue)) {
+        else if (this.util.isEmoji.test(this.searchValue)) {
           this.$toast("暂不支持emoji");
           this.searchValue = "";
         }
-        this.$emit("searchData", this.searchValue);
+        else {
+          this.$emit("searchData", this.searchValue);
+        }
       }
     }
   };

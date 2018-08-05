@@ -30,7 +30,7 @@
       </div>
       <div class="bg"></div>
     </div>
-    <scroller class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
+    <scroller :style="{height : scrollHeight}" class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
       <div class="answer-list" v-for="item in items" @click="detail(item)">
         <div class="item">
           <div class="title">
@@ -124,7 +124,11 @@
         row: 10,
         imgIp: this.api.imgIp,
         isEnd: false,
+        scrollHeight: "100%"
       };
+    },
+    mounted() {
+      this.scrollHeight = (window.innerHeight - 55 - 77 - 50) + "px";
     },
     methods: {
       /*获取列表*/

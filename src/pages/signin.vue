@@ -24,7 +24,7 @@
         </div>
       </div>
     </div>
-    <div class="ad-bg"></div>
+    <div class="ad-bg" v-if="adItem != null" v-lazy:background-image="imgIp + adItem.img"></div>
     <div class="worp">
       <div class="sign-bg">
         <div class="title">{{month}}月签到日历</div>
@@ -75,6 +75,7 @@
     name: "signin",
     data() {
       return {
+        imgIp: this.api.imgIp,
         countScore: 0,
         signData: {
           days: 0,
@@ -83,6 +84,7 @@
         signHistory: {},
         month: new Date().format("MM"),
         isShow: false,
+        adItem: null,
       }
     },
     created() {
@@ -131,6 +133,12 @@
         this.signHistory = result;
         console.log(this.signHistory.monthArr);
       }, (error) => {})
+
+      //获取广告位
+      this.api.http("post", this.api.getAdList, {position: 3}, (result) => {
+        this.adItem = result;
+      }, (error) => {})
+
     },
     updated() {
       try {
@@ -160,7 +168,6 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    top: 0;
     .bg {
       height: calc(434px / 2);
       background: url(../assets/bg2.png);
@@ -294,7 +301,7 @@
           height: 14px;
           background: url(../assets/right-icon.png);
           background-size: cover;
-          background-origin: center;
+          background-position: center;
 
         }
       }
