@@ -46,17 +46,25 @@
         </div>
       </div>
     </transition>
+
+    <Loader v-if="isLoading" title="登录中"/>
+
   </div>
 </template>
 
 <script>
+  import Loader from "../components/loader"
 
   export default {
     name: "login",
+    components: {
+      Loader
+    },
     data() {
       return {
         // user: { phone: "", code: "", openId: "ot23W05_9NC1bfllkCWiAS7Fuexw", },
-        user: { phone: "", code: "", openId: "", },
+        user: { phone: "", code: "", openId: "",nickName: "", avatar: "" },
+        isLoading: true,
         okPhone: "",
         showToast: false,
         isPhoneError: false,
@@ -67,6 +75,7 @@
         time: null,
         isAll: false,
         isLogin: false,
+        weChatUser: null,
       };
     },
     mounted() {
@@ -81,6 +90,24 @@
                 result = JSON.parse(result);
                 this.$store.dispatch("setOpenId", result.openid);
                 this.user.openId = result.openid;
+                this.weChatUser = result;
+                this.api.http("post", this.api.login, {
+                  openId: this.user.openId,
+                  nickName: result.nickname,
+                  avatar: result.headimgurl
+                }, result => {
+                  localStorage.setItem("accessToken", result.token);
+                  localStorage.setItem("userInfo", JSON.stringify(result));
+                  //TODO 权限配置
+                  this.getGroupAuth();
+                  this.isLogin = true;
+                  this.isLoading = false;
+                  setTimeout(() => {
+                    this.$router.push({ path: this.$route.query.redirect });
+                  }, 1000);
+                }, error => {
+                  this.isLoading = false;
+                });
               }, error => { });
             }
           }
@@ -112,31 +139,22 @@
           this.isPhoneError = true;
           return;
         }
-        this.api.http("post", this.api.login, { openId: this.user.openId }, result => {
-          localStorage.setItem("accessToken", result.token);
-          localStorage.setItem("userInfo", JSON.stringify(result));
-
+        this.isLoading = true;
+        this.user.nickName = this.weChatUser.nickname;
+        this.user.avatar = this.weChatUser.headimgurl;
+        this.api.http("post", this.api.bindPhone, this.user, result => {
+          localStorage.setItem("accessToken", result);
+          this.isLogin = true;
+          this.isLoading = false;
+          this.api.http("post", this.api.getInfo, {}, result => {
+            localStorage.setItem("userInfo", JSON.stringify(result));
+            setTimeout(() => {
+              this.$router.push({ path: this.$route.query.redirect });
+            }, 1000);
+          }, error => { });
           //TODO 权限配置
           this.getGroupAuth();
-
-          this.isLogin = true;
-          setTimeout(() => {
-            this.$router.push({ path: this.$route.query.redirect });
-          }, 1000);
-        }, error => {
-          if (error.code == 1050) {
-            this.api.http("post", this.api.bindPhone, this.user, result => {
-              localStorage.setItem("accessToken", result.token);
-              this.api.http("post", this.api.getInfo, {}, result => {
-                localStorage.setItem("userInfo", JSON.stringify(result));
-              }, error => { });
-
-              //TODO 权限配置
-              this.getGroupAuth();
-
-            }, error => { });
-          }
-        });
+        }, error => { });
       },
       /*获取验证码*/
       getCode() {

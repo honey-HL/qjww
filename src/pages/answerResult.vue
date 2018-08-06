@@ -170,8 +170,9 @@
       /*收藏*/
       collect() {
         this.api.http("post", this.api.collectionSave, { questionId: this.detail.id, }, result => {
-          this.detail.collection = true;
-          this.$toast("收藏成功");
+          this.detail.collection = !this.detail.collection;
+          //this.$store.dispatch("setAnswerDetail", this.detail);
+          this.$toast(this.detail.collection ? "收藏成功" : "取消成功");
         }, error => {
           console.log(error);
         });

@@ -24,7 +24,7 @@
         </div>
       </div>
     </div>
-    <div class="ad-bg" v-if="adItem != null" v-lazy:background-image="imgIp + adItem.img"></div>
+    <div class="ad-bg" v-if="adItem != null && adItem.status == 1" v-lazy:background-image="imgIp + adItem.img"></div>
     <div class="worp">
       <div class="sign-bg">
         <div class="title">{{month}}月签到日历</div>

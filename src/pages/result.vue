@@ -284,6 +284,9 @@
             display: table-cell;
             vertical-align: middle;
           }
+          .zan img{
+            top: 1px;
+          }
           img {
             width: calc(26px / 2);
             height: calc(26px / 2);

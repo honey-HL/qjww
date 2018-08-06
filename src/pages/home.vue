@@ -1,7 +1,12 @@
 <template>
   <div class="home">
+    <transition name="fade">
+      <div v-if="adShow && adItem != null && adItem.status == 1" class="ad-flex" v-lazy:background-image="imgIp + adItem.img">
+        <span class="btn" @click="adShow = !adShow">跳过 {{timeCount}}s</span>
+      </div>
+    </transition>
     <div id="top" class="top">
-      <img class="logo" v-if="logo == null" src="../assets/qjww.png">
+      <img class="logo" v-if="logo == null || logo.status == 1" src="../assets/qjww.png">
       <img class="logo" v-else v-lazy="imgIp + logo.img">
       <p class="title">手机问题，就来千机问问</p>
       <div class="search-bar">
@@ -15,7 +20,7 @@
     </div>
     <div class="bottom-bar" v-show="isShow">
       <div class="title">不止解答·直至解决</div>
-      <div class="ad" v-if="adBottom != null" v-lazy:background-image="imgIp + adBottom.img"></div>
+      <div class="ad" v-if="adBottom != null && adBottom.status == 1" v-lazy:background-image="imgIp + adBottom.img"></div>
     </div>
     <MyFooter />
 
@@ -38,15 +43,33 @@
         adBottom: null,
         logo: null,
         isShow: true,
+        adItem: null,
+        adImg: "http://lofter.nos.netease.com/sogou-Z0dOZDFfa3ByVzBPRThmVUM1SHphUmxxNGlIc2lTWXdSWTRuOUxmRTdfUW5zUTN5MTNEWDJOMGx1c3ZvZTBaOQ.jpg",
+        timeCount: 5,
+        setInterval: null,
+        adShow: true
       };
     },
     mounted() {
+
+      this.setInterval = setInterval(() => {
+        if (this.timeCount == 1) {
+          clearInterval(this.setInterval);
+          this.adShow = false;
+        }
+        this.timeCount--;
+      }, 1000);
+
       this.api.http("post", this.api.getAdList, {position: 0}, (result) => {
         this.logo = result;
       }, (error) => {})
 
       this.api.http("post", this.api.getAdList, {position: 1}, (result) => {
         this.adBottom = result;
+      }, (error) => {})
+
+      this.api.http("post", this.api.getAdList, {position: 2}, (result) => {
+        this.adItem = result;
       }, (error) => {})
 
     },
@@ -92,6 +115,27 @@
     width: 100%;
     height: 100%;
     overflow: hidden;
+    .ad-flex{
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+      background: #ddd;
+      background-position: center !important;
+      background-size: cover !important;
+      span.btn{
+        background: rgba(0, 0, 0, 0.5);
+        padding: 5px 20px;
+        color: #fff;
+        border-radius: 50px;
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+      }
+    }
+    .ad-flex.zoomOut{
+      transform: translate(-100%, 0);
+    }
     .top{
       padding-top: 50px;
     }

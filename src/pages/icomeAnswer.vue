@@ -9,9 +9,9 @@
                 </span>
       </div>
       <div class="row">
-        <div class="item" v-for="item in images" v-lazy:background-image="item.url">
-          <i class="del" @click="delImg(item.fileName)"></i>
-        </div>
+          <div class="item" v-for="item in images" v-lazy:background-image="item.url">
+            <i class="del" @click="delImg(item.fileName)"></i>
+          </div>
         <UploadFile @uploadCall="onRead" v-if="images.length < 8">
           <div class="item add-icon"></div>
         </UploadFile>

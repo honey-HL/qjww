@@ -29,7 +29,7 @@
           <div class="operation-bar">
             <div class="left">
               <div class="head" v-lazy:background-image="item.avatar"></div>
-              <div class="name">{{item.nickName}}</div>
+              <div class="name">{{!item.anonymity ? item.nickName : '匿名'}}</div>
             </div>
             <div class="right">
               <div class="time">{{formatting(item.createTime)}}</div>
@@ -337,6 +337,9 @@
         .comment {
           display: table-cell;
           vertical-align: middle;
+        }
+        .zan img{
+          top: 1px;
         }
         img {
           width: calc(26px / 2);
