@@ -20,7 +20,7 @@
       <div class="bg"></div>
       <div class="list-title">相关问题</div>
       <transition-group name="fade">
-        <div v-for="(item, index) in items" :key="index" class="row" @click="detail(item)">
+        <div v-for="(item, index) in items" :key="index" class="row" v-if="item.userPush" @click="detail(item)">
           <div class="title" v-html="item.questionTitle"></div>
           <div class="content" v-html="item.questionContent"></div>
           <div class="img-list">
@@ -28,8 +28,8 @@
           </div>
           <div class="operation-bar">
             <div class="left">
-              <div class="head" v-lazy:background-image="item.avatar"></div>
-              <div class="name">{{!item.anonymity ? item.nickName : '匿名'}}</div>
+              <div v-if="item.userPush" class="head" v-lazy:background-image="item.avatar"></div>
+              <div v-if="item.userPush" class="name">{{!item.anonymity ? item.nickName : '匿名'}}</div>
             </div>
             <div class="right">
               <div class="time">{{formatting(item.createTime)}}</div>

@@ -1,10 +1,10 @@
 <template>
   <div id="result">
     <Search :searchValue="searchValue" @searchData="searchData" />
-    <scroller :style="{height : scrollHeight}" class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
+    <scroller :style="{height : scrollHeight}" class="scroller" ref="myscroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
       <div class="hint">最佳匹配答案</div>
       <transition-group name="fade">
-        <div class="row" v-for="(item, index) in items" :key="index" v-if="item.userPush" @click="detail(item)">
+        <div class="row" v-for="(item, index) in items" :key="index" v-if="!item.userPush" @click="detail(item)">
           <div class="title" v-html="item.questionTitle"></div>
           <div class="content" v-html="item.questionContent"></div>
         </div>
@@ -15,7 +15,7 @@
         </div>
       </transition>
       <transition-group name="fade">
-        <div v-for="(item, index) in items" :key="index" class="row" v-if="!item.userPush" @click="detail(item)">
+        <div v-for="(item, index) in items" :key="index" class="row" v-if="item.userPush" @click="detail(item)">
           <div class="title" v-html="item.questionTitle"></div>
           <div class="content" v-html="item.questionContent"></div>
           <div class="img-list">
@@ -25,8 +25,8 @@
           </div>
           <div class="operation-bar">
             <div class="left">
-              <div class="head" v-lazy:background-image="item.avatar"></div>
-              <div class="name">{{!item.anonymity ? item.nickName : '匿名'}}</div>
+              <div v-if="item.userPush" class="head" v-lazy:background-image="item.avatar"></div>
+              <div v-if="item.userPush" class="name">{{!item.anonymity ? item.nickName : '匿名'}}</div>
             </div>
             <div class="right">
               <div class="time">{{formatting(item.createTime)}}</div>
@@ -84,7 +84,7 @@
     created() {
       this.searchValue = this.$route.query.keywords;
     },
-    mounted() {
+    updated() {
       this.scrollHeight = (window.innerHeight - 52 - 88) + "px";
     },
     methods: {
@@ -99,6 +99,7 @@
           title: this.searchValue
         }, result => {
           if (this.start == 0) {
+            this.$refs.myscroller.scrollTo(0, 0, true); //返回顶部
             this.items = result.data;
             this.totalNum = result.numFound;
             if (result.data.length == 0) {

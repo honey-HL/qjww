@@ -49,7 +49,8 @@
                 <div class="name">{{item.userNickName}}</div>
               </div>
               <div class="title">
-                <i class="badge problem"></i>
+                <i class="badge quiz" v-if="item.userPush">提问</i>
+                <i class="badge" v-else :class="{img: item.label == 1, video: item.label == 2, problem: item.label == 2}"></i>
                 <span v-html="item.questionTitle"></span>
               </div>
               <div class="content" v-html="item.content"></div>
@@ -206,7 +207,6 @@
           this.getData(0);
           done(this.isEnd);
         }, 1000);
-        return;
       },
       /*下拉刷新*/
       refresh2(done) {
@@ -223,7 +223,6 @@
           this.getData(1);
           done(this.isEnd2);
         }, 1000);
-        return;
       },
       del(id) {
         this.$dialog.confirm({
@@ -386,6 +385,15 @@
             }
             i.video {
               background: url(../assets/video.png);
+            }
+            i.quiz {
+              background: #5FB62A;
+              border-radius: 4px;
+              color: #fff; font-style:normal;
+              line-height: calc(28px / 2);
+              padding: 2px;
+              text-align: center;
+              top: -2px;
             }
           }
           .content {

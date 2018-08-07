@@ -30,76 +30,42 @@
       </div>
       <div class="bg"></div>
     </div>
-    <scroller :style="{height : scrollHeight}" class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
+    <scroller :style="{height : scrollHeight}" class="scroller" ref="myscroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
       <div class="answer-list" v-for="item in items" @click="detail(item)">
         <div class="item">
           <div class="title">
-            <i class="badge video"></i>
+            <i class="badge quiz" v-if="item.userPush">提问</i>
+            <i class="badge" v-else :class="{img: item.label == 1, video: item.label == 2, problem: item.label == 2}"></i>
             <span v-html="item.questionTitle"></span>
           </div>
           <div class="content" v-html="item.questionContent"></div>
           <div class="img-list">
-            <div class="img-item" v-for="child in splitImg(item.images)" v-lazy:background-image="child">
-              <!-- <img v-lazy="child" width="100%" height="100%"> -->
-            </div>
+            <div class="img-item" v-for="child in splitImg(item.images)" v-lazy:background-image="child"></div>
           </div>
+
+          <!--<div class="video-cover"></div>-->
 
           <div class="operation-bar">
             <div class="left">
               <div class="time">{{formatting(item.createTime)}}</div>
+              <div v-if="item.promot == 1">推广</div>
             </div>
             <div class="right">
-              <div style="margin-right: 10px">{{item.commentNum}}个回答</div>
+              <div style="margin-right: 10px" v-if="item.userPush">{{item.commentNum}}个回答</div>
               <div style="margin-right: 5px">{{item.praiseNum}}个赞</div>
-              <div class="icon-div" @click.stop="comment(item.id, item.questionTitle)">
+              <div class="icon-div" v-if="item.userPush" @click.stop="comment(item.id, item.questionTitle)">
                 <i class="comment"></i>
                 <span>回答</span>
+              </div>
+              <div class="icon-div" v-if="item.label > 1">
+                <i class="enter"></i>
+                <span>进入</span>
               </div>
             </div>
           </div>
         </div>
         <div class="bg"></div>
       </div>
-      <!--<div class="answer-list" v-for="item in items">
-        <div class="item">
-          <div class="title">
-            <i class="badge video"></i>
-            如何看待锤子新发布的R1手机？到底有什么自信卖那么贵？
-          </div>
-          <div class="content">
-            锤子TNT工作站是我见过最强大的手机配件，没有之一。确切的说这是一个手机配件系。锤子TNT工作站是我见过最强大的手机配件，没有之一。确切的说…
-          </div>
-          <div class="img-list">
-            <div class="img-item"></div>
-          </div>
-          <div class="video-cover">
-
-          </div>
-          <div class="operation-bar">
-            <div class="left">
-              <div class="time">8小时前</div>
-              <div>推广</div>
-            </div>
-            <div class="right">
-              &lt;!&ndash; <div>12个回答</div>
-                  <div>22个赞</div> &ndash;&gt;
-              <div class="icon-div">
-                <i class="enter"></i>
-                <span>进入</span>
-              </div>
-              <div class="icon-div">
-                <i class="comment"></i>
-                <span>回答</span>
-              </div>
-              <div class="icon-div">
-                <i class="activity"></i>
-                <span>活动</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="bg"></div>
-      </div>-->
     </scroller>
 
     <div class="foot-height"></div>
@@ -139,6 +105,7 @@
           title: this.searchValue
         }, result => {
           if (this.start == 0) {
+            this.$refs.myscroller.scrollTo(0, 0, true); //返回顶部
             this.items = result.data;
             if (result.data.length == 0) {
               this.isEnd = true;
@@ -335,6 +302,15 @@
           }
           i.video {
             background: url(../assets/video.png);
+          }
+          i.quiz {
+            background: #5FB62A;
+            border-radius: 4px;
+            color: #fff; font-style:normal;
+            line-height: calc(28px / 2);
+            padding: 2px;
+            text-align: center;
+            top: -2px;
           }
         }
         .content {

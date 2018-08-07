@@ -37,7 +37,7 @@
             </transition>
           </div>
           <Loading v-if="isShowLoading" style="padding: 30px 0"/>
-          <scroller v-else-if="dataList.length > 0" class="scroller" style="top: 46px;" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
+          <scroller v-else-if="dataList.length > 0" class="scroller" style="top: 46px;" ref="myscroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
             <transition-group name="fade">
               <div class="row" v-for="(item, index) in dataList" :key="index" @click="detail(item)">
                 <div class="head" v-lazy:background-image="imgIp + item.avatar">
@@ -68,7 +68,7 @@
         </div>
         <div class="swiper-slide">
           <Loading v-if="isShowLoading2" style="padding: 30px 0"/>
-          <scroller v-else-if="dataList2.length > 0" class="scroller" :on-refresh="refresh2" :on-infinite="infinite2" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
+          <scroller v-else-if="dataList2.length > 0" class="scroller" ref="myscroller2" :on-refresh="refresh2" :on-infinite="infinite2" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
             <div class="item">
               <div class="row">
                 <div class="head">
@@ -106,8 +106,12 @@
     </div>
 
     <van-popup v-model="showPopup" position="bottom">
-      <van-area :area-list="areaList" :columns-num="2" title="选择城市" @confirm="confirmArea" @cancel="cancelArea"/>
+      <van-area :area-list="areaList" :value="currentAddress.cityId" :columns-num="2" title="选择城市" @confirm="confirmArea" @cancel="cancelArea"/>
     </van-popup>
+
+    <Loader title="定位中" v-if="isLoader" />
+
+    <div id="allMap" ref="allMap"></div>
 
   </div>
 </template>
@@ -116,12 +120,13 @@
   import Swiper from "swiper";
   import Not from "../components/notData";
   import Loading from "../components/loading";
+  import Loader from "../components/loader";
   import areaList from "../common/area"
 
   export default {
     name: "expert",
     components: {
-      Not, Loading
+      Not, Loading, Loader
     },
     data() {
       return {
@@ -143,44 +148,27 @@
         isEnd: false,
         isEnd2: false,
         isNetwork: false,
-        lng: 30.652090,
-        lat: 104.066277,
+        lng: 104.066277,
+        lat: 30.652090,
         showPopup: false,
         areaList: areaList,
+        isLoader: true,
         currentAddress: {
-          province: "四川省",
-          city: "成都市",
-          cityId: 510100
+          province: "定位中",
+          city: "",
+          cityId: "",
         },
+        areaArray: null,
       };
     },
-    created () {
-      this.api.http("post", this.api.jsSign, {}, (result) => {
-        wx.config({
-          debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-          appId: result.appId, // 必填，公众号的唯一标识
-          timestamp: result.timestamp, // 必填，生成签名的时间戳
-          nonceStr: result.noncestr, // 必填，生成签名的随机串
-          signature: result.signature,// 必填，签名，见附录1
-          jsApiList: ["getLocation","openLocation"] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
-        });
-        wx.ready(function(){
-          wx.getLocation({
-            type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
-            success: function (res) {
-              console.log(res);
-              let latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
-              let longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
-              alert("腾讯：" + latitude + "," + longitude);
-            }
-          });
-        });
-        wx.error(function(res){
-          alert(JSON.stringify(res));
-        });
-      }, () => {})
+    created() {
+      this.api.http("get", this.api.getAllCity, {}, result => {
+        this.areaArray = result;
+        this.isLoader = false;
+      }, error => {});
     },
     mounted() {
+      this.map();
       let thas = this;
       this.swiper = new Swiper(".swiper-container", {
         on: {
@@ -199,6 +187,45 @@
       }, 1000)
     },
     methods: {
+      /**获取经纬度*/
+      getLngOrLat () {
+        for (let i = 0; i < this.areaArray.length; i++) {
+          let cityList = this.areaArray[i].cityList;
+          for (let j = 0; j < cityList.length; j++) {
+            let item = cityList[j];
+            if (this.currentAddress.city == item.name) {
+              this.lng = Number(item.lng);
+              this.lat = Number(item.lat);
+              this.currentAddress.cityId = item.cityId;
+            }
+          }
+        }
+      },
+      /**定位*/
+      map() {
+        let thas = this;
+        let map = new BMap.Map(this.$refs.allMap); // 创建Map实例
+        let point = new BMap.Point(116.331398,39.897445);
+        map.centerAndZoom(point,12);
+        let geolocation = new BMap.Geolocation();
+        geolocation.getCurrentPosition(function(result){
+          if(this.getStatus() == BMAP_STATUS_SUCCESS){
+            let mk = new BMap.Marker(result.point);
+            map.addOverlay(mk);
+            map.panTo(result.point);
+            console.log(result);
+            thas.lng = result.point.lng;
+            thas.lat = result.point.lat;
+            thas.currentAddress = {
+              province: result.address.province,
+              city: result.address.city,
+            }
+          }
+          else {
+            thas.$toast('failed'+this.getStatus());
+          }
+        },{enableHighAccuracy: true})
+      },
       /*切换tab卡*/
       setCurrent(index) {
         this.current = index;
@@ -221,6 +248,7 @@
           this.searchValue = "";
         }
         else {
+          this.switchMask();
           this.pageNO1 = 1;
           this.getData(0);
         }
@@ -235,7 +263,8 @@
           pageNO: type == 0 ? this.pageNO1 : this.pageNO2,
           pageSize: this.pageSize,
           lng: this.lng,
-          lat: this.lat
+          lat: this.lat,
+          searchValue: this.searchValue,
         }, result => {
           if (type == 0) {
             this.isShowLoading = false;
@@ -302,7 +331,6 @@
           this.getData(0);
           done(this.isEnd);
         }, 1000);
-        return;
       },
       /*下拉刷新*/
       refresh2(done) {
@@ -319,7 +347,6 @@
           this.getData(1);
           done(this.isEnd2);
         }, 1000);
-        return;
       },
       openPhone(phone) {
         this.$dialog.confirm({
@@ -357,6 +384,7 @@
           city: arr[1].name,
           cityId: arr[1].code
         }
+        this.getLngOrLat();
         this.pageNO1 = 1;
         this.getData(0);
       },
@@ -522,12 +550,13 @@
               display: inline-block;
               font-size: 14px;
               color: #555555;
-              width: 50px;
+              min-width: 50px;
             }
             .address {
               font-size: 14px;
               color: #999999;
               padding-right: 50px;
+              padding-left: 10px;
               overflow: hidden;
               text-overflow: ellipsis;
               white-space: nowrap;

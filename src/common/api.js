@@ -101,6 +101,8 @@ export default {
 
   getText: "systemText/getText",
 
+  getAllCity: "city/getAllCity",
+
 
 
 

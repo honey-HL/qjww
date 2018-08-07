@@ -4,7 +4,8 @@
     <scroller :style="{height : scrollHeight}" class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
       <div class="row first">
         <div class="title">
-          <i class="badge problem"></i>
+          <i class="badge quiz" v-if="detail.userPush">提问</i>
+          <i class="badge" v-else :class="{img: detail.label == 1, video: detail.label == 2, problem: detail.label == 2}"></i>
           <span v-html="detail.questionTitle"></span>
         </div>
         <div class="content" v-html="detail.questionContent"></div>
@@ -16,8 +17,8 @@
         <!-- <div class="video-cover"></div> -->
         <div class="operation-bar">
           <div class="left">
-            <div class="head" v-lazy:background-image="detail.avatar"></div>
-            <div class="name">{{!detail.anonymity ? detail.nickName : '匿名'}}</div>
+            <div v-if="detail.userPush" class="head" v-lazy:background-image="detail.avatar"></div>
+            <div v-if="detail.userPush" class="name">{{!detail.anonymity ? detail.nickName : '匿名'}}</div>
           </div>
           <div class="right">
             <div class="report" @click="report">
@@ -256,6 +257,15 @@
         i.video {
           background: url(../assets/video.png);
         }
+        i.quiz {
+          background: #5FB62A;
+          border-radius: 4px;
+          color: #fff; font-style:normal;
+          line-height: calc(28px / 2);
+          padding: 2px;
+          text-align: center;
+          top: -2px;
+        }
       }
       .content {
         color: #555555;
@@ -377,9 +387,9 @@
         display: inline-block;
         background-image: linear-gradient(-90deg, #5FB62A 0%, #78BC28 100%);
         border-radius: 100px;
-        box-shadow: 0 3px 10px 0 #5FB62A;
+        box-shadow: 0 2px 8px 0 #5FB62A;
         height: 30px;
-        width: 170px;
+        width: 150px;
         text-align: center;
         line-height: 30px;
         color: #fff;

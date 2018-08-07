@@ -69,10 +69,6 @@
           this.$toast("请输入标题");
           return;
         }
-        else if (this.util.empty(this.quiz.content)) {
-          this.$toast("请输入内容");
-          return;
-        }
         this.isLoading = true;
         this.images.forEach(item => {
           this.quiz.images.push(item.url);
