@@ -323,6 +323,11 @@
           padding-left: 5px;
           font-size: 12px;
           color: #9a9a9a;
+
+          width: calc(100% - 31px);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
       }
       .right {

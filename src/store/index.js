@@ -11,6 +11,7 @@ const module = {
     expertDetail: null,
     //openId
     openId: null,
+    isShowAd: true,
   },
   mutations: {
     //设置问题详情
@@ -25,6 +26,10 @@ const module = {
     setOpenId(state, value) {
       state.openId = value;
     },
+    //启动页
+    setIsShowAd(state, value) {
+      state.isShowAd = value;
+    },
   },
   actions: {
     setAnswerDetail(context, value) {
@@ -35,6 +40,9 @@ const module = {
     },
     setOpenId(context, value) {
       context.commit("setOpenId", value);
+    },
+    setIsShowAd(context, value) {
+      context.commit("setIsShowAd", value);
     },
   },
   getters: {},

@@ -5,7 +5,7 @@
       <div class="row first">
         <div class="title">
           <i class="badge quiz" v-if="detail.userPush">提问</i>
-          <i class="badge" v-else :class="{img: detail.label == 1, video: detail.label == 2, problem: detail.label == 2}"></i>
+          <i class="badge" v-else :class="{img: detail.label == 1, video: detail.label == 2, problem: detail.label == 3}"></i>
           <span v-html="detail.questionTitle"></span>
         </div>
         <div class="content" v-html="detail.questionContent"></div>
@@ -262,9 +262,9 @@
           border-radius: 4px;
           color: #fff; font-style:normal;
           line-height: calc(28px / 2);
-          padding: 2px;
+          padding: 1px;
           text-align: center;
-          top: -2px;
+          top: -1px;
         }
       }
       .content {
@@ -316,6 +316,11 @@
           .name {
             padding-left: 5px;
             color: #9a9a9a;
+
+            width: calc(100% - 31px);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
           .time {
             color: #9a9a9a;

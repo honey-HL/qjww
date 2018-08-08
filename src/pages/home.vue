@@ -6,8 +6,8 @@
       </div>
     </transition>
     <div id="top" class="top">
-      <img class="logo" v-if="logo == null || logo.status == 1" src="../assets/qjww.png">
-      <img class="logo" v-else v-lazy="imgIp + logo.img">
+      <img class="logo" v-if="logo != null && logo.status == 1" v-lazy="imgIp + logo.img">
+      <img class="logo" v-else src="../assets/qjww.png">
       <p class="title">手机问题，就来千机问问</p>
       <div class="search-bar">
         <img src="../assets/search.png" />
@@ -50,12 +50,15 @@
         adShow: true
       };
     },
+    created() {
+      this.adShow = this.$store.state.isShowAd;
+    },
     mounted() {
-
       this.setInterval = setInterval(() => {
         if (this.timeCount == 1) {
           clearInterval(this.setInterval);
           this.adShow = false;
+          this.$store.dispatch("setIsShowAd", false);
         }
         this.timeCount--;
       }, 1000);

@@ -54,14 +54,14 @@
       <div class="mask" v-if="isShow">
         <div class="signnin-bg">
           <div class="title">签到成功</div>
-          <div class="sig-row">
+          <div class="sig-row" v-if="signScore > 0">
             <div class="success">签到积分
               <span>+</span>
-              <span>5</span>
+              <span>{{signScore}}</span>
             </div>
             <div class="success">连续签到
               <span>+</span>
-              <span>5</span>
+              <span>{{signScore}}</span>
             </div>
           </div>
           <img src="../assets/signin.png" alt="">
@@ -85,6 +85,7 @@
         month: new Date().format("MM"),
         isShow: false,
         adItem: null,
+        signScore: 0,
       }
     },
     created() {
@@ -92,6 +93,7 @@
       this.api.http("post", this.api.isSign, {}, (result) => {
         if (!result) {
           this.api.http("post", this.api.sign, {}, (result) => {
+            this.signScore = result;
             this.isShow = true;
             setTimeout(() => {
               this.isShow = false;

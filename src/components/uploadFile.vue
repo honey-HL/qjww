@@ -73,7 +73,7 @@
             scale = w / h;
           w = obj.width || w;
           h = obj.height || (w / scale);
-          let quality = 0.7;  // 默认图片质量为0.7
+          let quality = 0.3;  // 默认图片质量为0.7
           //生成canvas
           let canvas = document.createElement('canvas');
           let ctx = canvas.getContext('2d');

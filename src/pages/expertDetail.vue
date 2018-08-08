@@ -10,7 +10,7 @@
           </div>
           <div class="name">{{item.userName}}</div>
           <div class="address">{{item.detailAdd}}</div>
-          <div class="hint">专业资深的手机维修专家，精通iPhone、安卓等设备维修，最值得信赖的XXX认证专家。</div>
+          <div class="hint">{{item.introduce}}</div>
           <div class="total-bar">
             <div class="left">
               <span class="num">{{item.answerNum == null ? 0 : item.answerNum}}</span>
@@ -31,7 +31,7 @@
           </div>
           <div class="title">
             <i class="badge quiz" v-if="detail.userPush">提问</i>
-            <i class="badge" v-else :class="{img: detail.label == 1, video: detail.label == 2, problem: detail.label == 2}"></i>
+            <i class="badge" v-else :class="{img: detail.label == 1, video: detail.label == 2, problem: detail.label == 3}"></i>
             <span v-html="child.questionTitle"></span>
           </div>
           <div class="content" v-html="child.content"></div>
@@ -274,6 +274,11 @@
         .name {
           padding-left: 10px;
           color: #9a9a9a;
+
+          width: calc(100% - 36px);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
       }
       .title {
@@ -311,9 +316,9 @@
           border-radius: 4px;
           color: #fff; font-style:normal;
           line-height: calc(28px / 2);
-          padding: 2px;
+          padding: 1px;
           text-align: center;
-          top: -2px;
+          top: -1px;
         }
       }
       .content {

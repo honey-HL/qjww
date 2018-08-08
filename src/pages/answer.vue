@@ -35,7 +35,7 @@
         <div class="item">
           <div class="title">
             <i class="badge quiz" v-if="item.userPush">提问</i>
-            <i class="badge" v-else :class="{img: item.label == 1, video: item.label == 2, problem: item.label == 2}"></i>
+            <i class="badge" v-else :class="{img: item.label == 1, video: item.label == 2, problem: item.label == 3}"></i>
             <span v-html="item.questionTitle"></span>
           </div>
           <div class="content" v-html="item.questionContent"></div>
@@ -48,7 +48,7 @@
           <div class="operation-bar">
             <div class="left">
               <div class="time">{{formatting(item.createTime)}}</div>
-              <div v-if="item.promot == 1">推广</div>
+              <div v-if="item.promot || item.promot == 1">推广</div>
             </div>
             <div class="right">
               <div style="margin-right: 10px" v-if="item.userPush">{{item.commentNum}}个回答</div>
@@ -57,7 +57,7 @@
                 <i class="comment"></i>
                 <span>回答</span>
               </div>
-              <div class="icon-div" v-if="item.label > 1">
+              <div class="icon-div" v-else-if="item.label == 1 || item.label == 2">
                 <i class="enter"></i>
                 <span>进入</span>
               </div>
@@ -105,7 +105,7 @@
           title: this.searchValue
         }, result => {
           if (this.start == 0) {
-            this.$refs.myscroller.scrollTo(0, 0, true); //返回顶部
+            this.$refs.myscroller.scrollTo(0, 0, false); //返回顶部
             this.items = result.data;
             if (result.data.length == 0) {
               this.isEnd = true;
@@ -308,9 +308,9 @@
             border-radius: 4px;
             color: #fff; font-style:normal;
             line-height: calc(28px / 2);
-            padding: 2px;
+            padding: 1px;
             text-align: center;
-            top: -2px;
+            top: -1px;
           }
         }
         .content {

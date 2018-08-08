@@ -8,7 +8,8 @@
             <div class="name">{{item.nikeName}}</div>
           </div>
           <div class="title">
-            <i class="badge problem"></i>
+            <i class="badge quiz" v-if="item.userPush">提问</i>
+            <i class="badge" v-else :class="{img: item.label == 1, video: item.label == 2, problem: item.label == 3}"></i>
             <span v-html="item.questionTitle"></span>
           </div>
           <div class="content" v-html="item.questionContent"></div>
@@ -197,6 +198,15 @@
         }
         i.video {
           background: url(../assets/video.png);
+        }
+        i.quiz {
+          background: #5FB62A;
+          border-radius: 4px;
+          color: #fff; font-style:normal;
+          line-height: calc(28px / 2);
+          padding: 1px;
+          text-align: center;
+          top: -1px;
         }
       }
       .content {

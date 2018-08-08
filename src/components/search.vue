@@ -1,7 +1,7 @@
 <template>
   <div id="search">
     <div class="search-bar">
-      <input placeholder="请输入您遇到的手机问题" maxlength="30" v-model="searchValue" @keyup.enter="searchEnterFun">
+      <input id="searchInput" placeholder="请输入您遇到的手机问题" maxlength="30" v-model="searchValue" @keyup.enter="searchEnterFun">
       <div class="img-div">
         <img src="../assets/search.png" @click="search" />
       </div>
@@ -40,6 +40,7 @@
         }
         else {
           this.$emit("searchData", this.searchValue);
+          document.getElementById("searchInput").blur();
         }
       }
     }

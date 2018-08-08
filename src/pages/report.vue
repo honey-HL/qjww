@@ -23,7 +23,7 @@
       </div>
       <div class="num-hint">最多可上传8张</div>
       <div class="btn">
-        <span v-if="report.describe != '' && report.type != null" class="active" @click="submit">提交</span>
+        <span v-if="report.type != null" class="active" @click="submit">提交</span>
         <span v-else>提交</span>
       </div>
       <div class="footer-hint">请正确提交举报信息，不实举报将对您的信用产生影响</div>
@@ -87,8 +87,8 @@
       },
       /*提交*/
       submit() {
-        if (this.util.empty(this.report.describe)) {
-          this.$toast("请输入内容");
+        if (this.report.type == null) {
+          this.$toast("请选择分类");
           return;
         }
         this.isLoading = true;

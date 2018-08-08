@@ -99,7 +99,7 @@
           title: this.searchValue
         }, result => {
           if (this.start == 0) {
-            this.$refs.myscroller.scrollTo(0, 0, true); //返回顶部
+            this.$refs.myscroller.scrollTo(0, 0, false); //返回顶部
             this.items = result.data;
             this.totalNum = result.numFound;
             if (result.data.length == 0) {
@@ -263,13 +263,17 @@
             height: 26px;
             border-radius: 50%;
             background-size: cover !important;
-            background-origin: center !important;
+            background-position: center !important;
             background: #ddd;
           }
           .name {
             padding-left: 5px;
             font-size: 12px;
             color: #9a9a9a;
+            width: calc(100% - 31px);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
         }
         .right {

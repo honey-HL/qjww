@@ -342,6 +342,7 @@
       },
       /*上拉刷新*/
       infinite2(done) {
+        this.isEnd2 = true; // TODO
         setTimeout(() => {
           this.pageNO2 ++;
           this.getData(1);
