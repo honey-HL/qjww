@@ -164,8 +164,8 @@
         }
         this.api.http("post", this.api.getBindCode, this.user, result => {
           //Test
-          // this.user.code = result;
-          // this.isAll = true;
+          this.user.code = result;
+          this.isAll = true;
 
           this.isCode = true;
           this.okPhone = this.user.phone;

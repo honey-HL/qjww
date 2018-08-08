@@ -4,7 +4,7 @@
 
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://1ek8059026.51mypc.cn:10294/qjww-api/';
+axios.defaults.baseURL = 'http://tiger.magic-beans.cn/qjww-api/';
 // axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem("accessToken");
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.defaults.timeout =  10000;
@@ -46,8 +46,8 @@ const http = (method, url, params, successCallback, errorCallback) => {
 
 export default {
   http: http,
-  ip: "http://1ek8059026.51mypc.cn:10294/qjww-api/",
-  imgIp: "http://1ek8059026.51mypc.cn:12631/qjww-api/",
+  ip: "http://tiger.magic-beans.cn/qjww-api/",
+  imgIp: "http://47.104.243.188:5888/",
 
   searchQuestion: "search/searchQuestion",
   findById: "search/findById",
