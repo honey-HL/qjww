@@ -149,9 +149,10 @@
           this.api.http("post", this.api.getInfo, {}, result => {
             localStorage.setItem("userInfo", JSON.stringify(result));
             setTimeout(() => {
-              this.$router.push({ path: this.$route.query.redirect });
+                this.$router.push({ path: this.$route.query.redirect });
             }, 1000);
           }, error => { });
+
           //TODO 权限配置
           this.getGroupAuth();
         }, error => { });
@@ -164,8 +165,8 @@
         }
         this.api.http("post", this.api.getBindCode, this.user, result => {
           //Test
-          this.user.code = result;
-          this.isAll = true;
+          // this.user.code = result;
+          // this.isAll = true;
 
           this.isCode = true;
           this.okPhone = this.user.phone;
