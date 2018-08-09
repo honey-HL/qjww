@@ -11,24 +11,26 @@ const module = {
     expertDetail: null,
     //openId
     openId: null,
+    //显示启动页
     isShowAd: true,
+    //广告位详情
+    adDetail: null,
   },
   mutations: {
-    //设置问题详情
     setAnswerDetail(state, value) {
       state.answerDetail = value;
     },
-    //设置专家详情
     setExpertDetail(state, value) {
       state.expertDetail = value;
     },
-    //openId
     setOpenId(state, value) {
       state.openId = value;
     },
-    //启动页
     setIsShowAd(state, value) {
       state.isShowAd = value;
+    },
+    setAdDetail(state, value) {
+      state.adDetail = value;
     },
   },
   actions: {
@@ -43,6 +45,9 @@ const module = {
     },
     setIsShowAd(context, value) {
       context.commit("setIsShowAd", value);
+    },
+    setAdDetail(context, value) {
+      context.commit("setAdDetail", value);
     },
   },
   getters: {},

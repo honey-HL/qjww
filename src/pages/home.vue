@@ -1,12 +1,12 @@
 <template>
   <div class="home">
     <transition name="fade">
-      <div v-if="adShow && adItem != null && adItem.status == 1" class="ad-flex" v-lazy:background-image="imgIp + adItem.img">
-        <span class="btn" @click="adShow = !adShow">跳过 {{timeCount}}s</span>
+      <div v-if="adShow && adItem != null && adItem.status == 1" @click="adDetail(2)" class="ad-flex" v-lazy:background-image="imgIp + adItem.img">
+        <span class="btn" @click.stop="adShow = !adShow">跳过 {{timeCount}}s</span>
       </div>
     </transition>
     <div id="top" class="top">
-      <img class="logo" v-if="logo != null && logo.status == 1" v-lazy="imgIp + logo.img">
+      <img class="logo" v-if="logo != null && logo.status == 1" @click="adDetail(0)" v-lazy="imgIp + logo.img">
       <img class="logo" v-else src="../assets/qjww.png">
       <p class="title">手机问题，就来千机问问</p>
       <div class="search-bar">
@@ -20,7 +20,7 @@
     </div>
     <div class="bottom-bar" v-show="isShow">
       <div class="title">不止解答·直至解决</div>
-      <div class="ad" v-if="adBottom != null && adBottom.status == 1" v-lazy:background-image="imgIp + adBottom.img"></div>
+      <div class="ad" v-if="adBottom != null && adBottom.status == 1" @click="adDetail(1)" v-lazy:background-image="imgIp + adBottom.img"></div>
     </div>
     <MyFooter />
 
@@ -99,6 +99,35 @@
       },
       blurInput() {
         this.isShow = true;
+      },
+      adDetail(type) {
+        if (type == 0) {
+          if (this.logo.type == 1) {
+            location.href = this.logo.url;
+          }
+          else {
+            this.$store.dispatch("setAdDetail", this.logo);
+            this.$router.push({ path: "/index/content" });
+          }
+        }
+        else if (type == 1) {
+          if (this.logo.type == 1) {
+            location.href = this.adBottom.url;
+          }
+          else {
+            this.$store.dispatch("setAdDetail", this.adBottom);
+            this.$router.push({ path: "/index/content" });
+          }
+        }
+        else {
+          if (this.adItem.type == 1) {
+            location.href = this.adItem.url;
+          }
+          else {
+            this.$store.dispatch("setAdDetail", this.adItem);
+            this.$router.push({ path: "/index/content" });
+          }
+        }
       },
     },
     directives: {

@@ -24,6 +24,7 @@ import Feedback from '@/pages/feedback'
 import Signin from '@/pages/signin'
 import Edit from '@/pages/edit'
 import Rule from '@/pages/rule'
+import Content from '@/pages/content'
 
 
 Router.prototype.goBack = function () {
@@ -36,7 +37,7 @@ Vue.use(VueWechatTitle)
 Vue.use(Router)
 
 const routers = new Router({
-  // mode: "history",
+  mode: "history",
   routes: [
     { path: '/', redirect: "/index/home" },
     {
@@ -64,7 +65,8 @@ const routers = new Router({
         { path: 'feedback', name: 'feedback', component: Feedback, meta: { title: "意见反馈", requireAuth: true } },
         { path: 'signin', name: 'signin', component: Signin, meta: { title: "签到", requireAuth: true } },
         { path: 'edit', name: 'edit', component: Edit, meta: { title: "编辑资料", requireAuth: true } },
-        { path: 'rule', name: 'rule', component: Rule, meta: { title: "积分规则说明", requireAuth: true } },
+        { path: 'rule', name: 'rule', component: Rule, meta: { title: "积分规则说明" } },
+        { path: 'content', name: 'content', component: Content, meta: { title: "详情" } },
       ]
     },
   ]

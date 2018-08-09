@@ -24,7 +24,7 @@
         </div>
       </div>
     </div>
-    <div class="ad-bg" v-if="adItem != null && adItem.status == 1" v-lazy:background-image="imgIp + adItem.img"></div>
+    <div class="ad-bg" v-if="adItem != null && adItem.status == 1" @click="adDetail" v-lazy:background-image="imgIp + adItem.img"></div>
     <div class="worp">
       <div class="sign-bg">
         <div class="title">{{month}}月签到日历</div>
@@ -161,7 +161,16 @@
     methods: {
       mall() {
         this.$toast('功能后续上线中,暂时无法访问')
-      }
+      },
+      adDetail(type) {
+        if (this.adItem.type == 1) {
+          location.href = this.adItem.url;
+        }
+        else {
+          this.$store.dispatch("setAdDetail", this.adItem);
+          this.$router.push({ path: "/index/content" });
+        }
+      },
     }
   }
 </script>
