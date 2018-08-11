@@ -5,7 +5,7 @@
       <div class="hint">您可以继续搜索您遇到的手机问题</div>
       <input type="text" placeholder="请输入标题" maxlength="30" v-model="quiz.title">
       <div class="text-div">
-        <textarea name="" id="" cols="30" rows="10" placeholder="问题描述（选填）" maxlength="200" v-model="quiz.content"></textarea>
+        <textarea name="" id="" cols="30" rows="10" placeholder="问题描述（选填）" maxlength="255" v-model="quiz.content"></textarea>
         <span class="num">{{quiz.content.length}}
                     <span class="font-hint">字</span>
                 </span>
@@ -31,6 +31,18 @@
 
     <Loader v-if="isLoading" title="提交中"/>
 
+    <transition name="fade">
+      <div class="mask" v-if="isShow">
+        <div class="login-bg">
+          <div class="title">提交成功</div>
+          <div class="success" v-if="score > 0">提问积分
+            <span>+</span>
+            <span>{{score}}</span>
+          </div>
+        </div>
+      </div>
+    </transition>
+
   </div>
 </template>
 
@@ -53,6 +65,9 @@
         },
         images: [],
         isLoading: false,
+        isShow: false,
+        score: 0
+
       }
     },
     methods: {
@@ -80,7 +95,13 @@
         this.quiz.images = this.quiz.images.toString();
         this.quiz.isAnonymity = this.quiz.isAnonymity ? 1 : 0;
         this.api.http("post", this.api.questionSave, this.quiz, result => {
-          this.$router.push({ path: '/index/quizSuccess?keywords=' + this.quiz.title });
+          this.score = result;
+          this.isLoading = false;
+          this.isShow = true;
+          //this.$toast("请耐心等待审核");
+          setTimeout(() => {
+            this.$router.push({ path: '/index/quizSuccess?keywords=' + this.quiz.title });
+          }, 1000)
         }, error => { });
       },
       /*删除图片*/
@@ -230,6 +251,41 @@
 
   }
 
-
+  .mask {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .login-bg {
+      padding: 15px 50px;
+      border-radius: 6px;
+      background: #fff;
+      text-align: center;
+      position: relative;
+      box-sizing: border-box;
+      transition: all 0.5s;
+      .title {
+        color: #999999;
+      }
+      .success {
+        font-size: 20px;
+        color: #555555;
+        margin-top: 15px;
+        span:nth-child(1) {
+          color: #5FB62A;
+        }
+        span:nth-child(2) {
+          font-size: 20px;
+          color: #5FB62A;
+        }
+      }
+    }
+  }
 
 </style>

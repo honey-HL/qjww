@@ -38,9 +38,9 @@
       <div class="mask" v-if="isLogin">
         <div class="login-bg">
           <div class="title">登录成功</div>
-          <div class="success">登录成功
+          <div class="success" v-if="score > 0">登录成功
             <span>+</span>
-            <span>5</span>
+            <span>{{score}}</span>
           </div>
           <div class="hint">正在跳转...</div>
         </div>
@@ -76,6 +76,7 @@
         isAll: false,
         isLogin: false,
         weChatUser: null,
+        score: 0,
       };
     },
     mounted() {
@@ -98,8 +99,6 @@
                 }, result => {
                   localStorage.setItem("accessToken", result.token);
                   localStorage.setItem("userInfo", JSON.stringify(result));
-                  //TODO 权限配置
-                  this.getGroupAuth();
                   this.isLogin = true;
                   this.isLoading = false;
                   setTimeout(() => {
@@ -119,12 +118,6 @@
 
     },
     methods: {
-      /**获取权限配置*/
-      getGroupAuth() {
-        this.api.http("post", this.api.getGroupAuth, {}, (result) => {
-          localStorage.setItem("config", JSON.stringify(result));
-        }, (error) => {})
-      },
       /*登录*/
       submit() {
         if (this.util.empty(this.user.phone) || !this.util.isPhone.test(this.user.phone)) {
@@ -143,7 +136,8 @@
         this.user.nickName = this.weChatUser.nickname;
         this.user.avatar = this.weChatUser.headimgurl;
         this.api.http("post", this.api.bindPhone, this.user, result => {
-          localStorage.setItem("accessToken", result);
+          localStorage.setItem("accessToken", result.token);
+          this.score = result.score;
           this.isLogin = true;
           this.isLoading = false;
           this.api.http("post", this.api.getInfo, {}, result => {
@@ -152,10 +146,9 @@
                 this.$router.push({ path: this.$route.query.redirect });
             }, 1000);
           }, error => { });
-
-          //TODO 权限配置
-          this.getGroupAuth();
-        }, error => { });
+        }, error => {
+          this.isLoading = false;
+        });
       },
       /*获取验证码*/
       getCode() {

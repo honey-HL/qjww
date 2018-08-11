@@ -56,9 +56,7 @@
       </transition-group>
     </scroller>
     <div class="footer-bar">
-      <router-link :to="{path:'/index/icomeAnswer', query:{keywords:detail.questionTitle,questionId: detail.id}}">
-        <div class="btn">我来回答</div>
-      </router-link>
+      <div class="btn" @click="answer">我来回答</div>
       <transition name="fade">
         <div class="collect" @click="collect" v-if="detail.collection">
           <img src="../assets/collect-active.png">
@@ -88,7 +86,8 @@
         row: 10,
         totalNum: 0,
         isEnd: false,
-        scrollHeight: "100%"
+        scrollHeight: "100%",
+        config: null,
       };
     },
     components: {
@@ -96,11 +95,28 @@
     },
     created() {
       this.detail = this.$store.state.answerDetail;
+      this.getGroupAuth();
     },
     mounted() {
       this.scrollHeight = (window.innerHeight - 52 - 54) + "px";
     },
     methods: {
+      /**获取权限配置*/
+      getGroupAuth() {
+        this.api.http("post", this.api.getGroupAuth, {}, (result) => {
+          this.config = result;
+        }, (error) => {})
+      },
+      answer() {
+        if (this.config.isReply == 0) {
+          this.$toast("对不起，您暂无权限提问");
+          return;
+        }
+        this.$router.push({
+          path: "/index/icomeAnswer",
+          query: {keywords:detail.questionTitle,questionId: detail.id}
+        })
+      },
       /*获取列表*/
       getData() {
         this.api.http("post", this.api.findByQuestion, {
@@ -156,6 +172,14 @@
       },
       /*赞*/
       praise(id) {
+        if (this.config == null) {
+          this.$router.push({path: '/index/login'});
+          return;
+        }
+        if (this.config.isLike == 0) {
+          this.$toast("对不起，您暂无权限点赞");
+          return;
+        }
         this.api.http("post", this.api.praise, { answerId: id, }, result => {
           for (let i = 0; this.items.length; i++) {
             if (this.items[i].id == id) {

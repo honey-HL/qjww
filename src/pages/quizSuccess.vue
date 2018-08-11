@@ -133,7 +133,53 @@
           path: "/index/answerResult"
         });
       }
-    }
+    },
+    mounted() {
+
+      this.api.http("post", this.api.jsSign, {}, (result) => {
+
+        wx.config({
+          debug: false,
+          appId: result.appId,
+          timestamp: result.timestamp,
+          nonceStr: result.noncestr,
+          signature: result.signature,
+          jsApiList: ["checkJsApi", "onMenuShareAppMessage", "hideMenuItems"]
+        });
+
+        wx.ready(function() {
+          wx.checkJsApi({
+            jsApiList: ['onMenuShareAppMessage'],
+            success: function (res) {
+              //alert(JSON.stringify(res));
+            }
+          });
+
+          //微信好友
+          let shareTitle = "好产品，欢喜送";
+          let shareImg = "http://app.cdhappygo.com/happygo-wechat/img/happygo-icon.jpg";
+          let desc = "分享好友得好礼";
+          let link = "http://" + window.location.host;
+
+          wx.onMenuShareAppMessage({
+            title : shareTitle,
+            desc : desc,
+            link : link,
+            imgUrl : shareImg,
+            type : "link",
+            success : function() {
+              this.$toast("分享成功");
+            },
+            cancel : function() {
+              this.$toast("取消分享");
+            },
+          });
+        });
+
+      }, (error) => {})
+
+
+    },
   }
 </script>
 <style lang="scss" scoped>

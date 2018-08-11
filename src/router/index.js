@@ -37,7 +37,7 @@ Vue.use(VueWechatTitle)
 Vue.use(Router)
 
 const routers = new Router({
-  mode: "history",
+  // mode: "history",
   routes: [
     { path: '/', redirect: "/index/home" },
     {
@@ -47,7 +47,7 @@ const routers = new Router({
       component: Index,
       children: [
         { path: 'home', name: 'home', component: Home, meta: { title: "首页" } },
-        { path: 'answer', name: 'answer', component: Answer, meta: { title: "问答", requireAuth: true } },
+        { path: 'answer', name: 'answer', component: Answer, meta: { title: "问答" } },
         { path: 'my', name: 'my', component: My, meta: { title: "我的", requireAuth: true } },
         { path: 'result', name: 'result', component: Result, meta: { title: "搜索结果" } },
         { path: 'login', name: 'login', component: Login, meta: { title: "登录" } },
@@ -55,7 +55,7 @@ const routers = new Router({
         { path: 'quizSuccess', name: 'quizSuccess', component: QuizSuccess, meta: { title: "提问成功", requireAuth: true } },
         { path: 'news', name: 'news', component: News, meta: { title: "通知", requireAuth: true } },
         { path: 'forAnswer', name: 'forAnswer', component: ForAnswer, meta: { title: "等你来答", requireAuth: true } },
-        { path: 'answerResult', name: 'answerResult', component: AnswerResult, meta: { title: "答案搜索结果", requireAuth: true } },
+        { path: 'answerResult', name: 'answerResult', component: AnswerResult, meta: { title: "答案搜索结果" } },
         { path: 'report', name: 'report', component: Report, meta: { title: "举报", requireAuth: true } },
         { path: 'icomeAnswer', name: 'icomeAnswer', component: IcomeAnswer, meta: { title: "我来回答", requireAuth: true } },
         { path: 'myAnswer', name: 'myAnswer', component: MyAnswer, meta: { title: "我的回答", requireAuth: true } },

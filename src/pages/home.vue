@@ -15,7 +15,7 @@
       </div>
       <div class="solve">
         已有
-        <span>5466545</span> 个问题被解决
+        <span>{{totalNumber}}</span> 个问题被解决
       </div>
     </div>
     <div class="bottom-bar" v-show="isShow">
@@ -47,7 +47,8 @@
         adImg: "http://lofter.nos.netease.com/sogou-Z0dOZDFfa3ByVzBPRThmVUM1SHphUmxxNGlIc2lTWXdSWTRuOUxmRTdfUW5zUTN5MTNEWDJOMGx1c3ZvZTBaOQ.jpg",
         timeCount: 5,
         setInterval: null,
-        adShow: true
+        adShow: true,
+        totalNumber: 0
       };
     },
     created() {
@@ -73,6 +74,10 @@
 
       this.api.http("post", this.api.getAdList, {position: 2}, (result) => {
         this.adItem = result;
+      }, (error) => {})
+
+      this.api.http("post", this.api.countSolveQuestion, {}, (result) => {
+        this.totalNumber = result;
       }, (error) => {})
 
     },

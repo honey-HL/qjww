@@ -3,7 +3,7 @@
     <div class="content">
       <div class="title" v-html="keywords"></div>
       <div class="text-div">
-        <textarea name="" id="" cols="30" rows="10" placeholder="请输入您的回答" v-model="answer.content" maxlength="200"></textarea>
+        <textarea name="" id="" cols="30" rows="10" placeholder="请输入您的回答" v-model="answer.content" maxlength="255"></textarea>
         <span class="num">{{answer.content.length}}
                     <span class="font-hint">字</span>
                 </span>
@@ -26,9 +26,9 @@
       <div class="mask" v-if="isShow">
         <div class="login-bg">
           <div class="title">提交成功</div>
-          <div class="success">答题积分
+          <div class="success" v-if="score > 0">答题积分
             <span>+</span>
-            <span>5</span>
+            <span>{{score}}</span>
           </div>
         </div>
       </div>
@@ -57,6 +57,7 @@
         images: [],
         keywords: "",
         isLoading: false,
+        score: 0
       }
     },
     created() {
@@ -78,13 +79,16 @@
         });
         this.answer.imgs = this.answer.imgs.toString();
         this.api.http("post", this.api.saveAnswer, this.answer, result => {
+          this.score = result;
           this.isLoading = false;
           this.isShow = true;
           this.$toast("请耐心等待审核");
           setTimeout(() => {
             this.$router.go(-1);
           }, 1000);
-        }, error => { });
+        }, error => {
+          this.isLoading = false;
+        });
       },
       /*删除图片*/
       delImg(fileName) {

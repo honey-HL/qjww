@@ -4,7 +4,7 @@
 
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://1ek8059026.51mypc.cn:10294/qjww-api/';
+axios.defaults.baseURL = 'http://192.168.1.110:8181/qjww-api/';
 // axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem("accessToken");
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.defaults.timeout =  10000;
@@ -19,16 +19,16 @@ const http = (method, url, params, successCallback, errorCallback) => {
     },
     params: params
   }).then((response) => {
-    console.log("******************");
-    console.log(params);
-    console.log(url);
-    console.log(response.data);
+    // console.log("******************");
+    // console.log(params);
+    // console.log(url);
+    // console.log(response.data);
     if (response.data.code == 200) {
       successCallback(response.data.body);
     }
     else if (response.data.code == 1005) {
       localStorage.removeItem("accessToken");
-      this.$router.push({path: '/index/login'});
+      //this.$router.push({path: '/index/login'});
     }
     else if (response.data.code == 1050) {
       errorCallback(response.data);
@@ -38,7 +38,6 @@ const http = (method, url, params, successCallback, errorCallback) => {
       errorCallback(response.data);
     }
   }).catch((error) => {
-    console.log(error);
     errorCallback(error);
   });
 }
@@ -46,7 +45,7 @@ const http = (method, url, params, successCallback, errorCallback) => {
 
 export default {
   http: http,
-  ip: "http://1ek8059026.51mypc.cn:10294/qjww-api/",
+  ip: "http://192.168.1.110:8181/qjww-api/",
   imgIp: "http://192.168.1.110:8088/",
 
   searchQuestion: "search/searchQuestion",
@@ -59,7 +58,7 @@ export default {
   praise: "answer/praise",
 
   login: "user/login",
-  jsSign: "wxClient/jsSign ",
+  jsSign: "wxClient/jsSign",
   getCode: "wxClient/getCode",
   getInfo: "user/getInfo",
   getOpenId: "wxClient/getOpenId",
@@ -102,6 +101,11 @@ export default {
   getText: "systemText/getText",
 
   getAllCity: "city/getAllCity",
+
+  isRead: "notification/isRead",
+
+  countSolveQuestion: "search/countSolveQuestion",
+
 
 
 

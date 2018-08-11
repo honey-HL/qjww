@@ -23,7 +23,7 @@
       </div>
       <div class="num-hint">最多可上传8张</div>
       <div class="btn">
-        <span v-if="report.type != null" class="active" @click="submit">提交</span>
+        <span v-if="report.reportType != null" class="active" @click="submit">提交</span>
         <span v-else>提交</span>
       </div>
       <div class="footer-hint">请正确提交举报信息，不实举报将对您的信用产生影响</div>
@@ -60,8 +60,8 @@
           describe: "",
           imgs: [],
           id: 0,
-          reportType: 3,
-          type: null,
+          reportType: null,
+          type: 1,
         },
         isShow: false,
         images: [],
@@ -87,7 +87,7 @@
       },
       /*提交*/
       submit() {
-        if (this.report.type == null) {
+        if (this.report.reportType == null) {
           this.$toast("请选择分类");
           return;
         }
@@ -102,7 +102,9 @@
           setTimeout(() => {
             this.$router.go(-1);
           }, 1000);
-        }, error => { });
+        }, error => {
+          this.isLoading = false;
+        });
       },
       /*删除图片*/
       delImg(fileName) {
@@ -116,7 +118,7 @@
         }, error => { });
       },
       onClick(item) {
-        this.report.type = item.type;
+        this.report.reportType = item.type;
         this.typeName = item.name;
         this.show = false;
       }
