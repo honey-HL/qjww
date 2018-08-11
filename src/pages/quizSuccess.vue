@@ -2,7 +2,7 @@
   <div class="quizSuccess">
     <scroller class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
       <div class="success-bar">
-        <span>邀请朋友来答</span>
+        <span @click="share">邀请朋友来答</span>
         <div class="title">问题发布成功啦</div>
         <div class="title-min">请耐心等待答案</div>
         <div class="success-icon"></div>
@@ -59,12 +59,17 @@
         start: 0,
         row: 10,
         isEnd: false,
+        answerId: 0,
       }
     },
     created() {
       this.searchValue = this.$route.query.keywords;
+      this.answerId = this.$route.query.answerId;
     },
     methods: {
+      share() {
+        this.$toast('请点击右上角进行分享')
+      },
       formatting (time) {
         return this.util.formatting(time);
       },
@@ -159,7 +164,7 @@
           let shareTitle = "好产品，欢喜送";
           let shareImg = "http://app.cdhappygo.com/happygo-wechat/img/happygo-icon.jpg";
           let desc = "分享好友得好礼";
-          let link = "http://" + window.location.host;
+          let link = "http://" + window.location.host + "/index/answerResult?answerId=" + this.answerId;
 
           wx.onMenuShareAppMessage({
             title : shareTitle,

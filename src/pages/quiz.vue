@@ -14,7 +14,8 @@
         <div class="item" v-for="item in images" v-lazy:background-image="item.url">
           <i class="del" @click="delImg(item.fileName)"></i>
         </div>
-        <UploadFile @uploadCall="onRead" v-if="images.length < 8">
+        <div v-if="config != null && config.isPush == 0" @click="check" class="item add-icon"></div>
+        <UploadFile @uploadCall="onRead" v-else-if="images.length < 8">
           <div class="item add-icon"></div>
         </UploadFile>
       </div>
@@ -66,11 +67,23 @@
         images: [],
         isLoading: false,
         isShow: false,
-        score: 0
-
+        score: 0,
+        config: null,
       }
     },
+    created() {
+      this.getGroupAuth();
+    },
     methods: {
+      /**获取权限配置*/
+      getGroupAuth() {
+        this.api.http("post", this.api.getGroupAuth, {}, (result) => {
+          this.config = result;
+        }, (error) => {})
+      },
+      check() {
+        this.$toast("对不起，您暂无权限提问");
+      },
       onRead(image) {
         this.images.push(image);
       },
@@ -80,12 +93,24 @@
       },
       /*提交*/
       submit() {
+        if (this.config != null && this.config.isPush == 0) {
+          this.$toast("对不起，您暂无权限提问");
+          return;
+        }
         if (this.util.empty(this.quiz.title)) {
           this.$toast("请输入标题");
           return;
         }
-        if (this.quiz.title.length > 25) {
+        else if (this.util.isEmoji.test(this.quiz.title)) {
+          this.$toast("暂不支持emoji");
+          return;
+        }
+        else if (this.quiz.title.length > 25) {
           this.$toast("标题不能超过25个字符");
+          return;
+        }
+        else if (this.quiz.content != "" && this.util.isEmoji.test(this.quiz.content)) {
+          this.$toast("暂不支持emoji");
           return;
         }
         this.isLoading = true;
@@ -102,7 +127,9 @@
           setTimeout(() => {
             this.$router.push({ path: '/index/quizSuccess?keywords=' + this.quiz.title });
           }, 1000)
-        }, error => { });
+        }, error => {
+          this.isLoading = false;
+        });
       },
       /*删除图片*/
       delImg(fileName) {

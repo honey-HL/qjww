@@ -397,6 +397,9 @@
         this.$store.dispatch("setExpertDetail", item);
         this.$router.push({
           path : "/index/expertDetail",
+          query: {
+            expertId: item.id
+          }
         });
       },
     },

@@ -46,7 +46,7 @@
       </transition-group>
     </scroller>
     <div class="bottom">
-      <div class="btn">在线咨询</div>
+      <div class="btn" @click="consult">在线咨询</div>
       <div class="btn" @click="openPhone">电话直连</div>
     </div>
   </div>
@@ -69,6 +69,11 @@
     },
     created() {
       this.item = this.$store.state.expertDetail;
+      if (this.item == null) {
+        this.api.http("post", this.api.specialistInfo, {id: this.$route.query.expertId}, (result) => {
+          this.item = result;
+        }, (error) => {})
+      }
     },
     mounted() {
       this.scrollHeight = (window.innerHeight - 62) + "px";
@@ -129,6 +134,9 @@
           // on cancel
         });
       },
+      consult() {
+        location.href = "https://kefu.easemob.com/webim/im.html?configId=d27e092a-7aac-456d-b0ee-077345ff5cbf&agentName=" + this.item.email;
+      }
     }
   }
 </script>

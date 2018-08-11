@@ -16,15 +16,13 @@
           <div class="icon"></div>
           <div class="name">提问</div>
         </div>
-        <div class="item" @click="link('icomeAnswer')">
+        <div class="item" @click="link('forAnswer')">
           <div class="icon"></div>
           <div class="name">回答</div>
         </div>
         <div class="item" @click="link('myAnswer')">
-          <router-link :to="{path: '/index/myAnswer', query: {tab : 1}}">
-            <div class="icon"></div>
-            <div class="name">我的回答</div>
-          </router-link>
+          <div class="icon"></div>
+          <div class="name">我的回答</div>
         </div>
       </div>
       <div class="bg"></div>
@@ -92,49 +90,22 @@
         scrollHeight: "100%",
         isRead: 0,
         config: null,
+        isConfig: false,
       };
     },
     created() {
       this.api.http("get", this.api.isRead, {}, result => {
         this.isRead = result.isread;
       }, error => {});
-      this.getGroupAuth();
     },
     mounted() {
       this.scrollHeight = (window.innerHeight - 55 - 77 - 50) + "px";
     },
     methods: {
-      beautySub (str, len) {
-        var reg = /[\u4e00-\u9fa5]/g,    //专业匹配中文
-          slice = str.substring(0, len),
-          chineseCharNum = (~~(slice.match(reg) && slice.match(reg).length)),
-          realen = slice.length * 2 - chineseCharNum;
-        return str.substr(0, realen) + (realen < str.length ? "..." : "");
-      },
-      /**获取权限配置*/
-      getGroupAuth() {
-        this.api.http("post", this.api.getGroupAuth, {}, (result) => {
-          this.config = result;
-        }, (error) => {})
-      },
       link(url) {
-        if (this.config == null) {
-          this.$router.push({path: '/index/login'});
-          return;
-        }
-        if (url == 'quiz' && this.config.isPush == 0) {
-          this.$toast("对不起，您暂无权限提问");
-          return;
-        }
-        if (url == 'icomeAnswer' && this.config.isReply == 0) {
-          this.$toast("对不起，您暂无权限回答");
-          return;
-        }
         this.$router.push({
           path: "/index/" + url,
-          query: {
-            tab: 1
-          }
+          query: {tab: 1}
         })
       },
       /*获取列表*/

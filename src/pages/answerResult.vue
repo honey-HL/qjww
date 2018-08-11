@@ -87,7 +87,6 @@
         totalNum: 0,
         isEnd: false,
         scrollHeight: "100%",
-        config: null,
       };
     },
     components: {
@@ -95,23 +94,17 @@
     },
     created() {
       this.detail = this.$store.state.answerDetail;
-      this.getGroupAuth();
+      if (this.detail == null) {
+        this.api.http("post", this.api.findById, {id: this.util.getUrlParam("answerId")}, (result) => {
+          this.detail = result;
+        }, (error) => {})
+      }
     },
     mounted() {
       this.scrollHeight = (window.innerHeight - 52 - 54) + "px";
     },
     methods: {
-      /**获取权限配置*/
-      getGroupAuth() {
-        this.api.http("post", this.api.getGroupAuth, {}, (result) => {
-          this.config = result;
-        }, (error) => {})
-      },
       answer() {
-        if (this.config.isReply == 0) {
-          this.$toast("对不起，您暂无权限提问");
-          return;
-        }
         this.$router.push({
           path: "/index/icomeAnswer",
           query: {keywords:detail.questionTitle,questionId: detail.id}
@@ -326,7 +319,7 @@
         align-items: center;
         padding-top: 10px;
         .left {
-          width: 80%;
+          width: 60%;
           display: flex;
           align-items: center;
           .head {
@@ -341,7 +334,7 @@
             padding-left: 5px;
             color: #9a9a9a;
 
-            width: calc(100% - 31px);
+            max-width: calc(100% - 31px);
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -352,7 +345,7 @@
           }
         }
         .right {
-          width: 20%;
+          width: 40%;
           display: flex;
           justify-content: flex-end;
           align-items: center;

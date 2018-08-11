@@ -98,11 +98,17 @@
                   avatar: result.headimgurl
                 }, result => {
                   localStorage.setItem("accessToken", result.token);
+                  this.$store.dispatch("setToken", result.token);
                   localStorage.setItem("userInfo", JSON.stringify(result));
                   this.isLogin = true;
                   this.isLoading = false;
                   setTimeout(() => {
-                    this.$router.push({ path: this.$route.query.redirect });
+                    if (this.$route.query.redirect != undefined) {
+                      this.$router.push({ path: this.$route.query.redirect });
+                    }
+                    else {
+                      this.$router.go(-2);
+                    }
                   }, 1000);
                 }, error => {
                   this.isLoading = false;
@@ -137,13 +143,19 @@
         this.user.avatar = this.weChatUser.headimgurl;
         this.api.http("post", this.api.bindPhone, this.user, result => {
           localStorage.setItem("accessToken", result.token);
+          this.$store.dispatch("setToken", result.token);
           this.score = result.score;
           this.isLogin = true;
           this.isLoading = false;
           this.api.http("post", this.api.getInfo, {}, result => {
             localStorage.setItem("userInfo", JSON.stringify(result));
             setTimeout(() => {
+              if (this.$route.query.redirect != undefined) {
                 this.$router.push({ path: this.$route.query.redirect });
+              }
+              else {
+                this.$router.go(-2);
+              }
             }, 1000);
           }, error => { });
         }, error => {
@@ -158,8 +170,8 @@
         }
         this.api.http("post", this.api.getBindCode, this.user, result => {
           //Test
-          // this.user.code = result;
-          // this.isAll = true;
+          this.user.code = result;
+          this.isAll = true;
 
           this.isCode = true;
           this.okPhone = this.user.phone;

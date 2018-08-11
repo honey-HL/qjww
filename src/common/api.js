@@ -106,7 +106,7 @@ export default {
 
   countSolveQuestion: "search/countSolveQuestion",
 
-
+  specialistInfo: "specialist/info",
 
 
 

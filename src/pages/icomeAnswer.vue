@@ -12,7 +12,8 @@
           <div class="item" v-for="item in images" v-lazy:background-image="item.url">
             <i class="del" @click="delImg(item.fileName)"></i>
           </div>
-        <UploadFile @uploadCall="onRead" v-if="images.length < 8">
+        <div v-if="config != null && config.isPush == 0" @click="check" class="item add-icon"></div>
+        <UploadFile @uploadCall="onRead" v-else-if="images.length < 8">
           <div class="item add-icon"></div>
         </UploadFile>
       </div>
@@ -57,20 +58,40 @@
         images: [],
         keywords: "",
         isLoading: false,
-        score: 0
+        score: 0,
+        config: null,
       }
     },
     created() {
       this.keywords = this.$route.query.keywords;
+      this.getGroupAuth();
     },
     methods: {
       onRead(image) {
         this.images.push(image);
       },
+      /**获取权限配置*/
+      getGroupAuth() {
+        this.api.http("post", this.api.getGroupAuth, {}, (result) => {
+          this.config = result;
+          this.isConfig = true;
+        }, (error) => {})
+      },
+      check() {
+        this.$toast("对不起，您暂无权限回答");
+      },
       /*提交*/
       submit() {
+        if (this.config != null && this.config.isPush == 0) {
+          this.$toast("对不起，您暂无权限回答");
+          return;
+        }
         if (this.util.empty(this.answer.content)) {
           this.$toast("请输入内容");
+          return;
+        }
+        else if (this.util.isEmoji.test(this.answer.content)) {
+          this.$toast("暂不支持emoji");
           return;
         }
         this.isLoading = true;

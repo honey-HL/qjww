@@ -15,6 +15,8 @@ const module = {
     isShowAd: true,
     //广告位详情
     adDetail: null,
+    //登录token
+    token: null,
   },
   mutations: {
     setAnswerDetail(state, value) {
@@ -32,6 +34,10 @@ const module = {
     setAdDetail(state, value) {
       state.adDetail = value;
     },
+    setToken(state, value) {
+      state.token = value;
+    },
+
   },
   actions: {
     setAnswerDetail(context, value) {
@@ -48,6 +54,9 @@ const module = {
     },
     setAdDetail(context, value) {
       context.commit("setAdDetail", value);
+    },
+    setToken(context, value) {
+      context.commit("setToken", value);
     },
   },
   getters: {},

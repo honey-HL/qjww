@@ -91,6 +91,10 @@
           this.$toast("请选择分类");
           return;
         }
+        else if (this.report.describe != "" && this.util.isEmoji.test(this.report.describe)) {
+          this.$toast("暂不支持emoji");
+          return;
+        }
         this.isLoading = true;
         this.images.forEach(item => {
           this.report.imgs.push(item.url);
