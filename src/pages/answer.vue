@@ -343,9 +343,6 @@
           -webkit-line-clamp: 3;
           overflow: hidden;
         }
-        .content>p{
-          overflow: hidden;
-        }
         .img-list {
           display: flex;
           padding-top: 5px;
