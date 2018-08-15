@@ -334,6 +334,7 @@
           }
         }
         .content {
+          max-height: 63px;
           font-family: PingFangSC-Light;
           font-size: 14px;
           color: #999999;
