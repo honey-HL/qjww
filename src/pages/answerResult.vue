@@ -94,8 +94,9 @@
     },
     created() {
       this.detail = this.$store.state.answerDetail;
+      console.log(this.$store.state.answerDetail);
       if (this.detail == null) {
-        this.api.http("post", this.api.findById, {id: this.util.getUrlParam("answerId")}, (result) => {
+        this.api.http("post", this.api.findById, {id: this.util.getUrlParam("questionId")}, (result) => {
           this.detail = result;
         }, (error) => {})
       }
@@ -107,7 +108,7 @@
       answer() {
         this.$router.push({
           path: "/index/icomeAnswer",
-          query: {keywords:detail.questionTitle,questionId: detail.id}
+          query: {keywords:this.detail.questionTitle,questionId: this.detail.id}
         })
       },
       /*获取列表*/
