@@ -3,7 +3,7 @@
     <Search @searchData="searchData" />
     <div class="content">
       <div class="hint">您可以继续搜索您遇到的手机问题</div>
-      <input type="text" placeholder="请输入标题" maxlength="30" v-model="quiz.title">
+      <input type="text" placeholder="请输入标题" maxlength="50" v-model="quiz.title">
       <div class="text-div">
         <textarea name="" id="" cols="30" rows="10" placeholder="问题描述（选填）" maxlength="255" v-model="quiz.content"></textarea>
         <span class="num">{{quiz.content.length}}

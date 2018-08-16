@@ -2,7 +2,7 @@
   <div class="home">
     <transition name="fade">
       <div v-if="adShow && adItem != null && adItem.status == 1" @click="adDetail(2)" class="ad-flex" v-lazy:background-image="imgIp + adItem.img">
-        <span class="btn" @click.stop="adShow = !adShow">跳过 {{timeCount}}s</span>
+        <span class="btn" @click.stop="hideAd">跳过 {{timeCount}}s</span>
       </div>
     </transition>
     <div id="top" class="top">
@@ -52,18 +52,20 @@
       };
     },
     created() {
-      this.adShow = this.$store.state.isShowAd;
+      console.log(sessionStorage.getItem("isShowAd"));
+      this.adShow = sessionStorage.getItem("isShowAd") == null ? true : sessionStorage.getItem("isShowAd") == "false" ? false : true;
     },
     mounted() {
-      this.setInterval = setInterval(() => {
-        if (this.timeCount == 1) {
-          clearInterval(this.setInterval);
-          this.adShow = false;
-          this.$store.dispatch("setIsShowAd", false);
-        }
-        this.timeCount--;
-      }, 1000);
-
+      if (this.adShow) {
+        this.setInterval = setInterval(() => {
+          if (this.timeCount == 1) {
+            clearInterval(this.setInterval);
+            this.adShow = false;
+            sessionStorage.setItem("isShowAd", "false");
+          }
+          this.timeCount--;
+        }, 1000);
+      }
       this.api.http("post", this.api.getAdList, {position: 0}, (result) => {
         this.logo = result;
       }, (error) => {})
@@ -134,6 +136,10 @@
           }
         }
       },
+      hideAd () {
+        sessionStorage.setItem("isShowAd", "false");
+        this.adShow = false;
+      }
     },
     directives: {
       focus: {

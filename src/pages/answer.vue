@@ -188,13 +188,7 @@
       },
       /*详情*/
       detail(item) {
-        console.log(this.$store.state);
-        if(this.$store.state.openId == null || this.$store.state.token == null){
-          this.$router.push({path: '/index/login'});
-          return;
-        };
         this.$store.dispatch("setAnswerDetail", item);
-        
         this.$router.push({
           path: "/index/answerResult"
         });
