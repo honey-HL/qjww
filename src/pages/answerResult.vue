@@ -92,7 +92,6 @@
     },
     created() {
       this.detail = this.$store.state.answerDetail;
-      console.log(this.$store.state.answerDetail);
       if (this.detail == null) {
         this.api.http("post", this.api.findById, {id: this.util.getUrlParam("questionId")}, (result) => {
           this.detail = result;

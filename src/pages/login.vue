@@ -119,6 +119,7 @@
         }, error => { });
       }
       else {
+        this.isLoading = false;
         this.user.openId = this.$store.state.openId;
       }
 
