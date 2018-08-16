@@ -76,7 +76,7 @@
         this.adItem = result;
       }, (error) => {})
 
-      this.api.http("post", this.api.countSolveQuestion, {}, (result) => {
+      this.api.http("get", this.api.countSolveQuestion, {}, (result) => {
         this.totalNumber = result;
       }, (error) => {})
 

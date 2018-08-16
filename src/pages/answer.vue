@@ -35,9 +35,9 @@
             <i class="badge" v-else :class="{img: item.label == 1, video: item.label == 2, problem: item.label == 3}"></i>
             <span v-html="item.questionTitle"></span>
           </div>
-          <div class="content" v-html="item.questionContent"></div>
-          <div class="img-list">
-            <div class="img-item" v-for="child in splitImg(item.images)" v-lazy:background-image="child"></div>
+          <div class="content" v-html="item.questionContent" v-if="item.label === 1"></div>
+          <div class="img-list" v-if="item.label == 2">
+            <video class="img-item" v-for="child in splitImg(item.images)" :src="child" ></video>
           </div>
 
           <!--<div class="video-cover"></div>-->
@@ -345,14 +345,23 @@
           overflow: hidden;
         }
         .img-list {
-          display: flex;
+          display: block;
           padding-top: 5px;
-          .img-item {
+          /*.img-item {
             width: calc((100% - 30px) / 4);
             height: 58px;
             margin: 0 10px 10px 0;
             border-radius: 4px;
             background: #e6e6e6;
+            background-size: cover !important;
+            background-position: center !important;
+          }*/
+          .img-item {
+            width: 100%;
+            height: auto;
+            margin: 0 10px 10px 0;
+            border-radius: 4px;
+            /*background: #e6e6e6;*/
             background-size: cover !important;
             background-position: center !important;
           }
@@ -425,5 +434,13 @@
   .bg {
     background: #fcfcfc;
     height: 10px;
+  }
+</style>
+<style lang="css">
+  .content p{
+    display: inline-block;
+  }
+  .content p img{
+    max-height: 63px;
   }
 </style>

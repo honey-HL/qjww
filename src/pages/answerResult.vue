@@ -8,12 +8,10 @@
           <i class="badge" v-else :class="{img: detail.label == 1, video: detail.label == 2, problem: detail.label == 3}"></i>
           <span v-html="detail.questionTitle"></span>
         </div>
-        <div class="content" v-html="detail.questionContent"></div>
         <div class="img-list">
-          <div class="img-item" v-for="child in splitImg(detail.images)" v-lazy:background-image="child">
-            <!-- <img v-lazy="child" width="100%" height="100%"> -->
-          </div>
+            <video class="img-item" v-for="child in splitImg(detail.images)" :src="child" controls></video>
         </div>
+        <div class="content" v-html="detail.questionContent"></div>
         <!-- <div class="video-cover"></div> -->
         <div class="operation-bar">
           <div class="left">
@@ -166,11 +164,11 @@
       },
       /*赞*/
       praise(id) {
-        if (this.config == null) {
-          this.$router.push({path: '/index/login'});
-          return;
-        }
-        if (this.config.isLike == 0) {
+        // if (this.config == null) {
+        //   this.$router.push({path: '/index/login'});
+        //   return;
+        // }
+        if (this.config != null && this.config.isLike == 0) {
           this.$toast("对不起，您暂无权限点赞");
           return;
         }
@@ -292,10 +290,10 @@
         margin-bottom: 10px;
       }
       .img-list {
-        display: flex;
-        flex-flow: wrap;
+        display: contents;
+        /*flex-flow: wrap;*/
         padding-top: 5px;
-        .img-item {
+        /*.img-item {
           width: calc((100% - 10px) / 2);
           height: 80px;
           margin: 0 10px 10px 0;
@@ -306,7 +304,17 @@
           &:nth-child(2n) {
             margin-right: 0;
           }
-        }
+        }*/
+
+        .img-item {
+            width: 100%;
+            height: auto;
+            margin: 0 10px 10px 0;
+            border-radius: 4px;
+            /*background: #e6e6e6;*/
+            background-size: cover !important;
+            background-position: center !important;
+          }
 
       }
       .video-cover {
