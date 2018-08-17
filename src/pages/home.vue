@@ -242,10 +242,10 @@
       & .ad {
         display: inline-block;
         border-radius: 6px;
-        width: calc(692px / 2);
+        width: calc(670px / 2);
         max-width: calc(100% - 20px);
         margin: 0 auto;
-        height: calc(242px / 2);
+        height: calc(180px / 2);
         background-size: cover !important;
         background-position: center !important;
         background: #ddd;

@@ -24,7 +24,9 @@
         </div>
       </div>
     </div>
-    <div class="ad-bg" v-if="adItem != null && adItem.status == 1" @click="adDetail" v-lazy:background-image="imgIp + adItem.img"></div>
+    <div class="ad-bg" v-if="adItem != null && adItem.status == 1" @click="adDetail">
+      <img class="signInLogo" :src="imgIp + adItem.img" alt="">
+    </div>
     <div class="worp">
       <div class="sign-bg">
         <div class="title">{{month}}月签到日历</div>
@@ -237,7 +239,7 @@
     .ad-bg{
       height: 80px;
       background: #fff;
-      padding: 10px;
+      padding: 0;
       box-sizing: border-box;
       margin-top: 10px;
     }
@@ -364,5 +366,11 @@
         }
       }
     }
+  }
+</style>
+<style>
+  .signInLogo{
+    width: 100%;
+    height: auto;
   }
 </style>

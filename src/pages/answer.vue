@@ -38,6 +38,9 @@
           <div class="content" v-html="item.questionContent" v-if="item.label === 1"></div>
           <div class="img-list" v-if="item.label == 2">
             <video class="img-item" v-for="child in splitImg(item.images)" :src="child" ></video>
+            <div class="ThisVideoPlayButton" v-if="item.label === 2 && item.coverUrl !=null">
+              <img class="suspend img-responsive" :src="item.coverUrl" alt="">  
+            </div>
           </div>
 
           <!--<div class="video-cover"></div>-->
@@ -188,6 +191,10 @@
       },
       /*详情*/
       detail(item) {
+        if(this.$store.state.openId == null || this.$store.state.token == null){
+          this.$router.push({path: '/index/login'});
+          return;
+        };
         this.$store.dispatch("setAnswerDetail", item);
         this.$router.push({
           path: "/index/answerResult"
@@ -347,6 +354,7 @@
         .img-list {
           display: block;
           padding-top: 5px;
+          position: relative;
           /*.img-item {
             width: calc((100% - 30px) / 4);
             height: 58px;
@@ -359,7 +367,7 @@
           .img-item {
             width: 100%;
             height: auto;
-            margin: 0 10px 10px 0;
+            margin: 0 0 10px 0;
             border-radius: 4px;
             /*background: #e6e6e6;*/
             background-size: cover !important;
@@ -442,5 +450,30 @@
   }
   .content p img{
     max-height: 63px;
+  }
+  .ThisVideoPlayButton{
+    width: 100%;
+    height: calc(100%-20px);
+    position: absolute;
+    margin: 0;
+    /*background-color: rgba(0,0,0,.2);*/
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10000 !important;
+    border-radius: 5px;
+    /*display: block;*/
+  }
+  img.suspend{
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
   }
 </style>

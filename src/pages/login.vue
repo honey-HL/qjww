@@ -92,6 +92,9 @@
                 this.$store.dispatch("setOpenId", result.openid);
                 this.user.openId = result.openid;
                 this.weChatUser = result;
+                window.weChatUserNickName = result.nickname;
+                window.weChatUserHeadimgurl = result.headimgurl;
+                console.log(window.weChatUserNickName);
                 this.api.http("post", this.api.login, {
                   openId: this.user.openId,
                   nickName: result.nickname,
@@ -140,8 +143,8 @@
           return;
         }
         this.isLoading = true;
-        this.user.nickName = this.weChatUser.nickname;
-        this.user.avatar = this.weChatUser.headimgurl;
+        this.user.nickName = window.weChatUserNickName;
+        this.user.avatar = window.weChatUserHeadimgurl;
         this.api.http("post", this.api.bindPhone, this.user, result => {
           localStorage.setItem("accessToken", result.token);
           this.$store.dispatch("setToken", result.token);

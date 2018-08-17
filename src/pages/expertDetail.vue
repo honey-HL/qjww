@@ -23,6 +23,9 @@
           </div>
         </div>
       </div>
+      <div class="NewestAnswerDiv">
+        <p>最新回答</p>
+      </div>
       <transition-group name="fade">
         <div class="row" v-for="(child, index) in items" :key="index">
           <div class="top">
@@ -30,8 +33,8 @@
             <div class="name">{{child.userNickName}}</div>
           </div>
           <div class="title">
-            <i class="badge quiz" v-if="detail.userPush">提问</i>
-            <i class="badge" v-else :class="{img: detail.label == 1, video: detail.label == 2, problem: detail.label == 3}"></i>
+            <i class="badge quiz" v-if="child.userPush">提问</i>
+            <i class="badge" v-else :class="{img: child.label == 1, video: child.label == 2, problem: child.label == 3}"></i>
             <span v-html="child.questionTitle"></span>
           </div>
           <div class="content" v-html="child.content"></div>
@@ -380,5 +383,21 @@
         }
       }
     }
+  }
+</style>
+<style>
+  .NewestAnswerDiv{
+    width: 100%;
+    max-height: 90px;
+    height:max-content;
+    padding: 10px 0;
+    margin: 0;
+    border-bottom: 1px solid #efefef;
+  }
+  .NewestAnswerDiv>p{
+    font-size: 16px;
+    color: #5c695c;
+    text-align: center;
+    font-weight: lighter;
   }
 </style>

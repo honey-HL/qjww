@@ -9,7 +9,12 @@
           <span v-html="detail.questionTitle"></span>
         </div>
         <div class="img-list">
-            <video class="img-item" v-for="child in splitImg(detail.images)" :src="child" controls></video>
+            <video class="img-item videoPlay" v-for="child in splitImg(detail.images)" :src="child" controls></video>
+
+            <!--<div class="ThisVideoPlayButton" v-if="detail.label === 2 && detail.coverUrl !=null" @click="clickVideoPlayer()">
+              <img class="suspend img-responsive" :src="detail.coverUrl" alt="">  
+            </div>-->
+
         </div>
         <div class="content" v-html="detail.questionContent"></div>
         <!-- <div class="video-cover"></div> -->
@@ -201,7 +206,12 @@
       },
       formatting (time) {
         return this.util.formatting(time);
-      }
+      },
+      /*clickVideoPlayer(){
+        var v1=document.getElementsByClassName(".videoPlay").get(0);
+        v1.startAutoPlay;
+      }*/
+      
     },
     computed: {}
   };
@@ -292,6 +302,7 @@
         display: contents;
         /*flex-flow: wrap;*/
         padding-top: 5px;
+        position: relative;
         /*.img-item {
           width: calc((100% - 10px) / 2);
           height: 80px;
@@ -450,4 +461,32 @@
     }
   }
 
+</style>
+<style lang="css">
+
+  .ThisVideoPlayButton{
+    width: 100%;
+    height: calc(100%-20px);
+    position: absolute;
+    margin: 0;
+    /*background-color: rgba(0,0,0,.2);*/
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10000 !important;
+    border-radius: 5px;
+    /*display: block;*/
+  }
+  img.suspend{
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
 </style>

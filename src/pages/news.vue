@@ -40,7 +40,7 @@
       },
       /*获取列表*/
       getData() {
-        this.api.http("post", this.api.getNotification, {
+        this.api.http("get", this.api.getNotification, {
           pageNO: this.pageNO,
           pageSize: this.pageSize
         }, result => {
