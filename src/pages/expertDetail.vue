@@ -29,7 +29,7 @@
       <transition-group name="fade">
         <div class="row" v-for="(child, index) in items" :key="index">
           <div class="top">
-            <div class="head" v-lazy:background-image="child.userAvatar"></div>
+            <div class="head" v-lazy:background-image="imgIp + child.userAvatar"></div>
             <div class="name">{{child.userNickName}}</div>
           </div>
           <div class="title">
@@ -104,6 +104,7 @@
             else {
               result.data.forEach((item) => {
                 this.items.push(item);
+                console.log(this.items);
               })
             }
           }

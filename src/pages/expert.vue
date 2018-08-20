@@ -266,6 +266,9 @@
           lat: this.lat,
           searchValue: this.searchValue,
         }, result => {
+          console.log(result);
+          console.log(this.pageSize,this.lng,this.lat,this.searchValue);
+          //debugger;
           if (type == 0) {
             this.isShowLoading = false;
             if (this.pageNO1 == 1) {

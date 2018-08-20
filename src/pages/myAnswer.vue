@@ -18,7 +18,7 @@
             <transition-group name="fade">
               <div class="row" v-for="(item, index) in dataList" :key="index" @click="detail(item.questionId)">
                 <div class="top">
-                  <div class="head" v-lazy:background-image="item.userAvater"></div>
+                  <div class="head" v-lazy:background-image="imgIp + item.userAvater"></div>
                   <div class="name">{{item.nikeName}}</div>
                 </div>
                 <div class="title" v-html="item.questionTitle"></div>
@@ -45,7 +45,7 @@
           <scroller v-else-if="dataList2.length > 0" class="scroller" :on-refresh="refresh2" :on-infinite="infinite2" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
             <div class="row" v-for="(item, index) in dataList2" :key="index" @click="detail(item.questionId)">
               <div class="top">
-                <div class="head" v-lazy:background-image="item.userAvatar"></div>
+                <div class="head" v-lazy:background-image="imgIp +item.userAvatar"></div>
                 <div class="name">{{item.userNickName}}</div>
               </div>
               <div class="title">
@@ -66,7 +66,7 @@
           </scroller>
           <Not v-else title="您还没有回答提问哦" hint="快去回答吧" type="HD">
             <div class="o-btn">
-              <span>去回答</span>
+              <router-link to="/index/forAnswer"><span>去回答</span></router-link>
             </div>
           </Not>
         </div>
@@ -94,6 +94,7 @@
     },
     data() {
       return {
+        imgIp: this.api.imgIp,
         meunList: [{ id: 1, name: "提问" }, { id: 2, name: "回答" }],
         current: 0,
         swiper: null,

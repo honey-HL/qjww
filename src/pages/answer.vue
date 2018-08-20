@@ -98,6 +98,7 @@
     },
     created() {
       this.api.http("get", this.api.isRead, {}, result => {
+        console.log(result);
         this.isRead = result.isread;
       }, error => {});
     },

@@ -3,11 +3,13 @@
     <div class="bg"></div>
     <div class="wrop">
       <div class="top">
-        <div class="head" v-lazy:background-image="userInfo.avatar" @click="edit"></div>
+        <div class="head" v-lazy:background-image="userInfo.avatar" @click="edit" v-if="userInfo.roleId == 0"></div>
+        <div class="head" v-lazy:background-image="imgIp + userInfo.avatar" @click="edit" v-if="userInfo.roleId == 1"></div>
         <div class="name">{{userInfo.nickName}}</div>
         <div>
-          <div class="role" v-if="userInfo.roleId == 1">已认证</div>
-          <router-link tag="span" class="btn" to="/index/signin">签到</router-link>
+          <div class="role" v-if="userInfo.roleId == 1">{{userInfo.authName}}</div>
+          <router-link tag="span" class="btn" to="/index/signin" v-if="checkSign == false">签到</router-link>
+          <router-link tag="span" class="btn" to="/index/signin" v-if="checkSign == true">已签到</router-link>
         </div>
         <div class="total-bar">
           <div class="left">
@@ -67,7 +69,7 @@
 
 <script>
   import MyFooter from "../components/myFooter";
-
+  console.log(localStorage.getItem("userInfo"));
   export default {
     name: 'my',
     components: {
@@ -79,9 +81,14 @@
         userInfo: JSON.parse(localStorage.getItem("userInfo")),
         like: 0,
         score: 0,
+        checkSign:null,
       }
     },
     created() {
+      this.api.http("post", this.api.isSign, {}, result => {
+        this.checkSign = result;
+      }, error => { });
+
       this.api.http("post", this.api.getLike, {}, result => {
         this.like = result;
       }, error => { });

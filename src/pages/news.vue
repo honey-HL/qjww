@@ -3,11 +3,18 @@
     <scroller v-if="!isShow" class="scroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A"
               loading-layer-color="#5FB62A">
       <transition-group name="fade">
-        <div class="row" v-for="(item, index) in items" :key="index">
-          <div class="title">
-            <i :class="[{'news-zan': item.type == 0},{'news-comment': item.type == 1},{'news-activity': item.type == 2}]"></i>
-            {{item.userName == null ? '匿名' : item.userName}} 回答了您提出的问题
-            <span v-html="item.title"></span>
+        <div class="row" v-for="(item, index) in items" :key="index" @click="clickReaded(item)">
+          <div class="title" v-if="item.type == 2">
+            <i :class="[{'news-zan': item.type == 2},{'news-comment': item.type == 1},{'news-activity': item.type == 0}]"></i>
+            您的回答<span v-html="item.title"></span>获得{{item.userName}}点赞
+          </div>
+          <div class="title" v-if="item.type == 1">
+              <i :class="[{'news-zan': item.type == 2},{'news-comment': item.type == 1},{'news-activity': item.type == 0}]"></i>
+              {{item.userName}} 回答了您提出的问题<span v-html="item.title"></span>
+          </div>
+          <div class="title" v-if="item.type == 0">
+              <i :class="[{'news-zan': item.type == 2},{'news-comment': item.type == 1},{'news-activity': item.type == 0}]"></i>
+              本周参与<span v-html="item.title"></span>
           </div>
           <div class="time">{{formatting(item.createTime)}}</div>
         </div>
@@ -81,6 +88,17 @@
           this.getData();
           done(this.isEnd);
         }, 1000);
+      },
+      clickReaded(item){
+        console.log(item);
+        debugger;
+        this.api.http("get", this.api.clickRead, {
+          id:item.id,
+        }, result => {
+          console.log(result);
+        }, error =>{
+        });
+        this.$router.push({path: '/index/newsDetail'});
       },
     }
   }

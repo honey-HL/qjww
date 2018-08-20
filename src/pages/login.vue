@@ -94,7 +94,7 @@
                 this.weChatUser = result;
                 window.weChatUserNickName = result.nickname;
                 window.weChatUserHeadimgurl = result.headimgurl;
-                console.log(window.weChatUserNickName);
+                //localStorage.setItem("userInfo", JSON.stringify(result));
                 this.api.http("post", this.api.login, {
                   openId: this.user.openId,
                   nickName: result.nickname,
@@ -152,6 +152,8 @@
           this.isLogin = true;
           this.isLoading = false;
           this.api.http("post", this.api.getInfo, {}, result => {
+            //console.log(result);
+            //debugger;
             localStorage.setItem("userInfo", JSON.stringify(result));
             setTimeout(() => {
               if (this.$route.query.redirect != undefined) {
