@@ -69,7 +69,7 @@
 
 <script>
   import MyFooter from "../components/myFooter";
-  //console.log(localStorage.getItem("userInfo"));
+  console.log(localStorage.getItem("userInfo"));
   export default {
     name: 'my',
     components: {
