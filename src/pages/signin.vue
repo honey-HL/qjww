@@ -41,7 +41,7 @@
         </div>
         <transition-group name="fade">
           <div class="day-row" v-for="(item, index) in signHistory.monthArr" :key="index">
-              <div class="day-item" :class="{active: childItem.isSign}" v-for="(childItem, index) in item" :key="index">{{childItem.days}}</div>
+              <div class="day-item" :class="{active: childItem.isSign}" v-for="(childItem, index) in item" :key="index" :data-days="childItem.days">{{childItem.days}}</div>
           </div>
         </transition-group>
       </div>
@@ -147,20 +147,42 @@
     updated() {
 //      try {
         let childArr = document.getElementsByClassName("active");
-        console.log(childArr,childArr[0].innerHTML);
         if (childArr.length > 1) {
-          for(var i=0;i<childArr.length;i++){
-            if((childArr[i+1].innerHTML - childArr[i].innerHTML) == 1 && i>=0){
-              childArr[0].style.cssText = "border-radius: 50px 0 0 50px;";
-            }
-            if((childArr[i+1].innerHTML - childArr[i].innerHTML) > 1 && i>=1){
-              childArr[i].style.cssText = "border-radius: 0 50px 50px 0;";
-              childArr[i+1].style.cssText = "border-radius: 50px;";
-            }else{
+          childArr[0].style.cssText = "border-radius: 50px 0 0 50px;";
+          childArr[childArr.length-1].style.cssText = "border-radius: 0 50px 50px 0;";
+          
+          for(var i=0;i<childArr.length-1;i++){
+            console.log(i);
+            if((childArr[i+1].innerHTML - childArr[i].innerHTML) == 1 && i==0){
+              childArr[i].style.cssText = "border-radius: 50px 0 0 50px;";
+              childArr[i+1].style.cssText = "border-radius: 0 ;";
+            }else if((childArr[i+1].innerHTML - childArr[i].innerHTML) > 1 && i==0){
               childArr[i].style.cssText = "border-radius: 50px;";
               childArr[i+1].style.cssText = "border-radius: 50px;";
             }
+
+            if((childArr[i+1].innerHTML - childArr[i].innerHTML) == 1 && i>0){
+              
+              if(childArr[i+2].innerHTML-childArr[i+1].innerHTML>1){
+                childArr[i+1].style.cssText = "border-radius: 0 50px 50px 0;";
+              }
+              if(childArr[i].innerHTML-childArr[i-1].innerHTML>1){
+                childArr[i].style.cssText = "border-radius: 50px 0 0 50px;";
+              }else{
+                childArr[i].style.cssText = "border-radius: 0;";
+              }
+              
+
+            }else if((childArr[i+1].innerHTML - childArr[i].innerHTML) > 1 && i>0){
+              if((childArr[i].innerHTML-childArr[i-1].innerHTML)==1){
+                childArr[i].style.cssText = "border-radius: 0 50px 50px 0;";
+              }else{
+                childArr[i].style.cssText = "border-radius: 50px;";
+              }
+              childArr[i+1].style.cssText = "border-radius: 50px;";
+            }
           }
+          
         }else {
           let firstDiv = childArr[0];
           firstDiv.style.cssText = "border-radius: 50px;";
