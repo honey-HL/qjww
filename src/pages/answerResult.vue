@@ -11,7 +11,7 @@
         <div class="img-list">
             <video class="img-item videoPlay" v-for="child in splitImg(detail.images)" :src="child" controls></video>
 
-            <!--<div class="ThisVideoPlayButton" v-if="detail.label === 2 && detail.coverUrl !=null" @click="clickVideoPlayer()">
+            <!--<div class="ThisVideoPlayButton" v-if="detail.label === 2 && detail.label !=null" @click="clickVideoPlayer()">
               <img class="suspend img-responsive" :src="detail.coverUrl" alt="">  
             </div>-->
 
@@ -41,7 +41,8 @@
           <!-- <div class="video-cover"></div> -->
           <div class="operation-bar">
             <div class="left">
-              <div class="head" v-lazy:background-image="item.userAvatar"></div>
+              <div class="head" v-lazy:background-image="item.userAvatar" v-if="item.isUserAvatar"></div>
+              <div class="head" v-lazy:background-image="imgIp + item.userAvatar" v-if="!item.isUserAvatar"></div>
               <div class="name">{{item.userNickName}}</div>
               <div class="time">{{formatting(item.createTime)}}</div>
             </div>
@@ -82,6 +83,7 @@
     name: "answerResult",
     data() {
       return {
+        imgIp: this.api.imgIp,
         items: [],
         detail: null,
         searchValue: "",
@@ -115,12 +117,27 @@
       },
       /*获取列表*/
       getData() {
+        if(this.$store.state.token == null){
+          this.$router.push({path: '/index/login'});
+          return;
+        }
         this.api.http("post", this.api.findByQuestion, {
           pageNo: this.start,
           pageSize: this.row,
           questionId: this.detail.id
         }, result => {
+          /*if(result.code==1005){
+            this.$router.push({path: '/index/login'});
+          }*/
           if (this.start == 1) {
+            for(var i in result.data){
+              if(result.data[i].userAvatar.indexOf("http") != -1){
+                result.data[i]["isUserAvatar"] = true;
+              }else{
+                result.data[i]["isUserAvatar"] = false;
+              };
+            }
+
             this.items = result.data;
             this.totalNum = result.allNum;
             if (result.data.length == 0) {

@@ -18,7 +18,8 @@
             <transition-group name="fade">
               <div class="row" v-for="(item, index) in dataList" :key="index" @click="detail(item.questionId)">
                 <div class="top">
-                  <div class="head" v-lazy:background-image="imgIp + item.userAvater"></div>
+                  <div class="head" v-lazy:background-image="item.userAvatar" v-if="item.isUserAvatar"></div>
+                  <div class="head" v-lazy:background-image="imgIp + item.userAvatar" v-if="!item.isUserAvatar"></div>
                   <div class="name">{{item.nikeName}}</div>
                 </div>
                 <div class="title" v-html="item.questionTitle"></div>
@@ -45,7 +46,8 @@
           <scroller v-else-if="dataList2.length > 0" class="scroller" :on-refresh="refresh2" :on-infinite="infinite2" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
             <div class="row" v-for="(item, index) in dataList2" :key="index" @click="detail(item.questionId)">
               <div class="top">
-                <div class="head" v-lazy:background-image="imgIp +item.userAvatar"></div>
+                <div class="head" v-lazy:background-image="item.userAvatar" v-if="item.isUserAvatar"></div>
+                <div class="head" v-lazy:background-image="imgIp +item.userAvatar" v-if="!item.isUserAvatar"></div>
                 <div class="name">{{item.userNickName}}</div>
               </div>
               <div class="title">
@@ -152,6 +154,14 @@
           if (type == 0) {
             this.isShowLoading = false;
             if (this.pageNO1 == 1) {
+              for(var i in result){
+                if(result[i].userAvatar.indexOf("http") != -1){
+                  result[i]["isUserAvatar"] = true;
+                }else{
+                  result[i]["isUserAvatar"] = false;
+                };
+              }
+
               this.dataList = result;
               if (result.length == 0) {
                 this.isEnd = true;
@@ -172,6 +182,15 @@
           else {
             this.isShowLoading2 = false;
             if (this.pageNO2 == 1) {
+              
+              for(var i in result){
+                if(result[i].userAvatar.indexOf("http") != -1){
+                  result[i]["isUserAvatar"] = true;
+                }else{
+                  result[i]["isUserAvatar"] = false;
+                };
+              }
+          
               this.dataList2 = result;
               if (result.length == 0) {
                 this.isEnd2 = true;
