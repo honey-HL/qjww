@@ -152,8 +152,6 @@
           this.isLogin = true;
           this.isLoading = false;
           this.api.http("post", this.api.getInfo, {}, result => {
-            //console.log(result);
-            //debugger;
             localStorage.setItem("userInfo", JSON.stringify(result));
             setTimeout(() => {
               if (this.$route.query.redirect != undefined) {

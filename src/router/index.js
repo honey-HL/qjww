@@ -25,6 +25,7 @@ import Signin from '@/pages/signin'
 import Edit from '@/pages/edit'
 import Rule from '@/pages/rule'
 import Content from '@/pages/content'
+import NewsDetail from '@/pages/newsDetail'
 
 
 Router.prototype.goBack = function () {
@@ -54,7 +55,7 @@ const routers = new Router({
         { path: 'quiz', name: 'quiz', component: Quiz, meta: { title: "提问", requireAuth: true } },
         { path: 'quizSuccess', name: 'quizSuccess', component: QuizSuccess, meta: { title: "提问成功", requireAuth: true } },
         { path: 'news', name: 'news', component: News, meta: { title: "通知", requireAuth: true } },
-        //{ path: 'newsDetail', name: 'newsDetail', component: NewsDetail, meta: { title: "通知详情", requireAuth: true } },
+        { path: 'newsDetail', name: 'newsDetail', component: NewsDetail, meta: { title: "通知详情", requireAuth: true } },
         { path: 'forAnswer', name: 'forAnswer', component: ForAnswer, meta: { title: "等你来答", requireAuth: true } },
         { path: 'answerResult', name: 'answerResult', component: AnswerResult, meta: { title: "答案搜索结果" } },
         { path: 'report', name: 'report', component: Report, meta: { title: "举报", requireAuth: true } },
