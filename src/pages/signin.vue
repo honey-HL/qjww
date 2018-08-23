@@ -135,7 +135,7 @@
           }
         }
         this.signHistory = result;
-        console.log(this.signHistory.monthArr);
+        //console.log(this.signHistory.monthArr);
       }, (error) => {})
 
       //获取广告位
@@ -145,20 +145,38 @@
 
     },
     updated() {
-      try {
+//      try {
         let childArr = document.getElementsByClassName("active");
+        console.log(childArr,childArr[0].innerHTML);
         if (childArr.length > 1) {
-          let firstDiv = childArr[0];
-          firstDiv.style.cssText = "border-radius: 50px 0 0 50px;";
-          let lastDiv = childArr[childArr.length - 1];
-          lastDiv.style.cssText = "border-radius: 0 50px 50px 0;";
-        }
-        else {
+          for(var i=0;i<childArr.length;i++){
+            if((childArr[i+1].innerHTML - childArr[i].innerHTML) == 1 && i>=0){
+              childArr[0].style.cssText = "border-radius: 50px 0 0 50px;";
+            }
+            if((childArr[i+1].innerHTML - childArr[i].innerHTML) > 1 && i>=1){
+              childArr[i].style.cssText = "border-radius: 0 50px 50px 0;";
+              childArr[i+1].style.cssText = "border-radius: 50px;";
+            }else{
+              childArr[i].style.cssText = "border-radius: 50px;";
+              childArr[i+1].style.cssText = "border-radius: 50px;";
+            }
+          }
+        }else {
           let firstDiv = childArr[0];
           firstDiv.style.cssText = "border-radius: 50px;";
         }
-      }
-      catch (e) { }
+//        if (childArr.length > 1) {
+//          let firstDiv = childArr[0];
+//          firstDiv.style.cssText = "border-radius: 50px 0 0 50px;";
+//          let lastDiv = childArr[childArr.length - 1];
+//          lastDiv.style.cssText = "border-radius: 0 50px 50px 0;";
+//        }
+//        else {
+//          let firstDiv = childArr[0];
+//          firstDiv.style.cssText = "border-radius: 50px;";
+//        }
+//      }
+//      catch (e) { }
     },
     methods: {
       mall() {

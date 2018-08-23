@@ -29,7 +29,7 @@
                 <div class="input-bar" @click.stop>
                   <div class="input-div"><span @click="showPopup = !showPopup">请选择地址</span></div>
                   <div class="search-bar">
-                    <input placeholder="输入地区、师傅名字" maxlength="30" v-model="searchValue" @keyup.enter="searchEnterFun">
+                    <input placeholder="输入师傅名字" maxlength="30" v-model="searchValue" @keyup.enter="searchEnterFun">
                     <img src="../assets/search.png" @click="search"/>
                   </div>
                 </div>
@@ -249,6 +249,8 @@
         }
         else {
           this.switchMask();
+          console.log(this.searchValue);
+          //debugger;
           this.pageNO1 = 1;
           this.getData(0);
         }

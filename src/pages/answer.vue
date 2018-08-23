@@ -192,6 +192,7 @@
       },
       /*详情*/
       detail(item) {
+        console.log(item);
         if(this.$store.state.openId == null || this.$store.state.token == null){
           this.$router.push({path: '/index/login'});
           return;

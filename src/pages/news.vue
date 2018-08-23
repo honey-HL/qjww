@@ -91,15 +91,27 @@
       },
       clickReaded(item){
         console.log(item);
-        debugger;
+        //debugger;
         this.api.http("get", this.api.clickRead, {
           id:item.id,
-        }, result => {
-          console.log(result);
-        }, error =>{
-        });
-        this.$router.push({path: '/index/newsDetail'});
-      },
+        }, result => {}, error =>{});
+
+        if(item.isActivte ==1){
+          window.location.href=item.url;
+        }else{
+          if(item.type ==0){
+            localStorage.setItem("newsDetailCon", JSON.stringify(item));
+            this.$router.push({path: '/index/newsDetail'});
+          }else if(item.type ==1 || item.type ==2){
+            this.api.http("post", this.api.findById, {id: item.questionId}, (result) => {
+              this.$store.dispatch("setAnswerDetail", result.question);
+              this.$router.push({path : "/index/answerResult"});
+            }, (error) => {
+              
+            });
+          }
+        }
+      }
     }
   }
 </script>
