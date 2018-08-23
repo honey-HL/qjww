@@ -31,11 +31,14 @@
       <div class="answer-list" v-for="item in items" @click="detail(item)">
         <div class="item">
           <div class="title">
-            <i class="badge quiz" v-if="item.userPush">提问</i>
+            <i class="badge quiz" v-if="item.userPush"></i>
             <i class="badge" v-else :class="{img: item.label == 1, video: item.label == 2, problem: item.label == 3}"></i>
             <span v-html="item.questionTitle"></span>
           </div>
-          <div class="content" v-html="item.questionContent" v-if="item.label === 1"></div>
+          <div class="content" v-html="item.questionContent" v-if="item.label == 3 || item.label ==0 || item.label == 1"></div>
+          <div class="img-list" v-if="item.label == 0">
+            <img class="img-item" v-for="child in splitImg(item.images)" :src="child" >  
+          </div>
           <div class="img-list" v-if="item.label == 2">
             <video class="img-item" v-for="child in splitImg(item.images)" :src="child" ></video>
             <div class="ThisVideoPlayButton" v-if="item.label === 2 && item.coverUrl !=null">
@@ -197,6 +200,7 @@
           this.$router.push({path: '/index/login'});
           return;
         };*/
+        console.log(item);
         this.$store.dispatch("setAnswerDetail", item);
         this.$router.push({
           path: "/index/answerResult"
@@ -333,7 +337,7 @@
             background: url(../assets/video.png);
           }
           i.quiz {
-            background: #5FB62A;
+            background: url(../assets/problem.png);
             border-radius: 4px;
             color: #fff; font-style:normal;
             line-height: calc(28px / 2);

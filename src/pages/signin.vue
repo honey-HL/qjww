@@ -145,12 +145,10 @@
 
     },
     updated() {
-//      try {
+      //try {
         let childArr = document.getElementsByClassName("active");
         if (childArr.length > 1) {
-          childArr[0].style.cssText = "border-radius: 50px 0 0 50px;";
-          childArr[childArr.length-1].style.cssText = "border-radius: 0 50px 50px 0;";
-          
+        
           for(var i=0;i<childArr.length-1;i++){
             console.log(i);
             if((childArr[i+1].innerHTML - childArr[i].innerHTML) == 1 && i==0){
@@ -183,6 +181,11 @@
             }
           }
           
+          let firstDiv = childArr[0];
+          let lastDiv = childArr[childArr.length - 1];
+          firstDiv.style.cssText = "border-radius: 50px 0 0 50px;";
+          lastDiv.style.cssText = "border-radius: 0 50px 50px 0;";
+
         }else {
           let firstDiv = childArr[0];
           firstDiv.style.cssText = "border-radius: 50px;";
@@ -197,8 +200,8 @@
 //          let firstDiv = childArr[0];
 //          firstDiv.style.cssText = "border-radius: 50px;";
 //        }
-//      }
-//      catch (e) { }
+      //}
+      //catch (e) { }
     },
     methods: {
       mall() {

@@ -152,6 +152,11 @@
           this.isLogin = true;
           this.isLoading = false;
           this.api.http("post", this.api.getInfo, {}, result => {
+            if(result.avatar.indexOf("http") != -1){
+              result["isUserHeadPic"] = true;
+            }else{
+              result["isUserHeadPic"] = false;
+            }
             localStorage.setItem("userInfo", JSON.stringify(result));
             setTimeout(() => {
               if (this.$route.query.redirect != undefined) {

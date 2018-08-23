@@ -9,8 +9,9 @@
           <span v-html="detail.questionTitle"></span>
         </div>
         <div class="img-list">
-            <video class="img-item videoPlay" v-for="child in splitImg(detail.images)" :src="child" controls></video>
-
+            <!--<video class="img-item videoPlay" v-for="child in splitImg(detail.images)" :src="child" controls></video>-->
+            <video class="img-item videoPlay" v-for="child in splitImg(detail.images)" :src="child" controls v-if="userPush"></video>
+            <img class="img-item" v-for="child in splitImg(detail.images)" :src="child" alt="" v-if="!userPush">  
             <!--<div class="ThisVideoPlayButton" v-if="detail.label === 2 && detail.label !=null" @click="clickVideoPlayer()">
               <img class="suspend img-responsive" :src="detail.coverUrl" alt="">  
             </div>-->

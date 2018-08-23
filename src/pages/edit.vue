@@ -2,15 +2,21 @@
   <div class="edit">
     <div class="row">
       <div class="left">
-        <UploadFile @uploadCall="onRead">
-          <div class="head" v-lazy:background-image="avatar"></div>
-        </UploadFile>
+          <van-uploader :after-read="uploadFile" accept="image/*">
+            <slot></slot>
+            <div class="head" v-lazy:background-image="avatar" v-if="userInfo.isUserHeadPic"></div>
+            <div class="head" v-lazy:background-image="imgIp + avatar" v-if="!userInfo.isUserHeadPic"></div>
+          </van-uploader> 
       </div>
         <div class="right">
-          <UploadFile @uploadCall="onRead">
+            <van-uploader :after-read="uploadFile" accept="image/*">
+              <slot></slot>
+            </van-uploader> 
             <span class="hint">修改头像</span>
             <i class="icon"></i>
-          </UploadFile>
+            <transition name="fade">
+                <Loader title="上传中" v-if="isFileLoading"/>
+            </transition>
         </div>
     </div>
     <div class="row">
@@ -31,14 +37,17 @@
 </template>
 
 <script>
-  import UploadFile from "../components/uploadFile"
+  //import UploadFile from "../components/uploadFile"
+  import Loader from "../components/loader"
   export default {
     name: "edit",
     components: {
-      UploadFile
+      Loader
     },
     data() {
       return {
+        imgIp: this.api.imgIp,
+        url:this.api.imgIp + this.api.updateUserHead,
         isFileLoading: false,
         userInfo: JSON.parse(localStorage.getItem("userInfo")),
         avatar: JSON.parse(localStorage.getItem("userInfo")).avatar,
@@ -46,6 +55,102 @@
       };
     },
     methods: {
+      /**上传文件方法**/
+      uploadFile(fileObj) {
+        console.log(fileObj);
+        fileObj = fileObj.file;
+        let size = Math.round(fileObj.size / 1024 / 1024 * 100) / 100;
+        if(size >= 10){
+          this.$toast("照片最大尺寸为10MB，请重新上传!");
+          return;
+        }
+        this.isFileLoading = true;
+        let xhr;
+        let form = new FormData();
+        if(fileObj.size / 1024 > 1025) { //大于1M，进行压缩上传
+          this.photoCompress(fileObj, {
+            quality: 0.2
+          }, (base64Codes) => {
+            let bl = this.convertBase64UrlToBlob(base64Codes);
+            form.append("file", bl, "file_" + Date.parse(new Date()) + ".jpg");
+            xhr = new XMLHttpRequest();
+            let picFileAndPath={file:fileObj,path:"qjww"};
+            xhr.open("post", this.url,picFileAndPath, true);
+            xhr.onload = this.uploadComplete; //请求完成
+            xhr.send(form); //开始上传，发送form数据
+          });
+        }
+        else {
+          form.append("file", fileObj);
+          xhr = new XMLHttpRequest();
+          xhr.open("post", this.url, true);
+          xhr.onload = this.uploadComplete;
+          xhr.send(form); //开始上传，发送form数据
+        }
+      },
+      convertBase64UrlToBlob(urlData){
+        let arr = urlData.split(','), mime = arr[0].match(/:(.*?);/)[1],
+          bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while(n--){
+          u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new Blob([u8arr], {type:mime});
+      },
+      /**上传回调*/
+      uploadComplete(evt) {
+        let data = JSON.parse(evt.target.responseText);
+        console.log(data);
+        if(data.code == 200) {
+          this.$emit("uploadCall", data.body);
+          this.$toast("上传成功");
+        }
+        else{
+          this.$toast("上传失败！");
+        }
+        this.isFileLoading = false;
+      },
+      photoCompress(file,w,objDiv) {
+        let thas = this;
+        let ready = new FileReader();
+        ready.readAsDataURL(file);
+        ready.onload = function () {
+          let re = this.result;
+          thas.canvasDataURL(re,w,objDiv)
+        }
+      },
+      canvasDataURL(path, obj, callback){
+        let img = new Image();
+        img.src = path;
+        img.onload = function () {
+          let that = this;
+          let w = that.width,
+            h = that.height,
+            scale = w / h;
+          w = obj.width || w;
+          h = obj.height || (w / scale);
+          let quality = 0.3;  // 默认图片质量为0.7
+          //生成canvas
+          let canvas = document.createElement('canvas');
+          let ctx = canvas.getContext('2d');
+          // 创建属性节点
+          let anw = document.createAttribute("width");
+          anw.nodeValue = w;
+          let anh = document.createAttribute("height");
+          anh.nodeValue = h;
+          canvas.setAttributeNode(anw);
+          canvas.setAttributeNode(anh);
+          ctx.drawImage(that, 0, 0, w, h);
+          // 图像质量
+          if(obj.quality && obj.quality <= 1 && obj.quality > 0){
+            quality = obj.quality;
+          }
+          // quality值越小，所绘制出的图像越模糊
+          let base64 = canvas.toDataURL('image/jpeg', quality);
+          // 回调函数返回base64的值
+          callback(base64);
+        }
+      },
+
       onRead(image) {
         this.avatar = image.url;
         this.api.http("post", this.api.updateUser, {

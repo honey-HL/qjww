@@ -95,14 +95,18 @@
         this.api.http("get", this.api.clickRead, {
           id:item.id,
         }, result => {}, error =>{});
-
+       // debugger;
         if(item.isActivte ==1){
           window.location.href=item.url;
         }else{
-          if(item.type ==0){
+          if(item.type == 0){
+          //  debugger;
             localStorage.setItem("newsDetailCon", JSON.stringify(item));
+
             this.$router.push({path: '/index/newsDetail'});
+
           }else if(item.type ==1 || item.type ==2){
+
             this.api.http("post", this.api.findById, {id: item.questionId}, (result) => {
               this.$store.dispatch("setAnswerDetail", result.question);
               this.$router.push({path : "/index/answerResult"});

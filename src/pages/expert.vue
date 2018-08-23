@@ -266,9 +266,11 @@
           pageSize: this.pageSize,
           lng: this.lng,
           lat: this.lat,
+          cityId:this.currentAddress.cityId,
           searchValue: this.searchValue,
         }, result => {
           console.log(result);
+          this.currentAddress.cityId="";
           console.log(this.pageSize,this.lng,this.lat,this.searchValue);
           //debugger;
           if (type == 0) {
@@ -390,7 +392,7 @@
           city: arr[1].name,
           cityId: arr[1].code
         }
-        this.getLngOrLat();
+        //this.getLngOrLat();
         this.pageNO1 = 1;
         this.getData(0);
       },

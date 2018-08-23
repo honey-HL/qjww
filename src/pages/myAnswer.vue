@@ -18,8 +18,8 @@
             <transition-group name="fade">
               <div class="row" v-for="(item, index) in dataList" :key="index" @click="detail(item.questionId)">
                 <div class="top">
-                  <div class="head" v-lazy:background-image="item.userAvatar" v-if="item.isUserAvatar"></div>
-                  <div class="head" v-lazy:background-image="imgIp + item.userAvatar" v-if="!item.isUserAvatar"></div>
+                  <div class="head" v-lazy:background-image="item.userAvater" v-if="item.isUserAvatar"></div>
+                  <div class="head" v-lazy:background-image="imgIp + item.userAvater" v-if="!item.isUserAvatar"></div>
                   <div class="name">{{item.nikeName}}</div>
                 </div>
                 <div class="title" v-html="item.questionTitle"></div>
@@ -155,7 +155,7 @@
             this.isShowLoading = false;
             if (this.pageNO1 == 1) {
               for(var i in result){
-                if(result[i].userAvatar.indexOf("http") != -1){
+                if(result[i].userAvater.indexOf("http") != -1){
                   result[i]["isUserAvatar"] = true;
                 }else{
                   result[i]["isUserAvatar"] = false;
