@@ -370,10 +370,19 @@
             background-size: cover !important;
             background-position: center !important;
           }*/
-          .img-item {
+          video.img-item {
             width: 100%;
             height: auto;
             margin: 0 0 10px 0;
+            border-radius: 4px;
+            /*background: #e6e6e6;*/
+            background-size: cover !important;
+            background-position: center !important;
+          }
+          img.img-item {
+            width: calc((100% - 30px) / 4);
+            height: auto;
+            margin: 0 10px 10px 0;
             border-radius: 4px;
             /*background: #e6e6e6;*/
             background-size: cover !important;

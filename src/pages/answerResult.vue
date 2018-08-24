@@ -9,19 +9,15 @@
           <span v-html="detail.questionTitle"></span>
         </div>
         <div class="img-list">
-            <!--<video class="img-item videoPlay" v-for="child in splitImg(detail.images)" :src="child" controls></video>-->
             <video class="img-item videoPlay" v-for="child in splitImg(detail.images)" :src="child" controls v-if="userPush"></video>
             <img class="img-item" v-for="child in splitImg(detail.images)" :src="child" alt="" v-if="!userPush">  
-            <!--<div class="ThisVideoPlayButton" v-if="detail.label === 2 && detail.label !=null" @click="clickVideoPlayer()">
-              <img class="suspend img-responsive" :src="detail.coverUrl" alt="">  
-            </div>-->
-
         </div>
-        <div class="content" v-html="detail.questionContent"></div>
+        <div class="content" v-html="detail.questionContent" @click="showImgSlide(detail.questionContent)"></div>
         <!-- <div class="video-cover"></div> -->
         <div class="operation-bar">
           <div class="left">
-            <div v-if="detail.userPush" class="head" v-lazy:background-image="detail.avatar"></div>
+            <div v-if="detail.isUserAvatar" class="head" v-lazy:background-image="detail.avatar"></div>
+            <div v-if="!detail.isUserAvatar" class="head" v-lazy:background-image="imgIp+detail.avatar"></div>
             <div v-if="detail.userPush" class="name">{{!detail.anonymity ? detail.nickName : '匿名'}}</div>
           </div>
           <div class="right">
@@ -100,6 +96,11 @@
     },
     created() {
       this.detail = this.$store.state.answerDetail;
+      if(this.detail.avatar.indexOf("http") != -1){
+        this.detail["isUserAvatar"] = true;
+      }else{
+        this.detail["isUserAvatar"] = false;
+      };
       if (this.detail == null) {
         this.api.http("post", this.api.findById, {id: this.util.getUrlParam("questionId")}, (result) => {
           this.detail = result;
@@ -118,10 +119,10 @@
       },
       /*获取列表*/
       getData() {
-        if(this.$store.state.token == null){
+        /*if(this.$store.state.token == null){
           this.$router.push({path: '/index/login'});
           return;
-        }
+        }*/
         this.api.http("post", this.api.findByQuestion, {
           pageNo: this.start,
           pageSize: this.row,
@@ -225,11 +226,13 @@
       formatting (time) {
         return this.util.formatting(time);
       },
-      /*clickVideoPlayer(){
-        var v1=document.getElementsByClassName(".videoPlay").get(0);
-        v1.startAutoPlay;
-      }*/
-      
+      showImgSlide(content){
+        let showImgArr;
+        console.log(content);
+        //$pattern = '/.*<img .*src=[\'|\"](.*[.jpg|.gif|.png])[\'|\"].*\/??>.*/U';//其中的//为分隔符
+        //showImgArr = content.match('/.*src=[\'|\"](.*[.jpg|.gif|.png])[\'|\"].*\/??>.*/ig');
+        //console.log(showImgArr)
+      }
     },
     computed: {}
   };
@@ -334,14 +337,26 @@
           }
         }*/
 
-        .img-item {
+        video.img-item {
             width: 100%;
             height: auto;
             margin: 0 10px 10px 0;
             border-radius: 4px;
-            /*background: #e6e6e6;*/
+            /*background: #e6e6e6;*/  
             background-size: cover !important;
             background-position: center !important;
+          }
+          img.img-item {
+            width: calc((100% - 10px) / 2);
+            height: 80px;
+            margin: 0 10px 10px 0;
+            border-radius: 4px;
+            background: #e6e6e6;
+            background-size: cover !important;
+            background-position: center !important;
+            &:nth-child(2n) {
+              margin-right: 0;
+            }
           }
 
       }

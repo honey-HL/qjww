@@ -73,6 +73,7 @@
           }, (base64Codes) => {
             let bl = this.convertBase64UrlToBlob(base64Codes);
             form.append("file", bl, "file_" + Date.parse(new Date()) + ".jpg");
+            form.append("path", "image");
             xhr = new XMLHttpRequest();
             let picFileAndPath={file:fileObj,path:"qjww"};
             xhr.open("post", this.url,picFileAndPath, true);
@@ -82,6 +83,7 @@
         }
         else {
           form.append("file", fileObj);
+          form.append("path", "image");
           xhr = new XMLHttpRequest();
           xhr.open("post", this.url, true);
           xhr.onload = this.uploadComplete;
@@ -100,9 +102,18 @@
       uploadComplete(evt) {
         let data = JSON.parse(evt.target.responseText);
         console.log(data);
-        if(data.code == 200) {
-          this.$emit("uploadCall", data.body);
-          this.$toast("上传成功");
+        if(data.status) {
+          this.avatar = data.body[0].smallPath;
+          this.api.http("post", this.api.updateUser, {
+            avatar: this.avatar,
+            //nickName: this.nickName,
+          }, result => {
+            this.$toast("修改成功");
+            this.api.http("post", this.api.getInfo, {}, result => {
+              console.log(result);
+              localStorage.setItem("userInfo", JSON.stringify(result));
+            }, error => { });
+          }, error => {});
         }
         else{
           this.$toast("上传失败！");
@@ -149,19 +160,6 @@
           // 回调函数返回base64的值
           callback(base64);
         }
-      },
-
-      onRead(image) {
-        this.avatar = image.url;
-        this.api.http("post", this.api.updateUser, {
-          avatar: this.avatar,
-          //nickName: this.nickName,
-        }, result => {
-          this.$toast("修改成功");
-          this.api.http("post", this.api.getInfo, {}, result => {
-            localStorage.setItem("userInfo", JSON.stringify(result));
-          }, error => { });
-        }, error => {});
       },
     }
   };

@@ -60,10 +60,15 @@
         ready.readAsDataURL(file);
         ready.onload = function () {
           let re = this.result;
-          thas.canvasDataURL(re,w,objDiv)
+          let Orientation;
+          EXIF.getData(fileList[i], function () {
+            Orientation = EXIF.getTag(fileList[i], 'Orientation');
+            alert(Orientation);
+          })
+          thas.canvasDataURL(re,w,objDiv,Orientation)
         }
       },
-      canvasDataURL(path, obj, callback){
+      canvasDataURL(path, obj, callback,Orientation){
         let img = new Image();
         img.src = path;
         img.onload = function () {
@@ -89,12 +94,77 @@
           if(obj.quality && obj.quality <= 1 && obj.quality > 0){
             quality = obj.quality;
           }
+          /*if (Orientation !== '' && Orientation !== 1) {
+            debugger;
+                switch (Orientation) {
+                    case 6: // 需要顺时针（向左）90度旋转
+                    that.rotateImg(this, 'left', canvas);
+                      break;
+                    case 8: // 需要逆时针（向右）90度旋转
+                    that.rotateImg(this, 'right', canvas);
+                      break;
+                    case 3: // 需要180度旋转
+                    that.rotateImg(this, 'right', canvas);// 转两次
+                    that.rotateImg(this, 'right', canvas);
+                      break;
+                }
+          }*/
           // quality值越小，所绘制出的图像越模糊
           let base64 = canvas.toDataURL('image/jpeg', quality);
           // 回调函数返回base64的值
           callback(base64);
         }
       },
+      /**
+       * 图片旋转函数
+       * 
+       * **/
+      /*rotateImg: function (img, direction, canvas) { // 图片旋转
+        var minStep = 0;
+        var maxStep = 3;
+        if (img == null) return;
+        var height = img.height;
+        var width = img.width;
+        var step = 2;
+        if (step == null) {
+          step = minStep;
+        }
+        if (direction === 'right') {
+          step++;
+          step > maxStep && (step = minStep);
+        } else {
+          step--;
+          step < minStep && (step = maxStep);
+        }
+        var degree = step * 90 * Math.PI / 180;
+        var ctx = canvas.getContext('2d');
+        switch (step) {
+          case 0:
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(img, 0, 0);
+            break
+          case 1:
+            canvas.width = height;
+            canvas.height = width;
+            ctx.rotate(degree);
+            ctx.drawImage(img, 0, -height);
+            break;
+          case 2:
+            canvas.width = width;
+            canvas.height = height;
+            ctx.rotate(degree);
+            ctx.drawImage(img, -width, -height);
+            break;
+          case 3:
+            canvas.width = height;
+            canvas.height = width;
+            ctx.rotate(degree);
+            ctx.drawImage(img, -width, 0);
+            break;
+        }
+      },*/
+
       /**
        * 将以base64的图片url数据转换为Blob
        * @param urlData
