@@ -10,7 +10,7 @@
           </div>
           <div class="name">{{item.userName}}</div>
           <div class="address">{{item.detailAdd}}</div>
-          <div class="hint">{{item.introduce}}</div>
+          <div class="hint"><p>{{item.introduce}}</p></div>
           <div class="total-bar">
             <div class="left">
               <span class="num">{{item.answerNum == null ? 0 : item.answerNum}}</span>
@@ -71,11 +71,19 @@
       }
     },
     created() {
+      //window.alert=function(){};
       this.item = this.$store.state.expertDetail;
       if (this.item == null) {
-        this.api.http("post", this.api.specialistInfo, {id: this.$route.query.expertId}, (result) => {
+        this.api.http("post", this.api.specialistInfo, {
+          pageNO: this.pageNo,
+          pageSize: this.pageSize,
+          id: this.$route.query.expertId
+        }, (result) => {
+          console.log(result);
           this.item = result;
-        }, (error) => {})
+        }, (error) => {
+          window.history.go(-1);
+        })
       }
     },
     mounted() {
@@ -91,7 +99,7 @@
         }, result => {
           if (this.pageNo == 1) {
             this.items = result.data;
-            this.phone = result.phone;
+            this.phone = result.contactNumber;
             if (result.data.length == 0) {
               this.isEnd = true;
             }
@@ -129,17 +137,21 @@
         }, 1500);
       },
       openPhone() {
+        console.log(this.phone);
         this.$dialog.confirm({
           title: '电话直连',
-          message: '确定拨打电话: <span style="color: #5FB62A;">' + this.phone + '</span> 吗？'
+          message: '确定拨打电话: <span style="color: #5FB62A;">' + this.item.contactNumber + '</span> 吗？'
         }).then(() => {
-          window.location.href = 'tel://' + this.phone;
+          window.location.href = 'tel://' + this.item.contactNumber;
         }).catch(() => {
           // on cancel
         });
       },
       consult() {
-        location.href = "https://kefu.easemob.com/webim/im.html?configId=d27e092a-7aac-456d-b0ee-077345ff5cbf&agentName=" + this.item.email;
+        this.api.http("post", this.api.speciaListAddRelation, {specialistId:this.item.id}, result => {
+          location.href = "https://kefu.easemob.com/webim/im.html?configId=d73a5083-b57e-4eb9-bccf-900f3ad55adf&agentName=" + this.item.email;
+        }, error => {
+        });
       }
     }
   }
@@ -158,88 +170,97 @@
       justify-content: center;
       align-items: center;
       padding: 15px;
-      .head-bar {
-        text-align: center;
-        .haed {
-          display: inline-block;
-          box-shadow: 0 0 10px rgba(133, 24, 24, 0.2);
-          width: 58px;
-          height: 58px;
-          background-size: cover !important;
-          background-position: center !important;
-          background: #e6e6e6;
-          border-radius: 100%;
-          box-sizing: border-box;
-          border: 2px solid #fff;
-          position: relative;
-          i {
-            display: inline-block;
-            width: 12px;
-            height: 12px;
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            background-size: cover !important;
-            background-position: center !important;
+      .worp{
+        min-width:130px;
+        max-width:330px;  
+          .head-bar {
+            text-align: center;
+            .haed {
+              display: inline-block;
+              box-shadow: 0 0 10px rgba(133, 24, 24, 0.2);
+              width: 58px;
+              height: 58px;
+              background-size: cover !important;
+              background-position: center !important;
+              background: #e6e6e6;
+              border-radius: 100%;
+              box-sizing: border-box;
+              border: 2px solid #fff;
+              position: relative;
+              i {
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                background-size: cover !important;
+                background-position: center !important;
+              }
+              i.b {
+                background: url(../assets/attestation-b.png)
+              }
+              i.o {
+                background: url(../assets/attestation-o.png)
+              }
+            }
           }
-          i.b {
-            background: url(../assets/attestation-b.png)
-          }
-          i.o {
-            background: url(../assets/attestation-o.png)
-          }
-        }
-      }
 
-      .name {
-        font-size: 20px;
-        color: #FFFFFF;
-        text-align: center;
-        margin-top: 5px;
-      }
-      .address {
-        text-align: center;
-        margin-top: 5px;
-        font-size: 14px;
-        color: #FFFFFF;
-      }
-      .hint {
-        margin-top: 15px;
-        text-align: center;
-        line-height: 21px;
-        font-size: 12px;
-        color: #FFFFFF;
-      }
-      .total-bar {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        margin-top: 20px;
-        .left {
-          width: 50%;
-          position: relative;
-          text-align: center;
-          &::before {
-            content: "";
-            position: absolute;
-            height: 100%;
-            width: 1px;
-            right: 0;
-            top: 0;
-            background: #e1e1e1;
+          .name {
+            font-size: 20px;
+            color: #FFFFFF;
+            text-align: center;
+            margin-top: 5px;
           }
-        }
-        .right {
-          width: 50%;
-          text-align: center;
-        }
-        .num {
-          font-size: 24px;
-          color: #FFFFFF;
-        }
-        .font {
-          color: #FFFFFF;
-        }
+          .address {
+            text-align: center;
+            margin-top: 5px;
+            font-size: 14px;
+            color: #FFFFFF;
+          }
+          .hint {
+            margin-top: 15px;
+            text-align: center;
+            line-height: 21px;
+            font-size: 12px;
+            color: #FFFFFF;
+            p{
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow:ellipsis;
+            }
+          }
+          .total-bar {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            .left {
+              width: 50%;
+              position: relative;
+              text-align: center;
+              &::before {
+                content: "";
+                position: absolute;
+                height: 100%;
+                width: 1px;
+                right: 0;
+                top: 0;
+                background: #e1e1e1;
+              }
+            }
+            .right {
+              width: 50%;
+              text-align: center;
+            }
+            .num {
+              font-size: 24px;
+              color: #FFFFFF;
+            }
+            .font {
+              color: #FFFFFF;
+            }
+          }
       }
     }
     & .row {

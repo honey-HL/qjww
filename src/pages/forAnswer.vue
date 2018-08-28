@@ -65,7 +65,7 @@
     methods: {
       /*获取列表*/
       getData() {
-        this.api.http("post", this.api.searchQuestion, {
+        this.api.http("get", this.api.searchGetQA, {
           start: this.start,
           row: this.row,
           title: this.searchValue

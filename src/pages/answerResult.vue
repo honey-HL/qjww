@@ -89,6 +89,8 @@
         totalNum: 0,
         isEnd: false,
         scrollHeight: "100%",
+        code: this.util.getUrlParam("code"),
+        user: { phone: "", code: "", openId: "",nickName: "", avatar: "" },
       };
     },
     components: {
@@ -106,6 +108,8 @@
           this.detail = result;
         }, (error) => {})
       }
+
+     
     },
     mounted() {
       this.scrollHeight = (window.innerHeight - 52 - 54) + "px";
@@ -119,18 +123,11 @@
       },
       /*获取列表*/
       getData() {
-        /*if(this.$store.state.token == null){
-          this.$router.push({path: '/index/login'});
-          return;
-        }*/
         this.api.http("post", this.api.findByQuestion, {
           pageNo: this.start,
           pageSize: this.row,
           questionId: this.detail.id
         }, result => {
-          /*if(result.code==1005){
-            this.$router.push({path: '/index/login'});
-          }*/
           if (this.start == 1) {
             for(var i in result.data){
               if(result.data[i].userAvatar.indexOf("http") != -1){
@@ -159,6 +156,9 @@
           }
         }, error => {
           console.log(error);
+          if(error.code == 1005){
+            this.$router.push({path: '/index/login'});
+          }
         });
       },
       /*下拉刷新*/
@@ -380,7 +380,7 @@
             border-radius: 50%;
             background-size: cover !important;
             background-position: center !important;
-            background: #ddd;
+            /*background: #ddd;*/
           }
           .name {
             padding-left: 5px;

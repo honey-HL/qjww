@@ -69,24 +69,24 @@
         <div class="swiper-slide">
           <Loading v-if="isShowLoading2" style="padding: 30px 0"/>
           <scroller v-else-if="dataList2.length > 0" class="scroller" ref="myscroller2" :on-refresh="refresh2" :on-infinite="infinite2" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
-            <div class="item">
+            <div class="item" v-for="(item, index) in dataList2" :key="index">
               <div class="row">
-                <div class="head">
+                <div class="head" v-lazy:background-image="imgIp + item.avatar">
                   <i class="b"></i>
                 </div>
                 <div class="info">
                   <div class="name-bar">
-                    <span class="name">李师傅</span>
-                    <span class="address2">啥都好过分打手犯规放大个</span>
+                    <span class="name">{{item.userName}}</span>
+                    <span class="address2"></span>
                   </div>
                   <div class="address-bar">
-                    <span class="detail">啥都好过分打手犯规放大个</span>
+                    <span class="detail">{{item.introduce}}</span>
                   </div>
                 </div>
               </div>
               <div class="phone-bar">
-                <div></div>
-                <div @click="openPhone(15208322308)"></div>
+                <div @click="consult(item.email)"></div>
+                <div @click="openPhone(item.contactNumber)"></div>
               </div>
             </div>
           </scroller>
@@ -175,7 +175,7 @@
           slideChangeTransitionStart: function () {
             if (this.activeIndex == 1 && !thas.isFrist) {
               thas.isFrist = true;
-              thas.getData(1);
+              thas.speciaListGetRelation();
             }
             thas.current = this.activeIndex;
           }
@@ -184,7 +184,7 @@
 
       setTimeout(() => {
         this.getData(0);
-      }, 1000)
+      }, 1000) 
     },
     methods: {
       /**获取经纬度*/
@@ -213,7 +213,6 @@
             let mk = new BMap.Marker(result.point);
             map.addOverlay(mk);
             map.panTo(result.point);
-            console.log(result);
             thas.lng = result.point.lng;
             thas.lat = result.point.lat;
             thas.currentAddress = {
@@ -269,10 +268,7 @@
           cityId:this.currentAddress.cityId,
           searchValue: this.searchValue,
         }, result => {
-          console.log(result);
           this.currentAddress.cityId="";
-          console.log(this.pageSize,this.lng,this.lat,this.searchValue);
-          //debugger;
           if (type == 0) {
             this.isShowLoading = false;
             if (this.pageNO1 == 1) {
@@ -293,7 +289,7 @@
               }
             }
           }
-          else {
+          /*else {
             this.isShowLoading2 = false;
             if (this.pageNO2 == 1) {
               this.dataList2 = result;
@@ -312,7 +308,7 @@
                 })
               }
             }
-          }
+          }*/
         }, error => {
           if (type == 0) {
             this.isShowLoading = false;
@@ -343,7 +339,7 @@
       refresh2(done) {
         setTimeout(() => {
           this.pageNO2 = 1;
-          this.getData(1);
+          this.speciaListGetRelation();
           done();
         }, 1000);
       },
@@ -352,7 +348,7 @@
         this.isEnd2 = true; // TODO
         setTimeout(() => {
           this.pageNO2 ++;
-          this.getData(1);
+          this.speciaListGetRelation();
           done(this.isEnd2);
         }, 1000);
       },
@@ -361,7 +357,7 @@
           title: '电话直连',
           message: '确定拨打电话: <span style="color: #5FB62A;">' + phone + '</span> 吗？'
         }).then(() => {
-          window.location.href = 'tel://' + this.phone;
+          window.location.href = 'tel://' + phone;
         }).catch(() => {
           // on cancel
         });
@@ -409,6 +405,36 @@
           }
         });
       },
+      speciaListGetRelation () {
+        this.api.http("get", this.api.speciaListGetRelation, {
+          pageNO: this.pageNO2,
+          pageSize: this.pageSize,
+        }, result => {
+          this.isShowLoading2 = false;
+            if (this.pageNO2 == 1) {
+              this.dataList2 = result;
+              if (result.length == 0) {
+                this.isEnd2 = true;
+              }
+            }
+            else {
+              if (result.length == 0) {
+                this.pageNO2 --;
+                this.isEnd2 = true;
+              }
+              else {
+                result.forEach(item => {
+                  this.dataList2.push(item);
+                })
+              }
+            }
+        }, error => {});
+      },
+    
+      consult(email) {
+        location.href = "https://kefu.easemob.com/webim/im.html?configId=d73a5083-b57e-4eb9-bccf-900f3ad55adf&agentName=" + email;
+      }
+    
     },
     computed: {
       countLeft() {

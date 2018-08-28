@@ -29,6 +29,7 @@ const http = (method, url, params, successCallback, errorCallback) => {
     }
     else if (response.data.code == 1005) {
       localStorage.removeItem("accessToken");
+      errorCallback(response.data);
       //this.$router.push({path: '/index/login'});
     }
     else if (response.data.code == 1050) {
@@ -116,10 +117,12 @@ export default {
 
   specialistInfo: "specialist/info",
 
+  getUserByOpenId:"/user/getUserByOpenId",
 
+  pvUploadData:"/pv/uploadData",
 
+  speciaListAddRelation:"/specialist/addRelation",
+  speciaListGetRelation:"/specialist/getRelation",
 
-
-
-
+  searchGetQA:"/search/getQA",
 }

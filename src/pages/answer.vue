@@ -35,7 +35,7 @@
             <i class="badge" v-else :class="{img: item.label == 1, video: item.label == 2, problem: item.label == 3}"></i>
             <span v-html="item.questionTitle"></span>
           </div>
-          <div class="content" v-html="item.questionContent" v-if="item.label == 3 || item.label ==0 || item.label == 1"></div>
+          <div class="content" v-html="item.questionContent" v-if="item.label ==0 || item.label == 1 || item.label == 2 || item.label == 3"></div>
           <div class="img-list" v-if="item.label == 0">
             <img class="img-item" v-for="child in splitImg(item.images)" :src="child" >  
           </div>
@@ -100,13 +100,14 @@
       };
     },
     created() {
+      this.api.http("post", this.api.pvUploadData, {place:2,flag:1}, (result) => {}, (error) => {});
       this.api.http("get", this.api.isRead, {}, result => {
-        console.log(result);
         this.isRead = result.isread;
       }, error => {});
     },
     mounted() {
       this.scrollHeight = (window.innerHeight - 55 - 77 - 50) + "px";
+      
     },
     methods: {
       link(url) {
@@ -195,12 +196,6 @@
       },
       /*详情*/
       detail(item) {
-        //console.log(item);
-        /*if(this.$store.state.openId == null || this.$store.state.token == null){
-          this.$router.push({path: '/index/login'});
-          return;
-        };*/
-        console.log(item);
         this.$store.dispatch("setAnswerDetail", item);
         this.$router.push({
           path: "/index/answerResult"

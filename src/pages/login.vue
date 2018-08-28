@@ -87,7 +87,7 @@
               location.href = this.api.ip + "wxClient/getCode?redirectUrl=" + location.href;
             }
             else {
-              this.api.http("post", this.api.getOpenId, { code: this.code }, result => {
+              this.api.http("post", this.api.getOpenId, { code: this.code }, result => {  
                 result = JSON.parse(result);
                 this.$store.dispatch("setOpenId", result.openid);
                 this.user.openId = result.openid;

@@ -54,6 +54,9 @@
         nickName: "",
       };
     },
+    created() {
+      console.log(this.userInfo);
+    },
     methods: {
       /**上传文件方法**/
       uploadFile(fileObj) {
@@ -161,6 +164,9 @@
           callback(base64);
         }
       },
+      /*用户修改名字*/
+
+
     }
   };
 </script>

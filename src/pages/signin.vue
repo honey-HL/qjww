@@ -91,6 +91,9 @@
       }
     },
     created() {
+      //签到客户数据统计
+      this.api.http("post", this.api.pvUploadData, {place:4,flag:1}, (result) => {}, (error) => {});
+
       //是否签到
       this.api.http("post", this.api.isSign, {}, (result) => {
         if (!result) {
@@ -145,7 +148,6 @@
 
     },
     updated() {
-      //try {
         let childArr = document.getElementsByClassName("active");
         if (childArr.length > 1) {
         
@@ -190,24 +192,13 @@
           let firstDiv = childArr[0];
           firstDiv.style.cssText = "border-radius: 50px;";
         }
-//        if (childArr.length > 1) {
-//          let firstDiv = childArr[0];
-//          firstDiv.style.cssText = "border-radius: 50px 0 0 50px;";
-//          let lastDiv = childArr[childArr.length - 1];
-//          lastDiv.style.cssText = "border-radius: 0 50px 50px 0;";
-//        }
-//        else {
-//          let firstDiv = childArr[0];
-//          firstDiv.style.cssText = "border-radius: 50px;";
-//        }
-      //}
-      //catch (e) { }
     },
     methods: {
       mall() {
         this.$toast('功能后续上线中,暂时无法访问')
       },
       adDetail(type) {
+        this.api.http("post", this.api.pvUploadData, {place:4,flag:0}, (result) => {}, (error) => {});
         if (this.adItem.type == 1) {
           location.href = this.adItem.url;
         }

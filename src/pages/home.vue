@@ -52,7 +52,7 @@
       };
     },
     created() {
-      console.log(sessionStorage.getItem("isShowAd"));
+      //console.log(sessionStorage.getItem("isShowAd"));
       this.adShow = sessionStorage.getItem("isShowAd") == null ? true : sessionStorage.getItem("isShowAd") == "false" ? false : true;
     },
     mounted() {
@@ -68,20 +68,24 @@
       }
       this.api.http("post", this.api.getAdList, {position: 0}, (result) => {
         this.logo = result;
-      }, (error) => {})
+      }, (error) => {});
 
       this.api.http("post", this.api.getAdList, {position: 1}, (result) => {
         this.adBottom = result;
-      }, (error) => {})
+      }, (error) => {});
 
       this.api.http("post", this.api.getAdList, {position: 2}, (result) => {
         this.adItem = result;
-      }, (error) => {})
+      }, (error) => {});
 
       this.api.http("get", this.api.countSolveQuestion, {}, (result) => {
         this.totalNumber = result;
-      }, (error) => {})
+      }, (error) => {});
 
+      this.api.http("post", this.api.pvUploadData, {place:0,flag:1}, (result) => {}, (error) => {});
+      this.api.http("post", this.api.pvUploadData, {place:1,flag:1}, (result) => {}, (error) => {});
+
+      this.api.http("post", this.api.pvUploadData, {place:3,flag:1}, (result) => {}, (error) => {});
     },
     methods: {
       searchEnterFun(e) {
@@ -109,6 +113,7 @@
       },
       adDetail(type) {
         if (type == 0) {
+          this.api.http("post", this.api.pvUploadData, {place:1,flag:0}, (result) => {}, (error) => {});
           if (this.logo.type == 1) {
             location.href = this.logo.url;
           }
@@ -118,6 +123,7 @@
           }
         }
         else if (type == 1) {
+          this.api.http("post", this.api.pvUploadData, {place:1,flag:0}, (result) => {}, (error) => {});
           if (this.logo.type == 1) {
             location.href = this.adBottom.url;
           }
@@ -127,6 +133,7 @@
           }
         }
         else {
+          this.api.http("post", this.api.pvUploadData, {place:3,flag:0}, (result) => {}, (error) => {});
           if (this.adItem.type == 1) {
             location.href = this.adItem.url;
           }
