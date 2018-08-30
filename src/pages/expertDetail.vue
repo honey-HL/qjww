@@ -82,6 +82,9 @@
           console.log(result);
           this.item = result;
         }, (error) => {
+          if(error.code == 203){
+            window.history.go(-1);
+          }
           window.history.go(-1);
         })
       }

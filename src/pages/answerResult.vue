@@ -9,10 +9,10 @@
           <span v-html="detail.questionTitle"></span>
         </div>
         <div class="img-list">
-            <video class="img-item videoPlay" v-for="child in splitImg(detail.images)" :src="child" controls v-if="userPush"></video>
-            <img class="img-item" v-for="child in splitImg(detail.images)" :src="child" alt="" v-if="!userPush">  
+            <video class="img-item videoPlay" :src="detail.video" controls v-if="detail.video !=null"></video>
+            <img class="img-item" v-for="child in splitImg(detail.images)" :src="child" alt="" v-if="detail.userPush" @click="showImgSlide">  
         </div>
-        <div class="content" v-html="detail.questionContent" @click="showImgSlide(detail.questionContent)"></div>
+        <div class="content" v-html="detail.questionContent" @click="showImgSlide"></div>
         <!-- <div class="video-cover"></div> -->
         <div class="operation-bar">
           <div class="left">
@@ -70,10 +70,21 @@
       </transition>
 
     </div>
+    <div class="swiperShell" v-if="isShowSwiperImgShow" @click="clickCloseShowSwiper">
+
+      <div class="swiper-container" id="swiperImgShow">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide" v-for="child in splitImg(detail.images)"><img class="img-responsive" :src="child" alt=""/></div>
+        </div>
+        <div class="swiper-pagination" id="swiper-pagination"></div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+  import "swiper/dist/css/swiper.css";
+  import Swiper from "swiper";
   import Search from "../components/search";
 
   export default {
@@ -91,6 +102,7 @@
         scrollHeight: "100%",
         code: this.util.getUrlParam("code"),
         user: { phone: "", code: "", openId: "",nickName: "", avatar: "" },
+        isShowSwiperImgShow:false,
       };
     },
     components: {
@@ -108,11 +120,17 @@
           this.detail = result;
         }, (error) => {})
       }
-
-     
     },
     mounted() {
       this.scrollHeight = (window.innerHeight - 52 - 54) + "px";
+
+      let swiper = new Swiper(".swiper-container", {
+        pagination: '#swiper-pagination',
+        slidesPerView: 1,
+        paginationClickable: true,
+        loop: true,
+        autoplay: 3000,
+      });
     },
     methods: {
       answer() {
@@ -226,12 +244,13 @@
       formatting (time) {
         return this.util.formatting(time);
       },
-      showImgSlide(content){
-        let showImgArr;
-        console.log(content);
-        //$pattern = '/.*<img .*src=[\'|\"](.*[.jpg|.gif|.png])[\'|\"].*\/??>.*/U';//其中的//为分隔符
-        //showImgArr = content.match('/.*src=[\'|\"](.*[.jpg|.gif|.png])[\'|\"].*\/??>.*/ig');
-        //console.log(showImgArr)
+      /*显示这个图片滑动查看模块*/
+      showImgSlide(){
+        this.isShowSwiperImgShow = true;
+      },
+      /*隐藏这个图片滑动查看模块*/
+      clickCloseShowSwiper(){
+        this.isShowSwiperImgShow = false;
       }
     },
     computed: {}
@@ -347,8 +366,8 @@
             background-position: center !important;
           }
           img.img-item {
-            width: calc((100% - 10px) / 2);
-            height: 80px;
+            /*width: calc((100% - 10px) / 2);*/
+            max-height: 63px;
             margin: 0 10px 10px 0;
             border-radius: 4px;
             background: #e6e6e6;
@@ -496,7 +515,7 @@
 
 </style>
 <style lang="css">
-
+  /*可能有用的css,暂时未用*/
   .ThisVideoPlayButton{
     width: 100%;
     height: calc(100%-20px);
@@ -522,4 +541,30 @@
     top: 0;
     bottom: 0;
   }
+  .swiperShell,#swiperImgShow{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    background-color: rgba(0,0,0,0.4);
+    top: 0;
+  }
+  #swiperImgShow .swiper-slide>img{
+    max-width: 100%;
+    max-height: 100%;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  #swiper-pagination{
+    width: 100%;
+    height: 10px;
+    background-color: #fff;
+    bottom: 10px;
+  }
+
 </style>

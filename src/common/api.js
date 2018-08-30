@@ -125,4 +125,5 @@ export default {
   speciaListGetRelation:"/specialist/getRelation",
 
   searchGetQA:"/search/getQA",
+  updateNickName:"/user/updateNickName",
 }

@@ -136,7 +136,7 @@
 
 <style lang="scss" scoped>
   .scroller {
-    top: 55px;
+    top: 55px !important;
     box-sizing: border-box;
     height: 100%;
   }

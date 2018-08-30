@@ -4,8 +4,8 @@
       <div class="left">
           <van-uploader :after-read="uploadFile" accept="image/*">
             <slot></slot>
-            <div class="head" v-lazy:background-image="avatar" v-if="userInfo.isUserHeadPic"></div>
-            <div class="head" v-lazy:background-image="imgIp + avatar" v-if="!userInfo.isUserHeadPic"></div>
+            <div class="head" v-lazy:background-image="avatar"></div>
+            
           </van-uploader> 
       </div>
         <div class="right">
@@ -21,9 +21,9 @@
     </div>
     <div class="row">
       <div class="left">名称</div>
-      <div class="right">
+      <div class="right" @click="changeName">
         <span class="name">{{userInfo.nickName}}</span>
-        <i class="icon"></i>
+        <i class="icon" ></i>
       </div>
     </div>
     <div class="row">
@@ -56,6 +56,11 @@
     },
     created() {
       console.log(this.userInfo);
+      if(this.avatar.indexOf("http") != -1){
+        return;
+      }else{
+        this.avatar = this.imgIp + this.avatar;
+      };
     },
     methods: {
       /**上传文件方法**/
@@ -115,6 +120,7 @@
             this.api.http("post", this.api.getInfo, {}, result => {
               console.log(result);
               localStorage.setItem("userInfo", JSON.stringify(result));
+              //this.avatar = JSON.parse(localStorage.getItem("userInfo")).avatar;//实时跟新用户的头像
             }, error => { });
           }, error => {});
         }
@@ -165,7 +171,11 @@
         }
       },
       /*用户修改名字*/
-
+      changeName(){
+        this.$router.push({
+          path: "/index/changeName"
+        });
+      }
 
     }
   };

@@ -26,6 +26,7 @@ import Edit from '@/pages/edit'
 import Rule from '@/pages/rule'
 import Content from '@/pages/content'
 import NewsDetail from '@/pages/newsDetail'
+import ChangeName from '@/pages/changeName'
 
 
 Router.prototype.goBack = function () {
@@ -69,6 +70,7 @@ const routers = new Router({
         { path: 'edit', name: 'edit', component: Edit, meta: { title: "编辑资料", requireAuth: true } },
         { path: 'rule', name: 'rule', component: Rule, meta: { title: "积分规则说明" } },
         { path: 'content', name: 'content', component: Content, meta: { title: "详情" } },
+        { path: 'changeName', name: 'changeName', component: ChangeName, meta: { title: "修改名称" } },
       ]
     },
   ]

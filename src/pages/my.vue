@@ -3,8 +3,8 @@
     <div class="bg"></div>
     <div class="wrop">
       <div class="top">
-        <div class="head" v-lazy:background-image="userInfo.avatar" @click="edit" v-if="userInfo.roleId == 0"></div>
-        <div class="head" v-lazy:background-image="imgIp + userInfo.avatar" @click="edit" v-if="userInfo.roleId == 1"></div>
+        <div class="head" v-lazy:background-image="userInfo.avatar" @click="edit"></div>
+        
         <div class="name">{{userInfo.nickName}}</div>
         <div>
           <div class="role" v-if="userInfo.roleId == 1">{{userInfo.authName}}</div>
@@ -96,6 +96,13 @@
       this.api.http("post", this.api.getScore, {}, result => {
         this.score = result;
       }, error => { });
+
+      if(this.userInfo.avatar.indexOf("http") != -1){
+        return;
+      }else{
+        this.userInfo.avatar = this.imgIp + this.userInfo.avatar;
+      };
+      
     },
     methods: {
       edit() {
