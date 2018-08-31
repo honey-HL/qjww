@@ -10,9 +10,9 @@
         </div>
         <div class="img-list">
             <video class="img-item videoPlay" :src="detail.video" controls v-if="detail.video !=null"></video>
-            <img class="img-item" v-for="child in splitImg(detail.images)" :src="child" alt="" v-if="detail.userPush" @click="showImgSlide">  
+            <img class="img-item" v-for="child in splitImg(detail.images)" :src="child" alt="" v-if="detail.userPush" @click="showImgSlide(detail.images)">  
         </div>
-        <div class="content" v-html="detail.questionContent" @click="showImgSlide"></div>
+        <div class="content" v-html="detail.questionContent" @click="showImgSlide(detail.images)"></div>
         <!-- <div class="video-cover"></div> -->
         <div class="operation-bar">
           <div class="left">
@@ -71,11 +71,8 @@
 
     </div>
     <div class="swiperShell" v-if="isShowSwiperImgShow" @click="clickCloseShowSwiper">
-
       <div class="swiper-container" id="swiperImgShow">
-        <div class="swiper-wrapper">
-            <div class="swiper-slide" v-for="child in splitImg(detail.images)"><img class="img-responsive" :src="child" alt=""/></div>
-        </div>
+        <div class="swiper-wrapper"><div class="swiper-slide" v-for="child in splitImg(detail.images)"><img class="img-responsive" :src="child" alt=""/></div></div>
         <div class="swiper-pagination" id="swiper-pagination"></div>
       </div>
     </div>
@@ -123,16 +120,25 @@
     },
     mounted() {
       this.scrollHeight = (window.innerHeight - 52 - 54) + "px";
-
-      let swiper = new Swiper(".swiper-container", {
-        pagination: '#swiper-pagination',
-        slidesPerView: 1,
-        paginationClickable: true,
-        loop: true,
-        autoplay: 3000,
-      });
+      
     },
+    updated() {
+		  this.newSwiper();
+	  },
+
     methods: {
+
+       newSwiper:function (){ new Swiper(".swiper-container", {
+            pagination: {
+                el: '.swiper-pagination',
+            },
+            slidesPerView: 1,
+            paginationClickable: true,
+            loop: true,
+            autoplay: true,
+            disableOnInteraction:false,
+          });
+      },
       answer() {
         this.$router.push({
           path: "/index/icomeAnswer",
@@ -147,14 +153,6 @@
           questionId: this.detail.id
         }, result => {
           if (this.start == 1) {
-            for(var i in result.data){
-              if(result.data[i].userAvatar.indexOf("http") != -1){
-                result.data[i]["isUserAvatar"] = true;
-              }else{
-                result.data[i]["isUserAvatar"] = false;
-              };
-            }
-
             this.items = result.data;
             this.totalNum = result.allNum;
             if (result.data.length == 0) {
@@ -171,6 +169,13 @@
                 this.items.push(item);
               })
             }
+          }
+          for(var i in this.items){
+              if(this.items[i].userAvatar.indexOf("http") != -1){
+                this.items[i]["isUserAvatar"] = true;
+              }else{
+                this.items[i]["isUserAvatar"] = false;
+              };
           }
         }, error => {
           console.log(error);
@@ -245,8 +250,12 @@
         return this.util.formatting(time);
       },
       /*显示这个图片滑动查看模块*/
-      showImgSlide(){
-        this.isShowSwiperImgShow = true;
+      showImgSlide(data){
+        if(data==null){
+          this.isShowSwiperImgShow = false;
+        }else{
+          this.isShowSwiperImgShow = true;
+        }
       },
       /*隐藏这个图片滑动查看模块*/
       clickCloseShowSwiper(){
@@ -547,7 +556,7 @@
     margin: 0;
     padding: 0;
     position: absolute;
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0,0,0,0.6);
     top: 0;
   }
   #swiperImgShow .swiper-slide>img{
@@ -563,8 +572,10 @@
   #swiper-pagination{
     width: 100%;
     height: 10px;
-    background-color: #fff;
     bottom: 10px;
+  }
+  #swiper-pagination>.swiper-pagination-bullet-active{
+    background-color: #fff;
   }
 
 </style>

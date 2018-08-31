@@ -72,6 +72,7 @@
     },
     data() {
       return {
+        imgIp: this.api.imgIp,
         items: [],
         searchValue: "",
         start: 0,
@@ -116,6 +117,13 @@
                 this.items.push(item);
               })
             }
+          }
+          for(var i in this.items){
+              if(this.items[i].avatar.indexOf("http") != -1){
+                return;
+              }else{
+                this.items[i].avatar = this.imgIp + this.items[i].avatar;
+              };
           }
         }, error => {
           console.log(error);
