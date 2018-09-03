@@ -40,7 +40,7 @@
             <img class="img-item" v-for="child in splitImg(item.images)" :src="child" >  
           </div>
           <div class="img-list" v-if="item.label == 2">
-            <video class="img-item" v-for="child in splitImg(item.images)" :src="child" ></video>
+            <video class="img-item" :src="item.videos"></video>
             <div class="ThisVideoPlayButton" v-if="item.label === 2 && item.coverUrl !=null">
               <img class="suspend img-responsive" :src="item.coverUrl" alt="">  
             </div>
@@ -139,6 +139,14 @@
               result.data.forEach(item => {
                 this.items.push(item);
               })
+            }
+          }
+          if(this.searchValue === "*"){
+           
+          }else{
+            var a= document.getElementsByClassName("title");
+            for(var i in a){
+              a[i].style.color="#555555"; 
             }
           }
         }, error => {
@@ -302,16 +310,16 @@
         background: #fff;
         .title {
           font-size: 16px;
-          color: #555555;
+          color: #5FB62A;
           line-height: 24px;
           margin-bottom: 5px;
           display: -webkit-box;
           -webkit-box-orient: vertical;
           -webkit-line-clamp: 2;
           overflow: hidden;
-          span {
-            color: #000 !important
-          }
+          /*span {
+            color: #5FB62A /*5FB62A
+          }*/
           i {
             display: inline-block;
             width: calc(52px / 2);

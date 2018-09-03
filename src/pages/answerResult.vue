@@ -9,7 +9,7 @@
           <span v-html="detail.questionTitle"></span>
         </div>
         <div class="img-list">
-            <video class="img-item videoPlay" :src="detail.video" controls v-if="detail.video !=null"></video>
+            <video class="img-item" id="videoPlay" :src="detail.videos" controls :poster="detail.coverUrl" v-if="detail.videos != null"></video>
             <img class="img-item" v-for="child in splitImg(detail.images)" :src="child" alt="" v-if="detail.userPush" @click="showImgSlide(detail.images)">  
         </div>
         <div class="content" v-html="detail.questionContent" @click="showImgSlide(detail.images)"></div>
@@ -34,7 +34,10 @@
       </div>
       <transition-group name="fade">
         <div class="row" v-for="(item,index) in items" :key="index">
-          <div class="content" v-html="item.content"></div>
+          <div class="content" v-html="item.content" @click="showUserAnswerImgSlide(item)"></div>
+          <div class="img-list" @click="showUserAnswerImgSlide(item)">
+            <img class="img-item" v-for="child in splitImg(item.images)" :src="child" alt="">
+          </div>
           <!-- <div class="video-cover"></div> -->
           <div class="operation-bar">
             <div class="left">
@@ -72,7 +75,7 @@
     </div>
     <div class="swiperShell" v-if="isShowSwiperImgShow" @click="clickCloseShowSwiper">
       <div class="swiper-container" id="swiperImgShow">
-        <div class="swiper-wrapper"><div class="swiper-slide" v-for="child in splitImg(detail.images)"><img class="img-responsive" :src="child" alt=""/></div></div>
+        <div class="swiper-wrapper"><div class="swiper-slide" v-for="child in splitImg(showImgSlideArr)"><img class="img-responsive" :src="child" alt=""/></div></div>
         <div class="swiper-pagination" id="swiper-pagination"></div>
       </div>
     </div>
@@ -100,6 +103,7 @@
         code: this.util.getUrlParam("code"),
         user: { phone: "", code: "", openId: "",nickName: "", avatar: "" },
         isShowSwiperImgShow:false,
+        showImgSlideArr:null,
       };
     },
     components: {
@@ -107,6 +111,7 @@
     },
     created() {
       this.detail = this.$store.state.answerDetail;
+      console.log(this.detail);
       if(this.detail.avatar.indexOf("http") != -1){
         this.detail["isUserAvatar"] = true;
       }else{
@@ -251,16 +256,39 @@
       },
       /*显示这个图片滑动查看模块*/
       showImgSlide(data){
-        if(data==null){
+        if(data==null||data==""){
           this.isShowSwiperImgShow = false;
         }else{
           this.isShowSwiperImgShow = true;
         }
+        this.showImgSlideArr=this.detail.images;
       },
       /*隐藏这个图片滑动查看模块*/
       clickCloseShowSwiper(){
         this.isShowSwiperImgShow = false;
-      }
+      },
+      showUserAnswerImgSlide(data){
+        var showImgSlideArrData=[],showImgSlideString;
+        if(data.images == null||data.images==""){
+          var imgReg = /<img.*?(?:>|\/>)/gi;
+          var srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
+          var arr = (data.content).match(imgReg);
+          if(arr==""||arr==null){
+            this.isShowSwiperImgShow = false;
+          }else{
+            for (var i = 0; i < arr.length; i++) {
+              var src = arr[i].match(srcReg);
+              showImgSlideArrData.push(src[1]);
+            }
+            showImgSlideString=showImgSlideArrData.join(",");
+            this.showImgSlideArr=showImgSlideString;
+            this.isShowSwiperImgShow = true;
+          }  
+        }else{
+          this.showImgSlideArr=data.images;
+          this.isShowSwiperImgShow = true;
+        }
+      },
     },
     computed: {}
   };
@@ -413,8 +441,7 @@
           .name {
             padding-left: 5px;
             color: #9a9a9a;
-
-            max-width: calc(100% - 31px);
+            max-width: calc(100% - 100px);
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
