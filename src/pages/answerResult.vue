@@ -16,7 +16,7 @@
         <!-- <div class="video-cover"></div> -->
         <div class="operation-bar">
           <div class="left">
-            <div class="head" v-lazy:background-image="detail.avatar"></div>
+            <div v-if="detail.isUserAvatar" class="head" v-lazy:background-image="detail.avatar"></div>
             <div v-if="detail.userPush" class="name">{{!detail.anonymity ? detail.nickName : '匿名'}}</div>
           </div>
           <div class="right">
@@ -114,9 +114,7 @@
         let url = window.location.href;
         let a = url.substring(url.lastIndexOf('=')+1, url.length); 
         this.api.http("post", this.api.findById, {id: a}, (result) => {
-
           this.detail = result.question;
-
         }, (error) => {})
       }
       if(this.detail.avatar.indexOf("http") != -1){
@@ -412,9 +410,9 @@
             background: #e6e6e6;
             background-size: cover !important;
             background-position: center !important;
-            &:nth-child(2n) {
-              margin-right: 0;
-            }
+            /* &:nth-child(2n) {
+              margin-right: 10;
+            } */
           }
 
       }
