@@ -120,12 +120,12 @@
         this.quiz.images = this.quiz.images.toString();
         this.quiz.isAnonymity = this.quiz.isAnonymity ? 1 : 0;
         this.api.http("post", this.api.questionSave, this.quiz, result => {
-          this.score = result;
+          this.score = result.score;
           this.isLoading = false;
           this.isShow = true;
           //this.$toast("请耐心等待审核");
           setTimeout(() => {
-            this.$router.push({ path: '/index/quizSuccess?keywords=' + this.quiz.title });
+            this.$router.push({ path: '/index/quizSuccess?keywords=' + this.quiz.title + '&questionId=' + result.questionId});
           }, 1000)
         }, error => {
           this.isLoading = false;

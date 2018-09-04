@@ -16,8 +16,7 @@
         <!-- <div class="video-cover"></div> -->
         <div class="operation-bar">
           <div class="left">
-            <div v-if="detail.isUserAvatar" class="head" v-lazy:background-image="detail.avatar"></div>
-            <div v-if="!detail.isUserAvatar" class="head" v-lazy:background-image="imgIp+detail.avatar"></div>
+            <div class="head" v-lazy:background-image="detail.avatar"></div>
             <div v-if="detail.userPush" class="name">{{!detail.anonymity ? detail.nickName : '匿名'}}</div>
           </div>
           <div class="right">
@@ -111,17 +110,20 @@
     },
     created() {
       this.detail = this.$store.state.answerDetail;
-      console.log(this.detail);
-      if(this.detail.avatar.indexOf("http") != -1){
-        this.detail["isUserAvatar"] = true;
-      }else{
-        this.detail["isUserAvatar"] = false;
-      };
       if (this.detail == null) {
-        this.api.http("post", this.api.findById, {id: this.util.getUrlParam("questionId")}, (result) => {
-          this.detail = result;
+        let url = window.location.href;
+        let a = url.substring(url.lastIndexOf('=')+1, url.length); 
+        this.api.http("post", this.api.findById, {id: a}, (result) => {
+
+          this.detail = result.question;
+
         }, (error) => {})
       }
+      if(this.detail.avatar.indexOf("http") != -1){
+        this.detail.avatar = this.imgIp+this.detail.avatar;
+      }else{
+        this.detail.avatar = this.detail.avatar;
+      };
     },
     mounted() {
       this.scrollHeight = (window.innerHeight - 52 - 54) + "px";
