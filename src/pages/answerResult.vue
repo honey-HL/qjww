@@ -85,6 +85,7 @@
   import "swiper/dist/css/swiper.css";
   import Swiper from "swiper";
   import Search from "../components/search";
+  import routers from "../router/index"
 
   export default {
     name: "answerResult",
@@ -109,23 +110,31 @@
       Search
     },
     created() {
+      window.alert=function(){};
       this.detail = this.$store.state.answerDetail;
       if (this.detail == null) {
         let url = window.location.href;
         let a = url.substring(url.lastIndexOf('=')+1, url.length); 
         this.api.http("post", this.api.findById, {id: a}, (result) => {
           this.detail = result.question;
-        }, (error) => {})
+        }, (error) => {
+          if(error.code == 1005){
+            this.$toast("对不起，请先登录");
+          }else if(error.code == 1002){
+            
+            this.$toast("对不起，问题正在审核！");
+          }
+        })
       }
       if(this.detail.avatar.indexOf("http") != -1){
         this.detail.avatar = this.imgIp+this.detail.avatar;
       }else{
         this.detail.avatar = this.detail.avatar;
-      };
+      };                                    
     },
     mounted() {
       this.scrollHeight = (window.innerHeight - 52 - 54) + "px";
-      
+      document.title=this.detail.normalQuestionTitle;   
     },
     updated() {
 		  this.newSwiper();

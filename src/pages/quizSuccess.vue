@@ -28,7 +28,8 @@
           </div>
           <div class="operation-bar">
             <div class="left">
-              <div v-if="item.userPush" class="head" v-lazy:background-image="item.avatar"></div>
+              <div v-if="item.isUserAvatar" class="head" v-lazy:background-image="item.avatar"></div>
+              <div v-if="!item.isUserAvatar" class="head" v-lazy:background-image="imgIp + item.avatar"></div>
               <div v-if="item.userPush" class="name">{{!item.anonymity ? item.nickName : '匿名'}}</div>
             </div>
             <div class="right">
@@ -54,6 +55,7 @@
     name: "quizSuccess",
     data() {
       return {
+        imgIp: this.api.imgIp,
         items: [],
         searchValue: "",
         start: 0,
@@ -97,6 +99,14 @@
                 this.items.push(item);
               })
             }
+          }
+
+          for(var i in this.items){
+              if(this.items[i].avatar.indexOf("http") != -1){
+                this.items[i]["isUserAvatar"] = true;
+              }else{
+                this.items[i]["isUserAvatar"] = false;
+              };
           }
         }, error => {
           console.log(error);

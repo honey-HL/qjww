@@ -147,51 +147,54 @@
       }, (error) => {})
 
     },
+
     updated() {
-        let childArr = document.getElementsByClassName("active");
+        let childArr = document.getElementsByClassName("active");     //borderTopLeftRadius  borderTopRightRadius  borderBottomLeftRadius  borderBottomRightRadius
+        console.log(childArr)
+        let firstDiv = childArr[0];
+        firstDiv.style.borderTopLeftRadius = "50px";
+        firstDiv.style.borderBottomLeftRadius = "50px";
         if (childArr.length > 1) {
         
-          for(var i=0;i<childArr.length-1;i++){
-            console.log(i);
-            if((childArr[i+1].innerHTML - childArr[i].innerHTML) == 1 && i==0){
-              childArr[i].style.cssText = "border-radius: 50px 0 0 50px;";
-              childArr[i+1].style.cssText = "border-radius: 0 ;";
-            }else if((childArr[i+1].innerHTML - childArr[i].innerHTML) > 1 && i==0){
-              childArr[i].style.cssText = "border-radius: 50px;";
-              childArr[i+1].style.cssText = "border-radius: 50px;";
+          for(var i=0;i<=childArr.length-2;i++){
+            if((childArr[i+1].innerHTML - childArr[i].innerHTML) == 1 && i==0 &&childArr.length>=3){
+              childArr[i].style.borderTopLeftRadius = "50px";
+              childArr[i].style.borderBottomLeftRadius = "50px";
+              childArr[i+1].style.borderRadius = "0";
+            }else if((childArr[i+1].innerHTML - childArr[i].innerHTML) == 1 && i==0 &&childArr.length<3){
+              childArr[i].style.borderTopLeftRadius = "50px";
+              childArr[i].style.borderBottomLeftRadius = "50px";
+              childArr[i+1].style.borderTopRightRadius = "50px";
+              childArr[i+1].style.borderBottomRightRadius = "50px";
+            }else if((childArr[i+1].innerHTML - childArr[i].innerHTML) > 1 && i==0 &&childArr.length>=3){
+              childArr[i].style.borderTopRightRadius = "50px";
+              childArr[i].style.borderBottomRightRadius = "50px";
+              childArr[i+1].style.borderTopLeftRadius = "50px";
+              childArr[i+1].style.borderBottomLeftRadius = "50px";
+            }else if((childArr[i+1].innerHTML - childArr[i].innerHTML) > 1 && i==0 &&childArr.length<3){
+              childArr[i].style.borderTopRightRadius = "50px";
+              childArr[i].style.borderBottomRightRadius = "50px";
+              childArr[i+1].style.borderTopLeftRadius = "50px";
+              childArr[i+1].style.borderBottomLeftRadius = "50px";            
             }
 
             if((childArr[i+1].innerHTML - childArr[i].innerHTML) == 1 && i>0){
-              
-              if(childArr[i+2].innerHTML-childArr[i+1].innerHTML>1){
-                childArr[i+1].style.cssText = "border-radius: 0 50px 50px 0;";
-              }
-              if(childArr[i].innerHTML-childArr[i-1].innerHTML>1){
-                childArr[i].style.cssText = "border-radius: 50px 0 0 50px;";
-              }else{
-                childArr[i].style.cssText = "border-radius: 0;";
-              }
-              
-
+              childArr[i].style.borderTopRightRadius = "0";
+              childArr[i].style.borderBottomRightRadius = "0";
+              childArr[i+1].style.borderTopLeftRadius = "0";
+              childArr[i+1].style.borderBottomLeftRadius = "0";
             }else if((childArr[i+1].innerHTML - childArr[i].innerHTML) > 1 && i>0){
-              if((childArr[i].innerHTML-childArr[i-1].innerHTML)==1){
-                childArr[i].style.cssText = "border-radius: 0 50px 50px 0;";
-              }else{
-                childArr[i].style.cssText = "border-radius: 50px;";
-              }
-              childArr[i+1].style.cssText = "border-radius: 50px;";
+              childArr[i].style.borderTopRightRadius = "50px";
+              childArr[i].style.borderBottomRightRadius = "50px";
+              childArr[i+1].style.borderTopLeftRadius = "50px";
+              childArr[i+1].style.borderBottomLeftRadius = "50px";
             }
           }
-          
-          let firstDiv = childArr[0];
-          let lastDiv = childArr[childArr.length - 1];
-          firstDiv.style.cssText = "border-radius: 50px 0 0 50px;";
-          lastDiv.style.cssText = "border-radius: 0 50px 50px 0;";
-
-        }else {
-          let firstDiv = childArr[0];
-          firstDiv.style.cssText = "border-radius: 50px;";
         }
+        let lastDiv = childArr[childArr.length - 1];
+        
+        lastDiv.style.borderTopRightRadius = "50px";
+        lastDiv.style.borderBottomRightRadius = "50px";
     },
     methods: {
       mall() {

@@ -35,11 +35,17 @@
             <i class="badge" v-else :class="{img: item.label == 1, video: item.label == 2, problem: item.label == 3}"></i>
             <span v-html="item.questionTitle"></span>
           </div>
-          <div class="content" v-html="item.questionContent" v-if="item.label ==0 || item.label == 1 || item.label == 2 || item.label == 3"></div>
-          <div class="img-list" v-if="item.label == 0">
+          <div class="content" v-html="item.questionContent" v-if="item.answer == null"></div>
+          <!--新增第一条回答-->
+          <div class="hasAnswer" v-if="item.answer != null">
+            <div class="answerContent" v-html="item.answer.content"></div>
+            <img class="img-item" v-for="child in splitImg(item.answer.images)" :src="child" >
+          </div>
+
+          <div class="img-list" v-if="item.label == 0&&item.answer == null">
             <img class="img-item" v-for="child in splitImg(item.images)" :src="child" >  
           </div>
-          <div class="img-list" v-if="item.label == 2">
+          <div class="img-list" v-if="item.label == 2&&item.answer == null">
             <video class="img-item" :src="item.videos"></video>
             <div class="ThisVideoPlayButton" v-if="item.label === 2 && item.coverUrl !=null">
               <img class="suspend img-responsive" :src="item.coverUrl" alt="">  
@@ -54,9 +60,9 @@
               <div v-if="item.promot || item.promot == 1">推广</div>
             </div>
             <div class="right">
-              <div style="margin-right: 10px" v-if="item.userPush">{{item.commentNum}}个回答</div>
+              <div style="margin-right: 10px">{{item.commentNum}}个回答</div>
               <div style="margin-right: 5px">{{item.praiseNum}}个赞</div>
-              <div class="icon-div" v-if="item.userPush" @click.stop="comment(item.id, item.questionTitle)">
+              <div class="icon-div" v-if="item.userPush || item.label == 3" @click.stop="comment(item.id, item.questionTitle)">
                 <i class="comment"></i>
                 <span>回答</span>
               </div>
@@ -463,11 +469,32 @@
   }
 </style>
 <style lang="css">
-  .content p{
+  .content p,.hasAnswer p{
     display: inline-block;
   }
-  .content p img{
+  .content p img,.hasAnswer p img{
     max-height: 63px;
+  }
+  .hasAnswer{
+    height: max-content;
+    max-height: 100px;
+    font-family: PingFangSC-Light;
+    font-size: 14px;
+    color: #999999;
+    line-height: 21px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+  .hasAnswer img.img-item {
+    width: calc((100% - 30px) / 4);
+    height: auto;
+    margin: 0 10px 10px 0;
+    border-radius: 4px;
+    /*background: #e6e6e6;*/
+    background-size: cover !important;
+    background-position: center !important;
   }
   .ThisVideoPlayButton{
     width: 100%;

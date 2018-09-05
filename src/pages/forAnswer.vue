@@ -12,14 +12,32 @@
             <i class="badge" v-else :class="{img: item.label == 1, video: item.label == 2, problem: item.label == 3}"></i>
             <span v-html="item.questionTitle"></span>
           </div>
+          <!--回答或者描述开始-->
+          <div class="content" v-html="item.questionContent" v-if="item.answer == null"></div>
+          <!--新增第一条回答-->
+          <div class="hasAnswer" v-if="item.answer != null">
+            <div class="answerContent" v-html="item.answer.content"></div>
+            <img class="img-item" v-for="child in splitImg(item.answer.images)" :src="child" >
+          </div>
+
+          <div class="img-list" v-if="item.label == 0&&item.answer == null">
+            <img class="img-item" v-for="child in splitImg(item.images)" :src="child" >  
+          </div>
+          <div class="img-list" v-if="item.label == 2&&item.answer == null">
+            <video class="img-item" :src="item.videos"></video>
+            <div class="ThisVideoPlayButton" v-if="item.label === 2 && item.coverUrl !=null">
+              <img class="suspend img-responsive" :src="item.coverUrl" alt="">  
+            </div>
+          </div>
+          <!--回答或者描述结束-->
           <div class="operation-bar">
             <div class="left">
               <div class="time">{{formatting(item.createTime)}}</div>
             </div>
             <div class="right">
-              <div style="margin-right: 10px" v-if="item.userPush">{{item.commentNum}}个回答</div>
+              <div style="margin-right: 10px">{{item.commentNum}}个回答</div>
               <div style="margin-right: 5px">{{item.praiseNum}}个赞</div>
-              <div class="icon-div" v-if="item.userPush" @click.stop="comment(item.id, item.questionTitle)">
+              <div class="icon-div" v-if="item.userPush || item.label == 3" @click.stop="comment(item.id, item.questionTitle)">
                 <i class="comment"></i>
                 <span>回答</span>
               </div>
@@ -183,6 +201,57 @@
             top: -1px;
           }
         }
+
+      /*回答或者描述开始*/
+
+        .content {
+          max-height: 63px;
+          font-family: PingFangSC-Light;
+          font-size: 14px;
+          color: #999999;
+          line-height: 21px;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 3;
+          overflow: hidden;
+        }
+        .img-list {
+          display: block;
+          padding-top: 5px;
+          position: relative;
+          /*.img-item {
+            width: calc((100% - 30px) / 4);
+            height: 58px;
+            margin: 0 10px 10px 0;
+            border-radius: 4px;
+            background: #e6e6e6;
+            background-size: cover !important;
+            background-position: center !important;
+          }*/
+          video.img-item {
+            width: 100%;
+            height: auto;
+            margin: 0 0 10px 0;
+            border-radius: 4px;
+            /*background: #e6e6e6;*/
+            background-size: cover !important;
+            background-position: center !important;
+          }
+          img.img-item {
+            width: calc((100% - 30px) / 4);
+            height: auto;
+            margin: 0 10px 10px 0;
+            border-radius: 4px;
+            /*background: #e6e6e6;*/
+            background-size: cover !important;
+            background-position: center !important;
+          }
+          .img-item:nth-child(4n) {
+            margin-right: 0;
+          }
+        }
+
+      /*回答或者描述结束*/
         .operation-bar {
           display: flex;
           padding-top: 15px;
@@ -241,5 +310,59 @@
   .bg {
     background: #fcfcfc;
     height: 10px;
+  }
+</style>
+<style lang="css">
+  .content p,.hasAnswer p{
+    display: inline-block;
+  }
+  .content p img,.hasAnswer p img{
+    max-height: 63px;
+  }
+  .hasAnswer{
+    height: max-content;
+    max-height: 100px;
+    font-family: PingFangSC-Light;
+    font-size: 14px;
+    color: #999999;
+    line-height: 21px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+  .hasAnswer img.img-item {
+    width: calc((100% - 30px) / 4);
+    height: auto;
+    margin: 0 10px 10px 0;
+    border-radius: 4px;
+    /*background: #e6e6e6;*/
+    background-size: cover !important;
+    background-position: center !important;
+  }
+  .ThisVideoPlayButton{
+    width: 100%;
+    height: calc(100%-20px);
+    position: absolute;
+    margin: 0;
+    /*background-color: rgba(0,0,0,.2);*/
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10000 !important;
+    border-radius: 5px;
+    /*display: block;*/
+  }
+  img.suspend{
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
   }
 </style>

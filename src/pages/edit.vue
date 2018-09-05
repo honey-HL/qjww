@@ -55,7 +55,6 @@
       };
     },
     created() {
-      console.log(this.userInfo);
       if(this.avatar.indexOf("http") != -1){
         return;
       }else{

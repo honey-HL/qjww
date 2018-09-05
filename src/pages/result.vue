@@ -6,7 +6,28 @@
       <transition-group name="fade">
         <div class="row" v-for="(item, index) in items" :key="index" v-if="!item.userPush" @click="detail(item)">
           <div class="title" v-html="item.questionTitle"></div>
-          <div class="content" v-html="item.questionContent"></div>
+          
+          <!--回答或者描述开始-->
+          <div class="content" v-html="item.questionContent" v-if="item.answer == null"></div>
+          <!--新增第一条回答-->
+          <div class="hasAnswer" v-if="item.answer != null">
+            <div class="answerContent" v-html="item.answer.content"></div>
+            <img class="img-item" v-for="child in splitImg(item.answer.images)" :src="child" >
+          </div>
+
+          <div class="img-list" v-if="item.label == 0&&item.answer == null">
+            <img class="img-item" v-for="child in splitImg(item.images)" :src="child" >  
+          </div>
+          <div class="img-list" v-if="item.label == 2&&item.answer == null">
+            <video class="img-item" :src="item.videos"></video>
+            <div class="ThisVideoPlayButton" v-if="item.label === 2 && item.coverUrl !=null">
+              <img class="suspend img-responsive" :src="item.coverUrl" alt="">  
+            </div>
+          </div>
+          <!--回答或者描述结束-->
+
+
+
         </div>
       </transition-group>
       <transition name="fade">
@@ -17,15 +38,37 @@
       <transition-group name="fade">
         <div v-for="(item, index) in items" :key="index" class="row" v-if="item.userPush" @click="detail(item)">
           <div class="title" v-html="item.questionTitle"></div>
-          <div class="content" v-html="item.questionContent"></div>
+          <!-- <div class="content" v-html="item.questionContent"></div>
           <div class="img-list">
             <div class="img-item" v-for="child in splitImg(item.images)" v-lazy:background-image="child">
-              <!--<img v-lazy="child" width="100%" height="100%">-->
+              <img v-lazy="child" width="100%" height="100%">-->
+            <!--</div>
+          </div> -->
+
+          <!--回答或者描述开始-->
+          <div class="content" v-html="item.questionContent" v-if="item.answer == null"></div>
+          <!--新增第一条回答-->
+          <div class="hasAnswer" v-if="item.answer != null">
+            <div class="answerContent" v-html="item.answer.content"></div>
+            <img class="img-item" v-for="child in splitImg(item.answer.images)" :src="child" >
+          </div>
+
+          <div class="img-list" v-if="item.label == 0&&item.answer == null">
+            <img class="img-item" v-for="child in splitImg(item.images)" :src="child" >  
+          </div>
+          <div class="img-list" v-if="item.label == 2&&item.answer == null">
+            <video class="img-item" :src="item.videos"></video>
+            <div class="ThisVideoPlayButton" v-if="item.label === 2 && item.coverUrl !=null">
+              <img class="suspend img-responsive" :src="item.coverUrl" alt="">  
             </div>
           </div>
+          <!--回答或者描述结束-->
+
+
           <div class="operation-bar">
             <div class="left">
-              <div v-if="item.userPush" class="head" v-lazy:background-image="item.avatar"></div>
+              <div v-if="item.isUserAvatar" class="head" v-lazy:background-image="item.avatar"></div>
+              <div v-if="!item.isUserAvatar" class="head" v-lazy:background-image="imgIp + item.avatar"></div>
               <div v-if="item.userPush" class="name">{{!item.anonymity ? item.nickName : '匿名'}}</div>
             </div>
             <div class="right">
@@ -120,9 +163,9 @@
           }
           for(var i in this.items){
               if(this.items[i].avatar.indexOf("http") != -1){
-                return;
+                this.items[i]["isUserAvatar"] = true;
               }else{
-                this.items[i].avatar = this.imgIp + this.items[i].avatar;
+                this.items[i]["isUserAvatar"] = false;
               };
           }
         }, error => {
@@ -357,5 +400,59 @@
         }
       }
     }
+  }
+</style>
+<style lang="css">
+  .content p,.hasAnswer p{
+    display: inline-block;
+  }
+  .content p img,.hasAnswer p img{
+    max-height: 63px;
+  }
+  .hasAnswer{
+    height: max-content;
+    max-height: 100px;
+    font-family: PingFangSC-Light;
+    font-size: 14px;
+    color: #999999;
+    line-height: 21px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+  .hasAnswer img.img-item {
+    width: calc((100% - 30px) / 4);
+    height: auto;
+    margin: 0 10px 10px 0;
+    border-radius: 4px;
+    /*background: #e6e6e6;*/
+    background-size: cover !important;
+    background-position: center !important;
+  }
+  .ThisVideoPlayButton{
+    width: 100%;
+    height: calc(100%-20px);
+    position: absolute;
+    margin: 0;
+    /*background-color: rgba(0,0,0,.2);*/
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10000 !important;
+    border-radius: 5px;
+    /*display: block;*/
+  }
+  img.suspend{
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
   }
 </style>
