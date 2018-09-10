@@ -3,7 +3,7 @@
     <div class="content">
       <div class="title" v-html="keywords"></div>
       <div class="text-div">
-        <textarea name="" id="" cols="30" rows="10" placeholder="请输入您的回答" v-model="answer.content" maxlength="255"></textarea>
+        <textarea name="" id="" cols="30" rows="10" placeholder="请输入您的回答" v-model="answer.content" maxlength="800"></textarea>
         <span class="num">{{answer.content.length}}
                     <span class="font-hint">字</span>
                 </span>
@@ -150,7 +150,7 @@
         .num {
           position: absolute;
           right: 10px;
-          bottom: 20px;
+          bottom: -2px;
           font-size: 12px;
           color: #5FB62A;
           .font-hint {

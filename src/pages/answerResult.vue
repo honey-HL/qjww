@@ -17,6 +17,7 @@
         <div class="operation-bar">
           <div class="left">
             <div v-if="detail.isUserAvatar" class="head" v-lazy:background-image="detail.avatar"></div>
+            <div v-if="!detail.isUserAvatar" class="head" v-lazy:background-image="imgIp +detail.avatar"></div>
             <div v-if="detail.userPush" class="name">{{!detail.anonymity ? detail.nickName : '匿名'}}</div>
           </div>
           <div class="right">
