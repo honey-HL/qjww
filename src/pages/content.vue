@@ -13,6 +13,7 @@
           }
         },
         created() {
+          document.title =this.$route.meta.title;
           this.item = this.$store.state.adDetail;
         },
     }

@@ -78,6 +78,7 @@
       }
     },
     created() {
+      document.title =this.$route.meta.title;
       this.detail = this.$store.state.answerDetail;
       this.report.id = this.detail.id;
     },

@@ -17,6 +17,9 @@
             inputChangeName:"",
           }
         },
+        created() {
+            document.title =this.$route.meta.title;
+        },
         methods: {
             submit(){
                 this.api.http("post", this.api.updateNickName, {nickName:this.inputChangeName}, result => {

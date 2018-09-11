@@ -49,6 +49,9 @@
         isLoading: false,
       }
     },
+    created() {
+      document.title =this.$route.meta.title;
+    },
     methods: {
       onRead(image) {
         this.imgs.push(image);

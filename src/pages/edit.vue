@@ -55,6 +55,7 @@
       };
     },
     created() {
+      document.title =this.$route.meta.title;
       if(this.avatar.indexOf("http") != -1){
         return;
       }else{

@@ -91,6 +91,7 @@
       }
     },
     created() {
+      document.title =this.$route.meta.title;
       //签到客户数据统计
       this.api.http("post", this.api.pvUploadData, {place:4,flag:1}, (result) => {}, (error) => {});
 

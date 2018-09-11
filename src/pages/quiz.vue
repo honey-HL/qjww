@@ -72,6 +72,7 @@
       }
     },
     created() {
+      document.title =this.$route.meta.title;
       this.getGroupAuth();
     },
     methods: {

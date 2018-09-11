@@ -77,6 +77,9 @@
         scrollHeight: "100%",
       }
     },
+    created() {
+      document.title =this.$route.meta.title;
+    },
     mounted() {
       this.scrollHeight = (window.innerHeight - 55 - 50) + "px";
     },

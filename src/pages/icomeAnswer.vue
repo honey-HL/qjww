@@ -63,6 +63,7 @@
       }
     },
     created() {
+      document.title =this.$route.meta.title;
       this.keywords = this.$route.query.keywords;
       this.getGroupAuth();
     },

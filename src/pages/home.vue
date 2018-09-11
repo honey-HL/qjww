@@ -53,6 +53,7 @@
     },
     created() {
       //console.log(sessionStorage.getItem("isShowAd"));
+      document.title =this.$route.meta.title;
       this.adShow = sessionStorage.getItem("isShowAd") == null ? true : sessionStorage.getItem("isShowAd") == "false" ? false : true;
     },
     mounted() {

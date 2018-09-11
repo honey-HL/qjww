@@ -106,6 +106,7 @@
       };
     },
     created() {
+      document.title = this.$route.meta.title;
       this.api.http("post", this.api.pvUploadData, {place:2,flag:1}, (result) => {}, (error) => {});
       this.api.http("get", this.api.isRead, {}, result => {
         this.isRead = result.isread;

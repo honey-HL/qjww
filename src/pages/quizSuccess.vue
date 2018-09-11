@@ -65,6 +65,7 @@
       }
     },
     created() {
+      document.title =this.$route.meta.title;
       this.searchValue = this.$route.query.keywords;
       this.questionId = this.$route.query.questionId;
       console.log(this.questionId);

@@ -79,6 +79,9 @@
         score: 0,
       };
     },
+    created() {
+      document.title =this.$route.meta.title;
+    },
     mounted() {
       if (this.$store.state.openId == null) {
         this.api.http("post", this.api.isGetCode, {}, result => {
