@@ -23,7 +23,10 @@ const getUrlParam = (name) => {
 
 /**时间格式化**/
 const formatting = (timestamp) => {
+  var reg = new RegExp("-", "g" )
+  timestamp = timestamp.replace(reg,"/");
   timestamp = new Date(timestamp).getTime();
+ 
   // 补全为13位
   let arrTimestamp = (timestamp + '').split('');
   for (let start = 0; start < 13; start++) {

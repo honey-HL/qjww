@@ -87,7 +87,7 @@
         this.api.http("post", this.api.isGetCode, {}, result => {
           if (result == 1) {
             if (this.code == null) {
-              location.href = this.api.ip + "wxClient/getCode?redirectUrl=" + location.href;
+              location.href = this.api.ip + "wxClient/getCode?redirectUrl=" + encodeURIComponent(location.href);
             }
             else {
               this.api.http("post", this.api.getOpenId, { code: this.code }, result => {  
@@ -110,11 +110,10 @@
                   this.isLoading = false;
                   setTimeout(() => {
                     if (this.$route.query.redirect != undefined) {
-                      this.$router.push({ path: this.$route.query.redirect });  //此处涉及多重登录~可能会多次修改~
-                      //this.$router.go(-1);
+                      this.$router.push({ path: this.$route.query.redirect });
                     }
                     else {
-                      this.$router.go(-2);
+                      this.$router.go(-3);
                     }
                   }, 1000);
                 }, error => {
@@ -167,7 +166,7 @@
                 this.$router.push({ path: this.$route.query.redirect });
               }
               else {
-                this.$router.go(-2);
+                this.$router.go(-3);
               }
             }, 1000);
           }, error => { });

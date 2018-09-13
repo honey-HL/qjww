@@ -35,16 +35,21 @@
             <i class="badge" v-else :class="{img: item.label == 1, video: item.label == 2, problem: item.label == 3}"></i>
             <span v-html="item.questionTitle"></span>
           </div>
+
           <div class="content" v-html="item.questionContent" v-if="item.answer == null"></div>
+          <div class="img-list" v-if="(item.label == 0||item.label == 1||item.label == 3)&&item.answer == null">
+            <img class="img-item" v-for="child in splitImg(item.images)" :src="child" >  
+          </div>
+
           <!--新增第一条回答-->
           <div class="hasAnswer" v-if="item.answer != null">
             <div class="answerContent" v-html="item.answer.content"></div>
+          </div>
+          <div class="img-list" v-if="item.answer != null">
             <img class="img-item" v-for="child in splitImg(item.answer.images)" :src="child" >
           </div>
+          <!--新增第一条回答结束-->
 
-          <div class="img-list" v-if="item.label == 0&&item.answer == null">
-            <img class="img-item" v-for="child in splitImg(item.images)" :src="child" >  
-          </div>
           <div class="img-list" v-if="item.label == 2&&item.answer == null">
             <video class="img-item" :src="item.videos"></video>
             <div class="ThisVideoPlayButton" v-if="item.label === 2 && item.coverUrl !=null">
@@ -390,17 +395,18 @@
             background-position: center !important;
           }
           img.img-item {
-            width: calc((100% - 30px) / 4);
+            width: auto;
             height: auto;
+            max-height: 63px;
             margin: 0 10px 10px 0;
             border-radius: 4px;
             /*background: #e6e6e6;*/
             background-size: cover !important;
             background-position: center !important;
           }
-          .img-item:nth-child(4n) {
+          /* .img-item:nth-child(4n) {
             margin-right: 0;
-          }
+          } */
         }
         .video-cover {
           margin-top: 5px;
@@ -470,6 +476,9 @@
   }
 </style>
 <style lang="css">
+  .content>p>img,.answerContent>p>img{
+    display:none;
+  }
   .content p,.hasAnswer p{
     display: inline-block;
   }
@@ -478,7 +487,7 @@
   }
   .hasAnswer{
     height: max-content;
-    max-height: 100px;
+    max-height: 63px;
     font-family: PingFangSC-Light;
     font-size: 14px;
     color: #999999;
@@ -489,8 +498,9 @@
     overflow: hidden;
   }
   .hasAnswer img.img-item {
-    width: calc((100% - 30px) / 4);
+    width: auto;
     height: auto;
+    max-height: 63px;
     margin: 0 10px 10px 0;
     border-radius: 4px;
     /*background: #e6e6e6;*/

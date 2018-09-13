@@ -104,7 +104,7 @@
           this.score = result;
           this.isLoading = false;
           this.isShow = true;
-          this.$toast("请耐心等待审核");
+          //this.$toast("请耐心等待审核");
           setTimeout(() => {
             this.$router.go(-1);
           }, 1000);
