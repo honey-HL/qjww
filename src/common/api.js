@@ -4,7 +4,7 @@
 
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://192.168.1.110:8181/qjww-api/';
+axios.defaults.baseURL = 'http://192.168.1.111:8181/qjww-api/';
 //axios.defaults.baseURL = 'http://tiger.magic-beans.cn/qjww-api/';
 // axios.defaults.headers.common['Authorization'] = "Bearer " + localStorage.getItem("accessToken");
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -48,8 +48,8 @@ const http = (method, url, params, successCallback, errorCallback) => {
 export default {
   http: http,
 
-  ip: "http://192.168.1.110:8181/qjww-api/",
-  imgIp: "http://192.168.1.110:8088/",
+  ip: "http://192.168.1.111:8181/qjww-api/",
+  imgIp: "http://192.168.1.111:8088/",
 
   //ip: "http://tiger.magic-beans.cn/qjww-api/",
   //imgIp: "http://res.magic-beans.cn/",

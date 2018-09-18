@@ -357,6 +357,9 @@
         line-height: 22px;
         margin-bottom: 5px;
         font-family: 微软雅黑;
+        span {
+          color:#5FB62A;
+        }
         i {
           display: inline-block;
           width: calc(52px / 2);
@@ -622,10 +625,10 @@
     background-color: #fff;
   }
   .backstagePush p img{
-    display: block;
-    max-height: none;
+    display: block !important;
+    max-height: none !important;
   }
-  .backstagePushAnswer>p>img{
+  .backstagePushAnswer p img{
     display: block !important;
   }
 </style>

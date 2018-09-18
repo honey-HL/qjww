@@ -38,7 +38,7 @@
 
           <div class="content" v-html="item.questionContent" v-if="item.answer == null"></div>
           <div class="img-list" v-if="(item.label == 0||item.label == 1||item.label == 3)&&item.answer == null">
-            <img class="img-item" v-for="child in splitImg(item.images)" :src="child" >  
+            <img class="img-item" v-for="child in splitImg(item.images).slice(0, 4)" :src="child" >  
           </div>
 
           <!--新增第一条回答-->
@@ -46,7 +46,7 @@
             <div class="answerContent" v-html="item.answer.content"></div>
           </div>
           <div class="img-list" v-if="item.answer != null">
-            <img class="img-item" v-for="child in splitImg(item.answer.images)" :src="child" >
+            <img class="img-item" v-for="child in splitImg(item.answer.images).slice(0, 4)" :src="child" >
           </div>
           <!--新增第一条回答结束-->
 
@@ -119,7 +119,6 @@
     },
     mounted() {
       this.scrollHeight = (window.innerHeight - 55 - 77 - 50) + "px";
-      
     },
     methods: {
       link(url) {
@@ -395,11 +394,12 @@
             background-position: center !important;
           }
           img.img-item {
-            width: auto;
-            height: auto;
+            width: calc((100% - 40px) / 4);
+            height: 63px;
             max-height: 63px;
             margin: 0 10px 10px 0;
             border-radius: 4px;
+            object-fit: cover;
             /*background: #e6e6e6;*/
             background-size: cover !important;
             background-position: center !important;
@@ -476,14 +476,11 @@
   }
 </style>
 <style lang="css">
-  .content>p>img,.answerContent>p>img{
+  .content p img,.answerContent p img{
     display:none;
   }
   .content p,.hasAnswer p{
     display: inline-block;
-  }
-  .content p img,.hasAnswer p img{
-    max-height: 63px;
   }
   .hasAnswer{
     height: max-content;
@@ -498,11 +495,12 @@
     overflow: hidden;
   }
   .hasAnswer img.img-item {
-    width: auto;
-    height: auto;
+    width: calc((100% - 40px) / 4);
+    height: 63px;
     max-height: 63px;
     margin: 0 10px 10px 0;
     border-radius: 4px;
+    object-fit: cover;
     /*background: #e6e6e6;*/
     background-size: cover !important;
     background-position: center !important;

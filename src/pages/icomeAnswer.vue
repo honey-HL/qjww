@@ -110,6 +110,7 @@
           }, 1000);
         }, error => {
           this.isLoading = false;
+          this.$toast("该问题不允许回答!");
         });
       },
       /*删除图片*/
