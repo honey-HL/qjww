@@ -120,6 +120,10 @@
     mounted() {
       this.scrollHeight = (window.innerHeight - 55 - 77 - 50) + "px";
     },
+    updated() {
+      let con = $(".content").children("p");
+      con.removeAttr("style");
+    },
     methods: {
       link(url) {
         this.$router.push({
