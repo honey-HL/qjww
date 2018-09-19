@@ -280,6 +280,30 @@
         }
         this.showImgSlideArr=this.detail.images;
       },
+
+
+      // showImgSlideTRY(data){
+      //    if(data==null||data==""){
+      //      this.isShowSwiperImgShow = false;
+      //    }else{
+      //     let imgArr = $(".backstagePush").children("p").children("img");
+      //     let slideNub;
+      //     this.isShowSwiperImgShow = true; 
+      //     for(let i=0;i<imgArr.length;i++){
+      //       imgArr[i].addEventListener("click",function(){
+      //         slideNub = i+1;
+      //         console.log(slideNub);
+      //         this.newSwiper().slideTo(slideNub);
+      //         return;
+      //       });
+      //     }
+           
+          
+      //    }
+      //   this.showImgSlideArr=this.detail.images;
+      // },
+
+
       /*隐藏这个图片滑动查看模块*/
       clickCloseShowSwiper(){
         this.isShowSwiperImgShow = false;
