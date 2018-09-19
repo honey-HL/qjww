@@ -83,6 +83,10 @@
     mounted() {
       this.scrollHeight = (window.innerHeight - 55 - 50) + "px";
     },
+    updated() {
+      let con = $(".content").children("p");
+      con.removeAttr("style");
+    },
     methods: {
       /*获取列表*/
       getData() {

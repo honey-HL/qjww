@@ -165,7 +165,7 @@
             }
           }
         }, error => {
-          console.log(error);
+          
         });
       },
       /*下拉刷新*/
