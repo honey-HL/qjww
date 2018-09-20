@@ -35,16 +35,21 @@
             <i class="badge" v-else :class="{img: item.label == 1, video: item.label == 2, problem: item.label == 3}"></i>
             <span v-html="item.questionTitle"></span>
           </div>
+
           <div class="content" v-html="item.questionContent" v-if="item.answer == null"></div>
+          <div class="img-list" v-if="(item.label == 0||item.label == 1||item.label == 3)&&item.answer == null">
+            <img class="img-item" v-for="child in splitImg(item.images).slice(0, 4)" :src="child" >  
+          </div>
+
           <!--新增第一条回答-->
           <div class="hasAnswer" v-if="item.answer != null">
             <div class="answerContent" v-html="item.answer.content"></div>
-            <img class="img-item" v-for="child in splitImg(item.answer.images)" :src="child" >
           </div>
+          <div class="img-list" v-if="item.answer != null">
+            <img class="img-item" v-for="child in splitImg(item.answer.images).slice(0, 4)" :src="child" >
+          </div>
+          <!--新增第一条回答结束-->
 
-          <div class="img-list" v-if="item.label == 0&&item.answer == null">
-            <img class="img-item" v-for="child in splitImg(item.images)" :src="child" >  
-          </div>
           <div class="img-list" v-if="item.label == 2&&item.answer == null">
             <video class="img-item" :src="item.videos"></video>
             <div class="ThisVideoPlayButton" v-if="item.label === 2 && item.coverUrl !=null">
@@ -106,6 +111,7 @@
       };
     },
     created() {
+      document.title = this.$route.meta.title;
       this.api.http("post", this.api.pvUploadData, {place:2,flag:1}, (result) => {}, (error) => {});
       this.api.http("get", this.api.isRead, {}, result => {
         this.isRead = result.isread;
@@ -113,7 +119,10 @@
     },
     mounted() {
       this.scrollHeight = (window.innerHeight - 55 - 77 - 50) + "px";
-      
+    },
+    updated() {
+      let con = $(".content").children("p");
+      con.removeAttr("style");
     },
     methods: {
       link(url) {
@@ -156,7 +165,7 @@
             }
           }
         }, error => {
-          console.log(error);
+          
         });
       },
       /*下拉刷新*/
@@ -389,17 +398,19 @@
             background-position: center !important;
           }
           img.img-item {
-            width: calc((100% - 30px) / 4);
-            height: auto;
+            width: calc((100% - 40px) / 4);
+            height: 63px;
+            max-height: 63px;
             margin: 0 10px 10px 0;
             border-radius: 4px;
+            object-fit: cover;
             /*background: #e6e6e6;*/
             background-size: cover !important;
             background-position: center !important;
           }
-          .img-item:nth-child(4n) {
+          /* .img-item:nth-child(4n) {
             margin-right: 0;
-          }
+          } */
         }
         .video-cover {
           margin-top: 5px;
@@ -469,15 +480,15 @@
   }
 </style>
 <style lang="css">
+  .content p img,.answerContent p img{
+    display:none;
+  }
   .content p,.hasAnswer p{
     display: inline-block;
   }
-  .content p img,.hasAnswer p img{
-    max-height: 63px;
-  }
   .hasAnswer{
     height: max-content;
-    max-height: 100px;
+    max-height: 63px;
     font-family: PingFangSC-Light;
     font-size: 14px;
     color: #999999;
@@ -488,10 +499,12 @@
     overflow: hidden;
   }
   .hasAnswer img.img-item {
-    width: calc((100% - 30px) / 4);
-    height: auto;
+    width: calc((100% - 40px) / 4);
+    height: 63px;
+    max-height: 63px;
     margin: 0 10px 10px 0;
     border-radius: 4px;
+    object-fit: cover;
     /*background: #e6e6e6;*/
     background-size: cover !important;
     background-position: center !important;

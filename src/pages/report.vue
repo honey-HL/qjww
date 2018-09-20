@@ -8,7 +8,7 @@
         <span v-else>{{typeName}}</span>
       </div>
       <div class="text-div">
-        <textarea name="" id="" cols="30" rows="10" placeholder="问题描述（选填）" v-model="report.describe" maxlength="200"></textarea>
+        <textarea name="" id="" cols="30" rows="10" placeholder="问题描述（选填）" v-model="report.describe" maxlength="800"></textarea>
         <span class="num">{{report.describe.length}}
                     <span class="font-hint">字</span>
                 </span>
@@ -78,6 +78,7 @@
       }
     },
     created() {
+      document.title =this.$route.meta.title;
       this.detail = this.$store.state.answerDetail;
       this.report.id = this.detail.id;
     },
@@ -172,7 +173,7 @@
         .num {
           position: absolute;
           right: 10px;
-          bottom: 20px;
+          bottom: -2px;
           font-size: 12px;
           color: #5FB62A;
           .font-hint {

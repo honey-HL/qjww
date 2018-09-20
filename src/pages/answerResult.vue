@@ -12,11 +12,13 @@
             <video class="img-item" id="videoPlay" :src="detail.videos" controls :poster="detail.coverUrl" v-if="detail.videos != null"></video>
             <img class="img-item" v-for="child in splitImg(detail.images)" :src="child" alt="" v-if="detail.userPush" @click="showImgSlide(detail.images)">  
         </div>
-        <div class="content" v-html="detail.questionContent" @click="showImgSlide(detail.images)"></div>
+        <div class="content backstagePush" v-if="!detail.userPush" v-html="detail.questionContent" @click="showImgSlide(detail.images)"></div>
+        <div class="content userPush" v-if="detail.userPush" v-html="detail.questionContent" @click="showImgSlide(detail.images)"></div>
         <!-- <div class="video-cover"></div> -->
         <div class="operation-bar">
           <div class="left">
             <div v-if="detail.isUserAvatar" class="head" v-lazy:background-image="detail.avatar"></div>
+            <div v-if="!detail.isUserAvatar" class="head" v-lazy:background-image="imgIp +detail.avatar"></div>
             <div v-if="detail.userPush" class="name">{{!detail.anonymity ? detail.nickName : '匿名'}}</div>
           </div>
           <div class="right">
@@ -33,8 +35,8 @@
       </div>
       <transition-group name="fade">
         <div class="row" v-for="(item,index) in items" :key="index">
-          <div class="content" v-html="item.content" @click="showUserAnswerImgSlide(item)"></div>
-          <div class="img-list" @click="showUserAnswerImgSlide(item)">
+          <div class="content backstagePushAnswer" v-html="item.content" @click="showUserAnswerImgSlide(item)"></div>
+          <div class="img-list" @click="showUserAnswerImgSlide(item)" v-if="item.userPush">
             <img class="img-item" v-for="child in splitImg(item.images)" :src="child" alt="">
           </div>
           <!-- <div class="video-cover"></div> -->
@@ -114,17 +116,21 @@
       this.detail = this.$store.state.answerDetail;
       if (this.detail == null) {
         let url = window.location.href;
-        let a = url.substring(url.lastIndexOf('=')+1, url.length); 
-        this.api.http("post", this.api.findById, {id: a}, (result) => {
-          this.detail = result.question;
-        }, (error) => {
-          if(error.code == 1005){
-            this.$toast("对不起，请先登录");
-          }else if(error.code == 1002){
-            
-            this.$toast("对不起，问题正在审核！");
-          }
-        })
+        let a = url.substring(url.lastIndexOf('=')+1, url.length);
+        if(a.indexOf("answerResult") != -1){
+          this.$router.push({path: "/index/answer"});
+        }else{
+          this.api.http("post", this.api.findById, {id: a}, (result) => {
+            this.detail = result.question;
+          }, (error) => {
+            if(error.code == 1005){
+              this.$toast("对不起，请先登录");
+            }else if(error.code == 1002){
+              this.$toast("对不起，问题正在审核！");
+            }
+          })
+        }
+        
       }
       if(this.detail.avatar.indexOf("http") != -1){
         this.detail.avatar = this.imgIp+this.detail.avatar;
@@ -185,6 +191,12 @@
             }
           }
           for(var i in this.items){
+              if(this.items[i].content.indexOf("img") != -1){
+                this.items[i].userPush=false;
+              }else{
+                this.items[i].userPush=true;
+              };
+          
               if(this.items[i].userAvatar.indexOf("http") != -1){
                 this.items[i]["isUserAvatar"] = true;
               }else{
@@ -192,10 +204,6 @@
               };
           }
         }, error => {
-          console.log(error);
-          if(error.code == 1005){
-            this.$router.push({path: '/index/login'});
-          }
         });
       },
       /*下拉刷新*/
@@ -349,6 +357,9 @@
         line-height: 22px;
         margin-bottom: 5px;
         font-family: 微软雅黑;
+        span {
+          color:#5FB62A;
+        }
         i {
           display: inline-block;
           width: calc(52px / 2);
@@ -613,5 +624,11 @@
   #swiper-pagination>.swiper-pagination-bullet-active{
     background-color: #fff;
   }
-
+  .backstagePush p img{
+    display: block !important;
+    max-height: none !important;
+  }
+  .backstagePushAnswer p img{
+    display: block !important;
+  }
 </style>

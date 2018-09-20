@@ -13,7 +13,10 @@
         return {
           items:JSON.parse(localStorage.getItem("newsDetailCon")),
         }
-      } 
+      },
+      created() {
+        document.title =this.$route.meta.title;
+      }, 
     }
   </script>
   <style lang="scss" scoped>

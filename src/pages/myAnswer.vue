@@ -114,6 +114,7 @@
       };
     },
     created() {
+      document.title =this.$route.meta.title;
       setTimeout(() => {
         this.getData(0);
       }, 1000);

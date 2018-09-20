@@ -23,7 +23,10 @@ const getUrlParam = (name) => {
 
 /**时间格式化**/
 const formatting = (timestamp) => {
+  var reg = new RegExp("-", "g" )
+  timestamp = timestamp.replace(reg,"/");
   timestamp = new Date(timestamp).getTime();
+ 
   // 补全为13位
   let arrTimestamp = (timestamp + '').split('');
   for (let start = 0; start < 13; start++) {
@@ -86,7 +89,8 @@ export default {
   /**1开头的手机号**/
   isMobile : /^1\d{10}$/,
   /**手机号码正则表达式**/
-  isPhone : /^(((13[0-9]{1})|(18[0-9]{1})|(17[6-9]{1})|(15[0-9]{1}))+\d{8})$/,
+  //isPhone : /^(((13[0-9]{1})|(18[0-9]{1})|(17[6-9]{1})|(15[0-9]{1}))+\d{8})$/,
+  isPhone : /^(((13[0-9]{1})|(14[579]{1})|(15[0-9]{1})|(16[6]{1})|(17[36789]{1})|(18[0-9]{1})|(19[89]{1}))+\d{8})$/,
   /**6-16的密码**/
   isPwd : /[A-Za-z0-9]{6,16}/,
   isEmoji : /\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g,

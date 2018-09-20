@@ -7,7 +7,7 @@
       <div class="title">创造你最爱的千机问问</div>
       <div class="hint">问问的改进需要您宝贵的意见</div>
       <div class="text-div">
-        <textarea name="" id="" cols="30" rows="10" maxlength="200" v-model="content" placeholder="反馈问题或意见，帮助我们一起创造更好的千机问问"></textarea>
+        <textarea name="" id="" cols="30" rows="10" maxlength="800" v-model="content" placeholder="反馈问题或意见，帮助我们一起创造更好的千机问问"></textarea>
         <span class="num">{{content.length}}
                     <span class="font-hint">字</span>
                 </span>
@@ -48,6 +48,9 @@
         imgs: [],
         isLoading: false,
       }
+    },
+    created() {
+      document.title =this.$route.meta.title;
     },
     methods: {
       onRead(image) {
@@ -131,7 +134,7 @@
         .num {
           position: absolute;
           right: 10px;
-          bottom: 20px;
+          bottom: -2px;
           font-size: 12px;
           color: #5FB62A;
           .font-hint {

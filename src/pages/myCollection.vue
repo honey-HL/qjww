@@ -45,6 +45,9 @@
         isEnd: false,
       };
     },
+    created() {
+      document.title =this.$route.meta.title;
+    },
     methods: {
       formatting (time) {
         return this.util.formatting(time);

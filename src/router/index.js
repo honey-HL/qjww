@@ -40,6 +40,7 @@ Vue.use(Router)
 
 const routers = new Router({
   // mode: "history",
+  base:"/wechat/",
   routes: [
     { path: '/', redirect: "/index/home" },
     {
@@ -58,7 +59,7 @@ const routers = new Router({
         { path: 'news', name: 'news', component: News, meta: { title: "通知", requireAuth: true } },
         { path: 'newsDetail', name: 'newsDetail', component: NewsDetail, meta: { title: "通知详情", requireAuth: true } },
         { path: 'forAnswer', name: 'forAnswer', component: ForAnswer, meta: { title: "等你来答", requireAuth: true } },
-        { path: 'answerResult', name: 'answerResult', component: AnswerResult, meta: { title: "答案搜索结果" } },
+        { path: 'answerResult', name: 'answerResult', component: AnswerResult, meta: { title: "答案搜索结果", requireAuth: true  } },
         { path: 'report', name: 'report', component: Report, meta: { title: "举报", requireAuth: true } },
         { path: 'icomeAnswer', name: 'icomeAnswer', component: IcomeAnswer, meta: { title: "我来回答", requireAuth: true } },
         { path: 'myAnswer', name: 'myAnswer', component: MyAnswer, meta: { title: "我的回答", requireAuth: true } },

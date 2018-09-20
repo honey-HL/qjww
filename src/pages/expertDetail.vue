@@ -72,6 +72,7 @@
     },
     created() {
       //window.alert=function(){};
+      document.title =this.$route.meta.title;
       this.item = this.$store.state.expertDetail;
       if (this.item == null) {
         this.api.http("post", this.api.specialistInfo, {

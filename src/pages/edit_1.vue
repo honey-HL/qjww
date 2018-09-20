@@ -47,6 +47,9 @@
         nickName: "",
       };
     },
+    mounted() {
+      
+    },
     methods: {
       onRead(image) {
         this.avatar = image.url;

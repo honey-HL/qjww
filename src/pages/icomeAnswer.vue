@@ -3,7 +3,7 @@
     <div class="content">
       <div class="title" v-html="keywords"></div>
       <div class="text-div">
-        <textarea name="" id="" cols="30" rows="10" placeholder="请输入您的回答" v-model="answer.content" maxlength="255"></textarea>
+        <textarea name="" id="" cols="30" rows="10" placeholder="请输入您的回答" v-model="answer.content" maxlength="800"></textarea>
         <span class="num">{{answer.content.length}}
                     <span class="font-hint">字</span>
                 </span>
@@ -63,6 +63,7 @@
       }
     },
     created() {
+      document.title =this.$route.meta.title;
       this.keywords = this.$route.query.keywords;
       this.getGroupAuth();
     },
@@ -103,12 +104,13 @@
           this.score = result;
           this.isLoading = false;
           this.isShow = true;
-          this.$toast("请耐心等待审核");
+          //this.$toast("请耐心等待审核");
           setTimeout(() => {
             this.$router.go(-1);
           }, 1000);
         }, error => {
           this.isLoading = false;
+          this.$toast("该问题不允许回答!");
         });
       },
       /*删除图片*/
@@ -150,7 +152,7 @@
         .num {
           position: absolute;
           right: 10px;
-          bottom: 20px;
+          bottom: -2px;
           font-size: 12px;
           color: #5FB62A;
           .font-hint {

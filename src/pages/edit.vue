@@ -2,17 +2,17 @@
   <div class="edit">
     <div class="row">
       <div class="left">
-          <van-uploader :after-read="uploadFile" accept="image/*">
-            <slot></slot>
+          <!-- <van-uploader :after-read="uploadFile" accept="image/*">
+            <slot></slot> -->
             <div class="head" v-lazy:background-image="avatar"></div>
             
-          </van-uploader> 
+          <!-- </van-uploader>  -->
       </div>
         <div class="right">
-            <van-uploader :after-read="uploadFile" accept="image/*">
+            <!-- <van-uploader :after-read="uploadFile" accept="image/*">
               <slot></slot>
-            </van-uploader> 
-            <span class="hint">修改头像</span>
+            </van-uploader>  -->
+            <span class="hint" @click="changeName">修改头像</span>
             <i class="icon"></i>
             <transition name="fade">
                 <Loader title="上传中" v-if="isFileLoading"/>
@@ -21,7 +21,7 @@
     </div>
     <div class="row">
       <div class="left">名称</div>
-      <div class="right" @click="changeName">
+      <div class="right" @click="changeName"><!--@click="changeName"-->
         <span class="name">{{userInfo.nickName}}</span>
         <i class="icon" ></i>
       </div>
@@ -55,6 +55,7 @@
       };
     },
     created() {
+      document.title =this.$route.meta.title;
       if(this.avatar.indexOf("http") != -1){
         return;
       }else{
@@ -171,9 +172,10 @@
       },
       /*用户修改名字*/
       changeName(){
-        this.$router.push({
-          path: "/index/changeName"
-        });
+        this.$toast("此功能暂未开放!");
+        // this.$router.push({
+        //   path: "/index/changeName"
+        // });
       }
 
     }

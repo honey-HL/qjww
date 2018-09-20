@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <transition name="fade">
-      <div v-if="adShow && adItem != null && adItem.status == 1" @click="adDetail(2)" class="ad-flex" v-lazy:background-image="imgIp + adItem.img">
+      <div v-if="adShow && adItem.status == 1" @click="adDetail(2)" class="ad-flex" v-lazy:background-image="imgIp + adItem.img">
         <span class="btn" @click.stop="hideAd">跳过 {{timeCount}}s</span>
       </div>
     </transition>
@@ -53,6 +53,7 @@
     },
     created() {
       //console.log(sessionStorage.getItem("isShowAd"));
+      document.title =this.$route.meta.title;
       this.adShow = sessionStorage.getItem("isShowAd") == null ? true : sessionStorage.getItem("isShowAd") == "false" ? false : true;
     },
     mounted() {
@@ -73,11 +74,9 @@
       this.api.http("post", this.api.getAdList, {position: 1}, (result) => {
         this.adBottom = result;
       }, (error) => {});
-
       this.api.http("post", this.api.getAdList, {position: 2}, (result) => {
         this.adItem = result;
       }, (error) => {});
-
       this.api.http("get", this.api.countSolveQuestion, {}, (result) => {
         this.totalNumber = result;
       }, (error) => {});

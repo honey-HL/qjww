@@ -5,7 +5,7 @@
       <div class="hint">您可以继续搜索您遇到的手机问题</div>
       <input type="text" placeholder="请输入标题" maxlength="50" v-model="quiz.title">
       <div class="text-div">
-        <textarea name="" id="" cols="30" rows="10" placeholder="问题描述（选填）" maxlength="255" v-model="quiz.content"></textarea>
+        <textarea name="" id="" cols="30" rows="10" placeholder="问题描述（选填）" maxlength="800" v-model="quiz.content"></textarea>
         <span class="num">{{quiz.content.length}}
                     <span class="font-hint">字</span>
                 </span>
@@ -72,6 +72,7 @@
       }
     },
     created() {
+      document.title =this.$route.meta.title;
       this.getGroupAuth();
     },
     methods: {
@@ -183,7 +184,7 @@
         .num {
           position: absolute;
           right: 10px;
-          bottom: 20px;
+          bottom: -2px;
           font-size: 12px;
           color: #5FB62A;
           .font-hint {

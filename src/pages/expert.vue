@@ -162,6 +162,7 @@
       };
     },
     created() {
+      document.title =this.$route.meta.title;
       this.api.http("get", this.api.getAllCity, {}, result => {
         this.areaArray = result;
         this.isLoader = false;

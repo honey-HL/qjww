@@ -13,6 +13,7 @@
           }
         },
         created() {
+          document.title =this.$route.meta.title;
           this.api.http("post", this.api.getText, {
             flag: 0
           }, result => {

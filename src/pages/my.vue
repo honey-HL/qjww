@@ -85,6 +85,7 @@
       }
     },
     created() {
+      document.title =this.$route.meta.title;
       this.api.http("post", this.api.isSign, {}, result => {
         this.checkSign = result;
       }, error => { });
