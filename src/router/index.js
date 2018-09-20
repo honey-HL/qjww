@@ -40,6 +40,7 @@ Vue.use(Router)
 
 const routers = new Router({
   // mode: "history",
+  base:"/wechat/",
   routes: [
     { path: '/', redirect: "/index/home" },
     {
