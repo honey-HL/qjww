@@ -4,7 +4,7 @@
 
 import axios from 'axios'
 
-axios.defaults.baseURL = "http://ask.3ceasy.com/qjww-api/";
+axios.defaults.baseURL = "https://ask.3ceasy.com/qjww-api/";
 // axios.defaults.baseURL = "http://118.178.105.49/";
 // axios.defaults.baseURL = 'http://192.168.1.110:8181/qjww-api/';
 //axios.defaults.baseURL = 'http://tiger.magic-beans.cn/qjww-api/';
@@ -50,10 +50,10 @@ const http = (method, url, params, successCallback, errorCallback) => {
 export default {
   http: http,
 
-  ip: "http://ask.3ceasy.com/qjww-api/",
+  ip: "https://ask.3ceasy.com/qjww-api/",
   // ip: "http://118.178.105.49/",
   // ip: "http://192.168.1.110:8181/qjww-api/",
-  imgIp: "http://ask-img.3ceasy.com/",
+  imgIp: "https://ask-img.3ceasy.com/",
   // imgIp: "http://192.168.1.110:8088/",
   //ip: "http://tiger.magic-beans.cn/qjww-api/",
   //imgIp: "http://res.magic-beans.cn/",
