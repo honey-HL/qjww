@@ -10,7 +10,7 @@
       <img class="logo" v-else src="../assets/qjww.png">
       <p class="title">手机问题，就来千机问问</p>
       <div class="search-bar">
-        <img src="../assets/search.png" />
+        <img @click="searchEnterFun" src="../assets/search.png" />
         <input @blur="blurInput" @focus="focusInput" type="search" placeholder="请输入您遇到的手机问题" maxlength="30" v-model="searchValue" @keyup.enter="searchEnterFun">
       </div>
       <div class="solve">
@@ -89,7 +89,7 @@
     methods: {
       searchEnterFun(e) {
         let keyCode = window.event ? e.keyCode : e.which;
-        if (keyCode == 13) {
+        if (keyCode == 13 || e.type === "click") {
           //this.$store.dispatch("setSearchValue", this.searchValue);
           if (this.searchValue.trim() == "") {
             this.searchValue = "";
