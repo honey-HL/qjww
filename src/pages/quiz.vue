@@ -1,8 +1,8 @@
 <template>
   <div class="quiz">
-    <Search @searchData="searchData" />
+    <!-- <Search @searchData="searchData" /> -->
     <div class="content">
-      <div class="hint">您可以继续搜索您遇到的手机问题</div>
+      <!-- <div class="hint">您可以继续搜索您遇到的手机问题</div> -->
       <input type="text" placeholder="请输入标题" maxlength="50" v-model="quiz.title">
       <div class="text-div">
         <textarea name="" id="" cols="30" rows="10" placeholder="问题描述（选填）" maxlength="800" v-model="quiz.content"></textarea>
@@ -11,7 +11,7 @@
                 </span>
       </div>
       <div class="row">
-        <div class="item" v-for="item in images" v-lazy:background-image="item.url.filterImage(api.ip)">
+        <div class="item" v-for="(item, index) in images" :key="index" v-lazy:background-image="item.url.filterImage(api.ip)">
           <i class="del" @click="delImg(item.fileName)"></i>
         </div>
         <div v-if="config != null && config.isPush == 0" @click="check" class="item add-icon"></div>

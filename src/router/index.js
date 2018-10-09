@@ -3,30 +3,54 @@ import Router from 'vue-router'
 import VueWechatTitle from 'vue-wechat-title'
 import VueScroller from 'vue-scroller'
 
-import Index from '@/pages/index'
-import Home from '@/pages/home'
-import Answer from '@/pages/answer'
-import My from '@/pages/my'
-import Result from '@/pages/result'
-import Login from '@/pages/login'
-import Quiz from '@/pages/quiz'
-import QuizSuccess from '@/pages/quizSuccess'
-import News from '@/pages/news'
-import ForAnswer from '@/pages/forAnswer'
-import AnswerResult from '@/pages/answerResult'
-import Report from '@/pages/report'
-import IcomeAnswer from '@/pages/icomeAnswer'
-import MyAnswer from '@/pages/myAnswer'
-import Expert from '@/pages/expert'
-import ExpertDetail from '@/pages/expertDetail'
-import MyCollection from '@/pages/myCollection'
-import Feedback from '@/pages/feedback'
-import Signin from '@/pages/signin'
-import Edit from '@/pages/edit'
-import Rule from '@/pages/rule'
-import Content from '@/pages/content'
-import NewsDetail from '@/pages/newsDetail'
-import ChangeName from '@/pages/changeName'
+// import Index from '@/pages/index'
+// import Home from '@/pages/home'
+// import Answer from '@/pages/answer'
+// import My from '@/pages/my'
+// import Result from '@/pages/result'
+// import Login from '@/pages/login'
+// import Quiz from '@/pages/quiz'
+// import QuizSuccess from '@/pages/quizSuccess'
+// import News from '@/pages/news'
+// import ForAnswer from '@/pages/forAnswer'
+// import AnswerResult from '@/pages/answerResult'
+// import Report from '@/pages/report'
+// import IcomeAnswer from '@/pages/icomeAnswer'
+// import MyAnswer from '@/pages/myAnswer'
+// import Expert from '@/pages/expert'
+// import ExpertDetail from '@/pages/expertDetail'
+// import MyCollection from '@/pages/myCollection'
+// import Feedback from '@/pages/feedback'
+// import Signin from '@/pages/signin'
+// import Edit from '@/pages/edit'
+// import Rule from '@/pages/rule'
+// import Content from '@/pages/content'
+// import NewsDetail from '@/pages/newsDetail'
+// import ChangeName from '@/pages/changeName'
+const Index = () => import('@/pages/index')
+const Home = () => import('@/pages/home')
+const Answer = () => import('@/pages/answer')
+const My = () => import('@/pages/my')
+const Result = () => import('@/pages/result')
+const Login = () => import('@/pages/login')
+const Quiz = () => import('@/pages/quiz')
+const QuizSuccess = () => import('@/pages/quizSuccess')
+const News = () => import('@/pages/news')
+const ForAnswer = () => import('@/pages/forAnswer')
+const AnswerResult = () => import('@/pages/answerResult')
+const Report = () => import('@/pages/report')
+const IcomeAnswer = () => import('@/pages/icomeAnswer')
+const MyAnswer = () => import('@/pages/myAnswer')
+const Expert = () => import('@/pages/expert')
+const ExpertDetail = () => import('@/pages/expertDetail')
+const MyCollection = () => import('@/pages/myCollection')
+const Feedback = () => import('@/pages/feedback')
+const Signin = () => import('@/pages/signin')
+const Edit = () => import('@/pages/edit')
+const Rule = () => import('@/pages/rule')
+const Content = () => import('@/pages/content')
+const NewsDetail = () => import('@/pages/newsDetail')
+const ChangeName = () => import('@/pages/changeName')
 
 
 Router.prototype.goBack = function () {
