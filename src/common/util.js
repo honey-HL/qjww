@@ -26,7 +26,7 @@ const formatting = (timestamp) => {
   var reg = new RegExp("-", "g" )
   timestamp = timestamp.replace(reg,"/");
   timestamp = new Date(timestamp).getTime();
- 
+
   // 补全为13位
   let arrTimestamp = (timestamp + '').split('');
   for (let start = 0; start < 13; start++) {
@@ -121,4 +121,15 @@ Date.prototype.format = function (fmt) {
   for (let k in o)
     if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
   return fmt;
+}
+
+String.prototype.filterImage = function(ip) {
+  if(this !== null){
+    let index = this.indexOf("http")
+    if(index >= 0){
+      return this
+    }else{
+      return ip + this
+    }
+  }
 }
