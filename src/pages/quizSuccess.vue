@@ -24,7 +24,7 @@
           <div class="title" v-html="item.questionTitle"></div>
           <div class="content" v-html="item.questionContent"></div>
           <div class="img-list">
-            <div class="img-item" v-for="child in splitImg(item.images)" v-lazy:background-image="child"></div>
+            <div class="img-item" v-for="(child, index) in splitImg(item.images)" :key="index" v-lazy:background-image="child"></div>
           </div>
           <div class="operation-bar">
             <div class="left">
@@ -85,20 +85,27 @@
           title: this.searchValue
         }, result => {
           if (this.start == 0) {
-            this.items = result.data;
-            if (result.data.length == 0) {
+            result.data.forEach((item) => {
+                if (item.id.toString() !== this.questionId) {
+                  this.items.push(item);
+                }
+            })
+            if (this.items.length == 0) {
               this.isEnd = true;
             }
           }
           else {
             if (result.data.length == 0) {
-              this.start -= this.row + 1;
+              // this.start -= this.row + 1;
               this.isEnd = true;
             }
             else {
               result.data.forEach((item) => {
+                  if (item.id.toString() !== this.questionId) {
                 this.items.push(item);
+                  }
               })
+              this.isEnd = result.data.length < this.row ? true : false;
             }
           }
 
@@ -117,6 +124,7 @@
       refresh(done) {
         setTimeout(() => {
           this.start = 0;
+          this.items = [];
           this.getData();
           done();
         }, 1000);
@@ -124,9 +132,9 @@
       /*上拉刷新*/
       infinite(done) {
         setTimeout(() => {
-          this.start = this.items.length == 0 ? 0 : this.start + this.row + 1;
-          this.getData();
           done(this.isEnd);
+          this.start = this.items.length == 0 ? 0 : this.start + this.row;
+          this.getData();
         }, 1000);
       },
       /*分割图片*/

@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <transition name="fade">
-      <div v-if="adShow && adItem.status == 1" @click="adDetail(2)" class="ad-flex" v-lazy:background-image="imgIp + adItem.img">
+      <div v-if="adShow && adItem && adItem.status == 1" @click="adDetail(2)" class="ad-flex" v-lazy:background-image="imgIp + adItem.img">
         <span class="btn" @click.stop="hideAd">跳过 {{timeCount}}s</span>
       </div>
     </transition>

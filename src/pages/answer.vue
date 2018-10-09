@@ -28,7 +28,7 @@
       <div class="bg"></div>
     </div>
     <scroller :style="{height : scrollHeight}" class="scroller" ref="myscroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
-      <div class="answer-list" v-for="item in items" @click="detail(item)">
+      <div class="answer-list" v-for="(item, index) in items" :key="index" @click="detail(item)">
         <div class="item">
           <div class="title">
             <i class="badge quiz" v-if="item.userPush"></i>
@@ -38,7 +38,7 @@
 
           <div class="content" v-html="item.questionContent" v-if="item.answer == null"></div>
           <div class="img-list" v-if="(item.label == 0||item.label == 1||item.label == 3)&&item.answer == null">
-            <img class="img-item" v-for="child in splitImg(item.images).slice(0, 4)" :src="child" >  
+            <img class="img-item" v-for="(child, index) in splitImg(item.images).slice(0, 4)" :key="index" :src="child.filterImage(api.ip)" >  
           </div>
 
           <!--新增第一条回答-->
@@ -46,14 +46,14 @@
             <div class="answerContent" v-html="item.answer.content"></div>
           </div>
           <div class="img-list" v-if="item.answer != null">
-            <img class="img-item" v-for="child in splitImg(item.answer.images).slice(0, 4)" :src="child" >
+            <img class="img-item" v-for="(child, index) in splitImg(item.answer.images).slice(0, 4)" :key="index" :src="child.filterImage(api.ip)" >
           </div>
           <!--新增第一条回答结束-->
 
           <div class="img-list" v-if="item.label == 2&&item.answer == null">
             <video class="img-item" :src="item.videos"></video>
             <div class="ThisVideoPlayButton" v-if="item.label === 2 && item.coverUrl !=null">
-              <img class="suspend img-responsive" :src="item.coverUrl" alt="">  
+              <img class="suspend img-responsive" :src="item.coverUrl.filterImage(api.ip)" alt="">  
             </div>
           </div>
 
@@ -136,6 +136,7 @@
         this.api.http("post", this.api.searchQuestion, {
           start: this.start,
           row: this.row,
+          highlightColor: '#5FB62A',
           title: this.searchValue
         }, result => {
           if (this.start == 0) {
