@@ -195,7 +195,10 @@
             }
             this.count--;
           }, 1000);
-        }, error => { });
+        }, error => { 
+          // console.log(error)
+          this.$toast(error.msg) 
+        });
       },
       /*检查输入*/
       check(type) {

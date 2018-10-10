@@ -86,7 +86,8 @@
 </template>
 <script>
   import "swiper/dist/css/swiper.css";
-  import Swiper from "swiper";
+  // import Swiper from "swiper";
+  import Swiper from "swiper/dist/js/swiper.min.js";
   import Not from "../components/notData";
   import Loading from "../components/loading";
   export default {
