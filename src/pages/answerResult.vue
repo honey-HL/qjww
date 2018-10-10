@@ -85,7 +85,8 @@
 
 <script>
   import "swiper/dist/css/swiper.css";
-  import Swiper from "swiper";
+  // import Swiper from "swiper";
+  import Swiper from "swiper/dist/js/swiper.min.js";
   import Search from "../components/search";
   import routers from "../router/index"
 
@@ -630,5 +631,19 @@
   }
   .backstagePushAnswer p img{
     display: block !important;
+    max-height: none !important;
+  }
+  .backstagePushAnswer p span{
+    color: rgba(85,85,85,200) !important;
+    font-family: 微软雅黑,PingFangSC-Light !important;
+    font-weight:normal !important;
+    font-size:0.6rem !important;
+  }
+  .backstagePushAnswer p{
+    color: rgba(85,85,85,200) !important;
+    font-family: 微软雅黑,PingFangSC-Light !important;
+    font-weight:normal !important;
+    width:100% !important;
+    font-size:0.6rem !important;
   }
 </style>
