@@ -10,7 +10,7 @@
         </div>
         <div class="img-list">
             <video class="img-item" id="videoPlay" :src="detail.videos" controls :poster="detail.coverUrl" v-if="detail.videos != null"></video>
-            <img class="img-item" v-for="child in splitImg(detail.images)" :src="child" alt="" v-if="detail.userPush" @click="showImgSlide(detail.images)">  
+            <img class="img-item" v-for="(child, index) in splitImg(detail.images)" :key="index" :src="child" alt="" v-if="detail.userPush" @click="showImgSlide(detail.images)">  
         </div>
         <div class="content backstagePush" v-if="!detail.userPush" v-html="detail.questionContent" @click="showImgSlide(detail.images)"></div>
         <div class="content userPush" v-if="detail.userPush" v-html="detail.questionContent" @click="showImgSlide(detail.images)"></div>
@@ -37,7 +37,7 @@
         <div class="row" v-for="(item,index) in items" :key="index">
           <div class="content backstagePushAnswer" v-html="item.content" @click="showUserAnswerImgSlide(item)"></div>
           <div class="img-list" @click="showUserAnswerImgSlide(item)" v-if="item.userPush">
-            <img class="img-item" v-for="child in splitImg(item.images)" :src="child" alt="">
+            <img class="img-item" v-for="(child, index) in splitImg(item.images)" :key="index" :src="child" alt="">
           </div>
           <!-- <div class="video-cover"></div> -->
           <div class="operation-bar">
@@ -76,7 +76,7 @@
     </div>
     <div class="swiperShell" v-if="isShowSwiperImgShow" @click="clickCloseShowSwiper">
       <div class="swiper-container" id="swiperImgShow">
-        <div class="swiper-wrapper"><div class="swiper-slide" v-for="child in splitImg(showImgSlideArr)"><img class="img-responsive" :src="child" alt=""/></div></div>
+        <div class="swiper-wrapper"><div class="swiper-slide" v-for="(child, index) in splitImg(showImgSlideArr)" :key="index"><img class="img-responsive" :src="child" alt=""/></div></div>
         <div class="swiper-pagination" id="swiper-pagination"></div>
       </div>
     </div>
@@ -124,10 +124,9 @@
           this.api.http("post", this.api.findById, {id: a}, (result) => {
             this.detail = result.question;
           }, (error) => {
-            if(error.code == 1005){
-              this.$toast("对不起，请先登录");
-            }else if(error.code == 1002){
+            if(error.code == 1002){
               this.$toast("对不起，问题正在审核！");
+              this.$router.push({path: "/index/answer"});
             }
           })
         }
@@ -225,7 +224,25 @@
       },
       /*分割图片*/
       splitImg(image) {
-        return image == "" || image == null ? [] : image.split(",");
+        if (image) {
+          var imgArr = []
+          var images_arr = []
+          if (image.indexOf(',') == -1) {
+            imgArr.push(image)
+          } else {
+            imgArr = image.split(",")
+          }
+          for (let i in imgArr) {
+            if (imgArr[i].indexOf('http') >= 0) {
+              images_arr.push(imgArr[i])
+            } else {
+              images_arr.push(this.api.ip + imgArr[i] + '')
+            }
+          }
+          return images_arr
+        } else {
+          return ''
+        }
       },
       /*接收搜索参数*/
       searchData(value) {
