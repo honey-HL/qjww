@@ -5,7 +5,7 @@
       <!-- <div class="hint">您可以继续搜索您遇到的手机问题</div> -->
       <input type="text" placeholder="请输入标题" maxlength="50" v-model="quiz.title">
       <div class="text-div">
-        <textarea name="" id="" cols="30" rows="10" placeholder="问题描述（选填）" maxlength="800" v-model="quiz.content"></textarea>
+        <textarea name="" id="" cols="30" rows="10" placeholder="问题描述（选填）" maxlength="500" v-model="quiz.content"></textarea>
         <span class="num">{{quiz.content.length}}
                     <span class="font-hint">字</span>
                 </span>
@@ -69,6 +69,13 @@
         isShow: false,
         score: 0,
         config: null,
+      }
+    },
+    watch: {
+      'quiz.content': function (content) {
+        if (content.length >= 500) {
+          this.$toast("文本字数不能超过500");
+        }
       }
     },
     created() {
