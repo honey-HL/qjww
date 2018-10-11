@@ -137,7 +137,7 @@
           this.isPhoneError = true;
           return;
         }
-        else if (this.util.empty(this.user.code) || !this.isCode) {
+        else if (this.util.empty(this.user.code)) {
           this.isCodeError = true;
           return;
         }
