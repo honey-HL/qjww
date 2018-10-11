@@ -222,7 +222,10 @@
       detail(item) {
         this.$store.dispatch("setAnswerDetail", item);
         this.$router.push({
-          path: "/index/answerResult"
+          path: "/index/answerResult",
+          query: {
+             questionId: item.id
+          }
         });
       },
       formatting (time) {
@@ -481,6 +484,22 @@
   }
 </style>
 <style lang="css">
+.answer-list .item .hasAnswer .answerContent p,
+.pull-to-refresh-layer .answer-list .item .hasAnswer .answerContent p span
+{
+  font-size: 0.6rem;
+}
+.answer-list .item .hasAnswer .answerContent p {
+  display: none;
+}
+.answer-list .item .hasAnswer .answerContent p:first-child {
+  display: block;
+  overflow:hidden; 
+  text-overflow:ellipsis;
+  display:-webkit-box; 
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; 
+}
   .content p img,.answerContent p img{
     display:none;
   }
