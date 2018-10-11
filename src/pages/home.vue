@@ -1,11 +1,11 @@
 <template>
   <div class="home">
-    <transition name="fade">
+    <transition v-if="adShow" name="fade">
       <div v-if="adShow && adItem && adItem.status == 1" @click="adDetail(2)" class="ad-flex" v-lazy:background-image="imgIp + adItem.img">
         <span class="btn" @click.stop="hideAd">跳过 {{timeCount}}s</span>
       </div>
     </transition>
-    <div id="top" class="top">
+    <div v-if="!adShow" id="top" class="top">
       <img class="logo" v-if="logo != null && logo.status == 1" @click="adDetail(0)" v-lazy="imgIp + logo.img">
       <img class="logo" v-else src="../assets/qjww.png">
       <p class="title">手机问题，就来千机问问</p>
@@ -18,11 +18,11 @@
         <span>{{totalNumber}}</span> 个问题被解决
       </div>
     </div>
-    <div class="bottom-bar" v-show="isShow">
+    <div v-if="!adShow" class="bottom-bar" v-show="isShow">
       <div class="title">不止解答·直至解决</div>
       <div class="ad" v-if="adBottom != null && adBottom.status == 1" @click="adDetail(1)" v-lazy:background-image="imgIp + adBottom.img"></div>
     </div>
-    <MyFooter />
+    <MyFooter v-if="!adShow" />
 
   </div>
 </template>
