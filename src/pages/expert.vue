@@ -283,14 +283,14 @@
           }
         }, error => {
             this.isShowLoading = false;
-            alert(error.msg);
+            this.$toast(error.msg);
           if (type == 0) {
             this.isShowLoading = false;
           }
           else {
             this.isShowLoading2 = false;
           }
-          this.isNetwork = true;
+          // this.isNetwork = true;
         });
         }
       },
