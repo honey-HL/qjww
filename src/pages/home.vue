@@ -52,6 +52,12 @@
       };
     },
     created() {
+      let shareUrl = this.$store.state.sharedUrl
+      if(shareUrl != null && shareUrl.length > 0){
+        this.$store.dispatch("setSharedUrl",'')
+        this.$router.push({path: shareUrl})
+        return
+      }
       //console.log(sessionStorage.getItem("isShowAd"));
       document.title =this.$route.meta.title;
       this.adShow = sessionStorage.getItem("isShowAd") == null ? true : sessionStorage.getItem("isShowAd") == "false" ? false : true;

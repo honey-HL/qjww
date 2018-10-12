@@ -109,6 +109,29 @@
         showImgSlideArr:null,
       };
     },
+    watch:{
+        detail:{
+          handler(curVal,oldVal) {
+            console.log(curVal)
+            if(curVal != null){
+              let images = this.splitImg(curVal.images)
+              let shareImage = ""
+              if(images != null && images.length > 0){
+                shareImage = images[0].filterImage(this.api.ip)
+              }        
+              let context = curVal.questionContent ? curVal.questionContent.formatHtml(): ""
+              let shareData =  {
+                title: curVal.normalQuestionTitle,
+                desc: context,
+                link: window.location.href.split(/[?#]/)[0] + '#/share?questionId=' + curVal.id,
+                image: shareImage
+              }
+              this.$store.dispatch("setShare",shareData);
+            }
+          },
+          deep: true
+        },
+    },
     components: {
       Search
     },
@@ -324,6 +347,9 @@
           this.isShowSwiperImgShow = true;
         }
       },
+      configShare(data){
+
+      }
     },
     computed: {}
   };

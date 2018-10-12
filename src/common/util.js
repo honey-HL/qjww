@@ -133,3 +133,9 @@ String.prototype.filterImage = function(ip) {
     }
   }
 }
+String.prototype.formatHtml = function(){
+  return out.replace(/(\n)/g, '')
+    .replace(/(\t)/g, '')
+    .replace(/(\r)/g, '')
+    .replace(/<\/?[^>]*>/g, '')
+}

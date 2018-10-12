@@ -125,6 +125,7 @@
         this.images.forEach(item => {
           this.quiz.images.push(item.url);
         });
+        let shareImage = this.quiz.images.length > 0 ? this.quiz.images[0].filterImage(this.api.ip) : null
         this.quiz.images = this.quiz.images.toString();
         this.quiz.isAnonymity = this.quiz.isAnonymity ? 1 : 0;
         this.api.http("post", this.api.questionSave, this.quiz, result => {
@@ -132,6 +133,13 @@
           this.isLoading = false;
           this.isShow = true;
           //this.$toast("请耐心等待审核");
+          let userInfo = JSON.parse(localStorage.getItem('userInfo'))
+          this.$store.dispatch('setShare', {
+            link: window.location.href.split(/[?#]/)[0] + '#/share?questionId=' + result.questionId,
+            title: userInfo.nickName + ' 邀请你来千机问问回答',
+            desc: this.quiz.title,
+            image: shareImage
+          })
           setTimeout(() => {
             this.$router.push({ path: '/index/quizSuccess?keywords=' + this.quiz.title + '&questionId=' + result.questionId});
           }, 1000)
