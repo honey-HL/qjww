@@ -164,10 +164,6 @@
     },
     created() {
       document.title =this.$route.meta.title;
-      this.api.http("get", this.api.getAllCity, {}, result => {
-        this.areaArray = result;
-        this.isLoader = false;
-      }, error => {});
     },
     mounted() {
       this.map();
@@ -183,23 +179,15 @@
           }
         }
       });
-
-      setTimeout(() => {
-        this.getData(0);
-      }, 1000) 
     },
     methods: {
       /**获取经纬度*/
-      getLngOrLat () {
-        for (let i = 0; i < this.areaArray.length; i++) {
-          let cityList = this.areaArray[i].cityList;
-          for (let j = 0; j < cityList.length; j++) {
-            let item = cityList[j];
-            if (this.currentAddress.city == item.name) {
-              this.lng = Number(item.lng);
-              this.lat = Number(item.lat);
-              this.currentAddress.cityId = item.cityId;
-            }
+      getCityId () {
+        let city_list = this.areaList.city_list;
+        for (let key in city_list) {
+          if (city_list[key] == this.currentAddress.city) {
+            this.currentAddress.cityId = key
+            this.getData(0);
           }
         }
       },
@@ -221,6 +209,8 @@
               province: result.address.province,
               city: result.address.city,
             }
+            thas.getCityId()
+            thas.isLoader = false;
           }
           else {
             thas.$toast('failed'+this.getStatus());
@@ -262,6 +252,7 @@
       },
       /*获取列表*/
       getData(type) {
+        if (this.currentAddress.cityId) {
         this.api.http("post", this.api.getSpecialist, {
           pageNO: type == 0 ? this.pageNO1 : this.pageNO2,
           pageSize: this.pageSize,
@@ -270,9 +261,8 @@
           cityId:this.currentAddress.cityId,
           searchValue: this.searchValue,
         }, result => {
-          this.currentAddress.cityId="";
+          this.isShowLoading = false;
           if (type == 0) {
-            this.isShowLoading = false;
             if (this.pageNO1 == 1) {
               this.dataList = result;
               if (result.length == 0) {
@@ -291,35 +281,18 @@
               }
             }
           }
-          /*else {
-            this.isShowLoading2 = false;
-            if (this.pageNO2 == 1) {
-              this.dataList2 = result;
-              if (result.length == 0) {
-                this.isEnd2 = true;
-              }
-            }
-            else {
-              if (result.length == 0) {
-                this.pageNO2 --;
-                this.isEnd2 = true;
-              }
-              else {
-                result.forEach(item => {
-                  this.dataList2.push(item);
-                })
-              }
-            }
-          }*/
         }, error => {
+            this.isShowLoading = false;
+            this.$toast(error.msg);
           if (type == 0) {
             this.isShowLoading = false;
           }
           else {
             this.isShowLoading2 = false;
           }
-          this.isNetwork = true;
+          // this.isNetwork = true;
         });
+        }
       },
       /*下拉刷新*/
       refresh(done) {
