@@ -67,7 +67,7 @@
     created() {
       document.title =this.$route.meta.title;
       this.searchValue = this.$route.query.keywords;
-      this.questionId = this.$route.query.questionId;
+      this.questionId = this.$route.query.questionId; 
       console.log(this.questionId);
     },
     methods: {
@@ -158,55 +158,6 @@
           path: "/index/answerResult"
         });
       }
-    },
-    mounted() {
-
-      this.api.http("post", this.api.jsSign, {url:location.href}, (result) => {
-        let questionId=this.questionId;
-        wx.config({
-          debug: false,
-          appId: result.appId,
-          timestamp: result.timestamp,
-          nonceStr: result.noncestr,
-          signature: result.signature,
-          jsApiList: ["checkJsApi", "onMenuShareAppMessage", "hideMenuItems"]
-        });
-
-        wx.ready(function() {
-          wx.checkJsApi({
-            jsApiList: ['onMenuShareAppMessage',"hideMenuItems"],
-            success: function (res) {
-              //alert(JSON.stringify(res));
-            }
-          });
-
-          //微信好友
-          let shareTitle = "请你帮帮忙";
-          let shareImg = "http://app.cdhappygo.com/happygo-wechat/img/happygo-icon.jpg";
-          let desc = "分享好友得好礼";
-          let link = "http://" + window.location.host + "/#/index/answerResult?questionId=" + questionId;
-
-          wx.onMenuShareAppMessage({
-            title : shareTitle,
-            desc : desc,
-            link : link,
-            imgUrl : shareImg,
-            type : "link",
-            success : function() {
-              //this.$toast("分享成功");
-            },
-            cancel : function() {
-              //this.$toast("取消分享");
-            },
-          });
-        });
-        wx.error(function(res){ 
-          // config信息验证失败会执行error函数，如签名过期导致验证失败，具体错误信息可以打开config的debug模式查看，也可以在返回的res参数中查看，对于SPA可以在这里更新签名。
-          console.log(res);
-        });
-      }, (error) => {})
-
-
     },
   }
 </script>
