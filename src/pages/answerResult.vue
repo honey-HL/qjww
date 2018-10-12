@@ -185,7 +185,7 @@
       answer() {
         this.$router.push({
           path: "/index/icomeAnswer",
-          query: {keywords:this.detail.questionTitle,questionId: this.detail.id}
+          query: {keywords:this.detail.normalQuestionTitle,questionId: this.detail.id}
         })
       },
       /*获取列表*/

@@ -171,16 +171,21 @@
       },
       /**上传回调*/
       uploadComplete(evt) {
-        let data = JSON.parse(evt.target.responseText);
-        console.log(data);
-        if(data.code == 200) {
-          this.$emit("uploadCall", data.body);
-          this.$toast("上传成功");
-        }
-        else{
+        try {
+          let data = JSON.parse(evt.target.responseText);
+          console.log(data);
+          if(data.code == 200) {
+            this.$emit("uploadCall", data.body);
+            this.$toast("上传成功");
+          }
+          else{
+            this.$toast("上传失败！");
+          }
+        } catch (error) {
           this.$toast("上传失败！");
+        }finally{
+          this.isFileLoading = false;
         }
-        this.isFileLoading = false;
       },
       /**上传进度实现方法，上传过程中会频繁调用该方法*/
       progressFunction(evt) {

@@ -31,9 +31,11 @@
       <div class="answer-list" v-for="(item, index) in items" :key="index" @click="detail(item)">
         <div class="item">
           <div class="title">
-            <i class="badge quiz" v-if="item.userPush"></i>
-            <i class="badge" v-else :class="{img: item.label == 1, video: item.label == 2, problem: item.label == 3}"></i>
-            <span v-html="item.questionTitle"></span>
+            <span>
+              <i class="badge quiz" v-if="item.userPush"></i>
+              <i class="badge" v-else :class="{img: item.label == 1, video: item.label == 2, problem: item.label == 3}"></i>
+            </span>
+            <span class="title_text" v-html="item.questionTitle"></span>
           </div>
 
           <div class="content" v-html="item.questionContent" v-if="item.answer == null"></div>
@@ -67,7 +69,7 @@
             <div class="right">
               <div style="margin-right: 10px">{{item.commentNum}}个回答</div>
               <div style="margin-right: 5px">{{item.praiseNum}}个赞</div>
-              <div class="icon-div" v-if="item.userPush || item.label == 3" @click.stop="comment(item.id, item.questionTitle)">
+              <div class="icon-div" v-if="item.userPush || item.label == 3" @click.stop="comment(item.id, item.normalQuestionTitle)">
                 <i class="comment"></i>
                 <span>回答</span>
               </div>
@@ -123,6 +125,8 @@
     updated() {
       let con = $(".content").children("p");
       con.removeAttr("style");
+      let sp = con.children("span")
+      sp.removeAttr("style")
     },
     methods: {
       link(url) {
@@ -329,43 +333,51 @@
         background: #fff;
         .title {
           font-size: 16px;
-          color: #5FB62A;
           line-height: 24px;
           margin-bottom: 5px;
           display: -webkit-box;
           -webkit-box-orient: vertical;
           -webkit-line-clamp: 2;
           overflow: hidden;
-          /*span {
-            color: #5FB62A /*5FB62A
-          }*/
-          i {
-            display: inline-block;
-            width: calc(52px / 2);
-            height: calc(28px / 2);
-            background: #e6e6e6;
-            position: relative;
-            top: 1px;
-            background-size: cover !important;
-            background-position: center !important;
+          display: inline-block;
+          .title_text {
+            // text-align: center;
+            vertical-align: middle;
+            font-weight: bold;
+            color: #555555;
           }
-          i.img {
-            background: url(../assets/img.png);
-          }
-          i.problem {
-            background: url(../assets/problem.png);
-          }
-          i.video {
-            background: url(../assets/video.png);
-          }
-          i.quiz {
-            background: url(../assets/problem.png);
-            border-radius: 4px;
-            color: #fff; font-style:normal;
-            line-height: calc(28px / 2);
-            padding: 1px;
-            text-align: center;
-            top: -1px;
+          span{
+            vertical-align: middle;
+            i {
+              display: inline-block;
+              width: calc(52px / 2);
+              height: calc(28px / 2);
+              background: #e6e6e6;
+              position: relative;
+              top: 1px;
+              background-size: cover !important;
+              background-position: center !important;
+            }
+            i.img {
+              background: url(../assets/img.png);
+            }
+            i.problem {
+              background: url(../assets/problem.png);
+            }
+            i.video {
+              background: url(../assets/video.png);
+            }
+            i.quiz {
+              background: url(../assets/problem.png);
+              border-radius: 4px;
+              color: #fff; 
+              font-style:normal;
+              line-height: calc(28px / 2);
+              padding: 1px;
+              text-align: center;
+              top: -1px;
+              vertical-align: middle;
+            }
           }
         }
         .content {
@@ -484,10 +496,13 @@
   }
 </style>
 <style lang="css">
+.answerContent{
+  font-size: 1.17rem;
+}
 .answer-list .item .hasAnswer .answerContent p,
 .pull-to-refresh-layer .answer-list .item .hasAnswer .answerContent p span
 {
-  font-size: 0.6rem;
+  font-size: 14px;
 }
 .answer-list .item .hasAnswer .answerContent p {
   display: none;
@@ -500,10 +515,15 @@
   -webkit-box-orient:vertical;
   -webkit-line-clamp:2; 
 }
+  .content,.content p,.content p span{
+    font-size: 14px !important;
+    color: #999999;
+    display: inline-block;
+  }
   .content p img,.answerContent p img{
     display:none;
   }
-  .content p,.hasAnswer p{
+  .content,.hasAnswer p{
     display: inline-block;
   }
   .hasAnswer{
@@ -554,4 +574,13 @@
     top: 0;
     bottom: 0;
   }
+  .item .title span{
+    font-size: 16px;
+    color:#555 !important;
+  }
+  .item .title span span{
+    font-size: 16px;
+    color:#555 !important;
+  }
+
 </style>
