@@ -67,7 +67,7 @@
             <div class="right">
               <div style="margin-right: 10px">{{item.commentNum}}个回答</div>
               <div style="margin-right: 5px">{{item.praiseNum}}个赞</div>
-              <div class="icon-div" v-if="item.userPush || item.label == 3" @click.stop="comment(item.id, item.questionTitle)">
+              <div class="icon-div" v-if="item.userPush || item.label == 3" @click.stop="comment(item.id, item.normalQuestionTitle)">
                 <i class="comment"></i>
                 <span>回答</span>
               </div>
