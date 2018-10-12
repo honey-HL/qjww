@@ -88,6 +88,9 @@ const routers = new Router({
 routers.beforeEach((to, from, next) => {
 
   console.log("goto ===>",to)
+  if(to.path.indexOf("answerResult") < 0){
+    document.title  = to.meta.title;
+  }
   if (to.matched.length === 0) {                                         //如果未匹配到路由
     from.name ? next({ name: from.name }) : next('/index/home');         //如果上级也未匹配到路由则跳转登录页面，如果上级能匹配到则转上级路由
   }

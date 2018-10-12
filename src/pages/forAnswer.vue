@@ -17,16 +17,16 @@
           <!--新增第一条回答-->
           <div class="hasAnswer" v-if="item.answer != null">
             <div class="answerContent" v-html="item.answer.content"></div>
-            <img class="img-item" v-for="child in splitImg(item.answer.images)" :src="child" >
+            <img class="img-item" v-for="child in splitImg(item.answer.images)" :src="child.filterImage(api.ip)" >
           </div>
 
           <div class="img-list" v-if="item.label == 0&&item.answer == null">
-            <img class="img-item" v-for="child in splitImg(item.images)" :src="child" >  
+            <img class="img-item" v-for="child in splitImg(item.images)" :src="child.filterImage(api.ip)" >
           </div>
           <div class="img-list" v-if="item.label == 2&&item.answer == null">
             <video class="img-item" :src="item.videos"></video>
             <div class="ThisVideoPlayButton" v-if="item.label === 2 && item.coverUrl !=null">
-              <img class="suspend img-responsive" :src="item.coverUrl" alt="">  
+              <img class="suspend img-responsive" :src="item.coverUrl.filterImage(api.ip)" alt="">
             </div>
           </div>
           <!--回答或者描述结束-->
@@ -149,7 +149,10 @@
       detail(item) {
         this.$store.dispatch("setAnswerDetail", item);
         this.$router.push({
-          path: "/index/answerResult"
+          path: "/index/answerResult",
+          query: {
+            questionId: item.id
+          }
         });
       },
       formatting (time) {
