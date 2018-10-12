@@ -10,10 +10,10 @@
         </div>
         <div class="img-list">
             <video class="img-item" id="videoPlay" :src="detail.videos" controls :poster="detail.coverUrl" v-if="detail.videos != null"></video>
-            <img class="img-item" v-for="(child, index) in splitImg(detail.images)" :key="index" :src="child" alt="" v-if="detail.userPush" @click="showImgSlide(detail.images)">  
+            <img class="img-item" v-for="(child, index) in splitImg(detail.images)" :key="index" :src="child" alt="" v-if="detail.userPush">
         </div>
-        <div class="content backstagePush" v-if="!detail.userPush" v-html="detail.questionContent" @click="showImgSlide(detail.images)"></div>
-        <div class="content userPush" v-if="detail.userPush" v-html="detail.questionContent" @click="showImgSlide(detail.images)"></div>
+        <div class="content backstagePush" v-if="!detail.userPush" v-html="detail.questionContent"></div>
+        <div class="content userPush" v-if="detail.userPush" v-html="detail.questionContent"></div>
         <!-- <div class="video-cover"></div> -->
         <div class="operation-bar">
           <div class="left">
@@ -35,8 +35,8 @@
       </div>
       <transition-group name="fade">
         <div class="row" v-for="(item,index) in items" :key="index">
-          <div class="content backstagePushAnswer" v-html="item.content" @click="showUserAnswerImgSlide(item)"></div>
-          <div class="img-list" @click="showUserAnswerImgSlide(item)" v-if="item.userPush">
+          <div class="content backstagePushAnswer" v-html="item.content"></div>
+          <div class="img-list" v-if="item.userPush">
             <img class="img-item" v-for="(child, index) in splitImg(item.images)" :key="index" :src="child" alt="">
           </div>
           <!-- <div class="video-cover"></div> -->
@@ -76,7 +76,7 @@
     </div>
     <div class="swiperShell" v-if="isShowSwiperImgShow" @click="clickCloseShowSwiper">
       <div class="swiper-container" id="swiperImgShow">
-        <div class="swiper-wrapper"><div class="swiper-slide" v-for="(child, index) in splitImg(showImgSlideArr)" :key="index"><img class="img-responsive" :src="child" alt=""/></div></div>
+        <div class="swiper-wrapper"><div class="swiper-slide" v-for="(child, index) in showImgSlideArr" :key="index"><img class="img-responsive" :src="child" alt=""/></div></div>
         <div class="swiper-pagination" id="swiper-pagination"></div>
       </div>
     </div>
@@ -107,6 +107,8 @@
         user: { phone: "", code: "", openId: "",nickName: "", avatar: "" },
         isShowSwiperImgShow:false,
         showImgSlideArr:null,
+        GoSlideToNub:0,
+        Swiper:null,
       };
     },
     watch:{
@@ -118,7 +120,7 @@
               let shareImage = ""
               if(images != null && images.length > 0){
                 shareImage = images[0].filterImage(this.api.ip)
-              }        
+              }
               let context = curVal.questionContent ? curVal.questionContent.formatHtml(): ""
               let shareData =  {
                 title: curVal.normalQuestionTitle,
@@ -136,7 +138,24 @@
       Search
     },
     created() {
-      window.alert=function(){};
+     // this.detail = this.$store.state.answerDetail;
+     // if (this.detail == null) {
+        this.api.http("post", this.api.findById, {id: this.$route.query.questionId}, (result) => {
+          this.detail = result.question;
+          document.title = this.detail.normalQuestionTitle;
+          if (this.detail.avatar != null) {
+            if (this.detail.avatar.indexOf("http") !== -1) {
+              this.detail.avatar = this.imgIp + this.detail.avatar;
+            }
+          }
+        }, (error) => {
+          if (error.code == 1002) {
+            this.$toast("对不起，问题正在审核！");
+            this.$router.push({path: "/index/answer"});
+          }
+        })
+     // }
+      /*window.alert=function(){};
       this.detail = this.$store.state.answerDetail;
       if (this.detail == null) {
         let url = window.location.href;
@@ -153,34 +172,63 @@
             }
           })
         }
-        
+
       }
       if(this.detail.avatar.indexOf("http") != -1){
         this.detail.avatar = this.imgIp+this.detail.avatar;
       }else{
         this.detail.avatar = this.detail.avatar;
-      };                                    
+      }; */
     },
     mounted() {
       this.scrollHeight = (window.innerHeight - 52 - 54) + "px";
-      document.title=this.detail.normalQuestionTitle;   
+    /*  if(this.detail != null){
+        document.title=this.detail.normalQuestionTitle;
+      }*/
     },
     updated() {
-		  this.newSwiper();
+      this.$nextTick(() => {
+        let that = this;
+        $("img").on('click',function(){
+          let imgSrcArr = [],imgArr=null;
+          let thisImgAttr = $(this).attr("src");
+          if($(this).parents().hasClass("backstagePush")){
+            imgArr = $(this).parents(".backstagePush").children("p").children("img");
+          }else if($(this).parents().hasClass("userPush")){
+            imgArr = $(this).parents(".userPush").children("p").children("img");
+          }else if($(this).parents().hasClass("img-list")){
+            imgArr = $(this).parents(".img-list").children("img");
+          }else if($(this).parents().hasClass("backstagePushAnswer")){
+            imgArr = $(this).parents(".backstagePushAnswer").children("p").children("img");
+          }
+          for(let i=0;i<imgArr.length;i++){
+            if(thisImgAttr == imgArr[i].src){
+              that.GoSlideToNub = i+1;
+            }
+            imgSrcArr.push(imgArr[i].src.filterImage(that.api.ip));
+          }
+
+          that.showImgSlideArr = imgSrcArr;
+          that.isShowSwiperImgShow = true;
+          return false;
+        })
+      });
+
+      this.newSwiper();
+      if(this.Swiper != null)
+       this.Swiper.slideTo(this.GoSlideToNub,0,true);
 	  },
 
     methods: {
-
-       newSwiper:function (){ new Swiper(".swiper-container", {
-            pagination: {
-                el: '.swiper-pagination',
-            },
-            slidesPerView: 1,
-            paginationClickable: true,
-            loop: true,
-            autoplay: true,
-            disableOnInteraction:false,
-          });
+      newSwiper (){
+        this.Swiper = new Swiper(".swiper-container", {
+          pagination: {
+            el: '.swiper-pagination',
+          },
+          slidesPerView: 1,
+          paginationClickable: true,
+          loop: true,
+        });
       },
       answer() {
         this.$router.push({
@@ -219,7 +267,7 @@
               }else{
                 this.items[i].userPush=true;
               };
-          
+
               if(this.items[i].userAvatar.indexOf("http") != -1){
                 this.items[i]["isUserAvatar"] = true;
               }else{
@@ -312,40 +360,9 @@
       formatting (time) {
         return this.util.formatting(time);
       },
-      /*显示这个图片滑动查看模块*/
-      showImgSlide(data){
-        if(data==null||data==""){
-          this.isShowSwiperImgShow = false;
-        }else{
-          this.isShowSwiperImgShow = true;
-        }
-        this.showImgSlideArr=this.detail.images;
-      },
       /*隐藏这个图片滑动查看模块*/
       clickCloseShowSwiper(){
         this.isShowSwiperImgShow = false;
-      },
-      showUserAnswerImgSlide(data){
-        var showImgSlideArrData=[],showImgSlideString;
-        if(data.images == null||data.images==""){
-          var imgReg = /<img.*?(?:>|\/>)/gi;
-          var srcReg = /src=[\'\"]?([^\'\"]*)[\'\"]?/i;
-          var arr = (data.content).match(imgReg);
-          if(arr==""||arr==null){
-            this.isShowSwiperImgShow = false;
-          }else{
-            for (var i = 0; i < arr.length; i++) {
-              var src = arr[i].match(srcReg);
-              showImgSlideArrData.push(src[1]);
-            }
-            showImgSlideString=showImgSlideArrData.join(",");
-            this.showImgSlideArr=showImgSlideString;
-            this.isShowSwiperImgShow = true;
-          }  
-        }else{
-          this.showImgSlideArr=data.images;
-          this.isShowSwiperImgShow = true;
-        }
       },
       configShare(data){
 
@@ -462,7 +479,7 @@
             height: auto;
             margin: 0 10px 10px 0;
             border-radius: 4px;
-            /*background: #e6e6e6;*/  
+            /*background: #e6e6e6;*/
             background-size: cover !important;
             background-position: center !important;
           }
