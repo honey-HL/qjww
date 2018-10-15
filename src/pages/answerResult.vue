@@ -6,7 +6,7 @@
         <div class="title">
           <i class="badge quiz" v-if="detail.userPush">提问</i>
           <i class="badge" v-else :class="{img: detail.label == 1, video: detail.label == 2, problem: detail.label == 3}"></i>
-          <span v-html="detail.questionTitle"></span>
+          <span v-html="detail.normalQuestionTitle"></span>
         </div>
         <div class="img-list">
             <video class="img-item" id="videoPlay" :src="detail.videos" controls :poster="detail.coverUrl" v-if="detail.videos != null"></video>
@@ -412,14 +412,14 @@
           color: #5fb62a;
         }
       }
-      .title {
+      .title , .title span{
         font-size: 16px;
-        color: #000;
-        line-height: 22px;
+        color: #555555;
+        line-height: 24px;
         margin-bottom: 5px;
-        font-family: 微软雅黑;
+        font-family: PingFangSC-Semibold;
         span {
-          color:#5FB62A;
+          font-weight: bold;
         }
         i {
           display: inline-block;
@@ -689,21 +689,19 @@
     display: block !important;
     max-height: none !important;
   }
-  .backstagePushAnswer p img{
-    display: block !important;
-    max-height: none !important;
-  }
-  .backstagePushAnswer p span{
-    color: rgba(85,85,85,200) !important;
-    font-family: 微软雅黑,PingFangSC-Light !important;
-    font-weight:normal !important;
-    font-size:0.6rem !important;
-  }
   .backstagePushAnswer p{
     color: rgba(85,85,85,200) !important;
-    font-family: 微软雅黑,PingFangSC-Light !important;
+    font-family: PingFangSC-Light !important;
     font-weight:normal !important;
     width:100% !important;
-    font-size:0.6rem !important;
+    font-size:16px !important;
+    font-weight:300 !important;
+    line-height:21px !important;
+    margin: 4px 0px 4px 0px !important;
+  }
+  .backstagePushAnswer img{
+    display: block !important;
+    max-height: none !important;
+    margin: 4px 0px 4px 0px !important;
   }
 </style>

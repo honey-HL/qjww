@@ -92,8 +92,8 @@
 <script>
   import MyFooter from "../components/myFooter";
   import Search from "../components/search";
-
-  export default {
+   
+  export default { 
     name: 'answer',
     components: {
       MyFooter, Search
@@ -515,72 +515,72 @@
   -webkit-box-orient:vertical;
   -webkit-line-clamp:2; 
 }
-  .content,.content p,.content p span{
-    font-size: 14px !important;
-    color: #999999;
-    display: inline-block;
-  }
-  .content p img,.answerContent p img{
-    display:none;
-  }
-  .content,.hasAnswer p{
-    display: inline-block;
-  }
-  .hasAnswer{
-    height: max-content;
-    max-height: 63px;
-    font-family: PingFangSC-Light;
-    font-size: 14px;
-    color: #999999;
-    line-height: 21px;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    overflow: hidden;
-  }
-  .hasAnswer img.img-item {
-    width: calc((100% - 40px) / 4);
-    height: 63px;
-    max-height: 63px;
-    margin: 0 10px 10px 0;
-    border-radius: 4px;
-    object-fit: cover;
-    /*background: #e6e6e6;*/
-    background-size: cover !important;
-    background-position: center !important;
-  }
-  .ThisVideoPlayButton{
-    width: 100%;
-    height: calc(100%-20px);
-    position: absolute;
-    margin: 0;
-    /*background-color: rgba(0,0,0,.2);*/
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 10000 !important;
-    border-radius: 5px;
-    /*display: block;*/
-  }
-  img.suspend{
-    width: 100%;
-    height: 100%;
-    border-radius: 5px;
-    position: absolute;
-    margin: auto;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-  }
-  .item .title span{
-    font-size: 16px;
-    color:#555 !important;
-  }
-  .item .title span span{
-    font-size: 16px;
-    color:#555 !important;
-  }
+.answer-list .content,.answer-list .content p,.answer-list .content p span{
+  font-size: 14px !important;
+  color: #999999;
+  display: inline-block;
+}
+.answer-list .content p img,.answerContent p img{
+  display:none;
+}
+.answer-list .content,.hasAnswer p{
+  display: inline-block;
+}
+.hasAnswer{
+  height: max-content;
+  max-height: 63px;
+  font-family: PingFangSC-Light;
+  font-size: 14px;
+  color: #999999;
+  line-height: 21px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+.hasAnswer img.img-item {
+  width: calc((100% - 40px) / 4);
+  height: 63px;
+  max-height: 63px;
+  margin: 0 10px 10px 0;
+  border-radius: 4px;
+  object-fit: cover;
+  /*background: #e6e6e6;*/
+  background-size: cover !important;
+  background-position: center !important;
+}
+.ThisVideoPlayButton{
+  width: 100%;
+  height: calc(100%-20px);
+  position: absolute;
+  margin: 0;
+  /*background-color: rgba(0,0,0,.2);*/
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10000 !important;
+  border-radius: 5px;
+  /*display: block;*/
+}
+img.suspend{
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  position: absolute;
+  margin: auto;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+.answer-list .item .title span{
+  font-size: 16px;
+  color:#555 !important;
+}
+.answer-list .item .title span span{
+  font-size: 16px;
+  color:#555 !important;
+}
 
 </style>
