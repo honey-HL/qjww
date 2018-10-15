@@ -192,7 +192,7 @@
       transform: translate(-100%, 0);
     }
     .top{
-      padding-top: 50px;
+      padding-top: 95px;
     }
     .logo {
       display: block;
@@ -201,9 +201,9 @@
       height: calc(64px / 2);
     }
     .title {
-      font-size: 13px;
+      font-size: 12px;
       color: #999999;
-      margin-top: 5px;
+      margin-top: 10px;
       text-align: center;
     }
 
@@ -211,7 +211,7 @@
       width: 80%;
       margin: 0 auto;
       position: relative;
-      margin-top: 30px;
+      margin-top: 40px;
       img {
         width: calc(34px / 2);
         height: calc(34px / 2);
@@ -222,7 +222,7 @@
       input {
         width: 100%;
         height: 40px;
-        font-size: 12px;
+        font-size: 14px;
         line-height: 40px;
         border: 1px solid rgba(153, 153, 153, 0.1);
         border-radius: 30px;
@@ -230,6 +230,7 @@
         box-sizing: border-box;
         outline: none;
         color: #5FB62A;
+        padding-right: 8px;
       }
     }
     .solve {
@@ -250,7 +251,7 @@
         font-size: 18px;
         letter-spacing: 2px;
         color: #666;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
       }
       & .ad {
         display: inline-block;
