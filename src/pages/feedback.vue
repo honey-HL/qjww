@@ -13,7 +13,7 @@
                 </span>
       </div>
       <div class="row">
-        <div class="item" v-for="(item, index) in imgs" :key="index" v-lazy:background-image="filterImage(item.url)">
+        <div class="item" v-for="(item, index) in imgs" :key="index" v-lazy:background-image="item.url.filterImage(api.ip)">
           <i class="del" @click="delImg(item.fileName)"></i>
         </div>
         <UploadFile @uploadCall="onRead" v-if="images.length < 8">
@@ -53,15 +53,6 @@
       document.title =this.$route.meta.title;
     },
     methods: {
-      filterImage (url) {
-        let index = url.indexOf("http")
-        if (index > 0) {
-          return url
-        } else {
-          let ip = this.api.ip.substring(0, this.api.ip.length - 1);
-          return ip + url
-        }
-      },
       onRead(image) {
         this.imgs.push(image);
       },
