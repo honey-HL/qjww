@@ -199,6 +199,7 @@
         map.centerAndZoom(point,12);
         let geolocation = new BMap.Geolocation();
         geolocation.getCurrentPosition(function(result){
+          thas.isLoader = false;
           if(this.getStatus() == BMAP_STATUS_SUCCESS){
             let mk = new BMap.Marker(result.point);
             map.addOverlay(mk);
@@ -210,10 +211,10 @@
               city: result.address.city,
             }
             thas.getCityId()
-            thas.isLoader = false;
           }
           else {
-            thas.$toast('failed'+this.getStatus());
+            console.log("location is failed code:" + this.getStatus())
+            thas.$toast("定位失败，请手动选择城市");
           }
         },{enableHighAccuracy: true})
       },
