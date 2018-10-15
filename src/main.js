@@ -39,6 +39,7 @@ new Vue({
   template: '<App/>',
   created: function () {
     WeChat.init()
+    this.$toast.setDefaultOptions({position:'bottom'})
   },
   computed: {
     getShare() {
