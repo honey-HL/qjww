@@ -13,7 +13,7 @@
                 </span>
       </div>
       <div class="row">
-        <div class="item" v-for="item in imgs" v-lazy:background-image="item.url">
+        <div class="item" v-for="(item, index) in imgs" :key="index" v-lazy:background-image="item.url.filterImage(api.ip)">
           <i class="del" @click="delImg(item.fileName)"></i>
         </div>
         <UploadFile @uploadCall="onRead" v-if="images.length < 8">
