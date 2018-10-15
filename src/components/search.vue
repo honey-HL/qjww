@@ -78,6 +78,7 @@
         padding-left: 15px;
         box-sizing: border-box;
         outline: none;
+        color: #5FB62A;
       }
     }
   }
