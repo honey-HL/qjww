@@ -157,7 +157,8 @@
             this.isShowLoading = false;
             if (this.pageNO1 == 1) {
               for(var i in result){
-                if(result[i].userAvater.indexOf("http") != -1){
+                let avatar = result[i].userAvater
+                if(avatar != null && avatar.indexOf("http") != -1){
                   result[i]["isUserAvatar"] = true;
                 }else{
                   result[i]["isUserAvatar"] = false;
@@ -186,7 +187,8 @@
             if (this.pageNO2 == 1) {
               
               for(var i in result){
-                if(result[i].userAvatar.indexOf("http") != -1){
+                let avatar = result[i].userAvater
+                if(avatar != null && avatar.indexOf("http") != -1){
                   result[i]["isUserAvatar"] = true;
                 }else{
                   result[i]["isUserAvatar"] = false;
@@ -266,12 +268,12 @@
         }).catch(() => {});
       },
       detail(id) {
-        this.api.http("post", this.api.findById, {id: id}, (result) => {
-          this.$store.dispatch("setAnswerDetail", result.question);
-          this.$router.push({
-            path : "/index/answerResult"
+        this.$router.push({
+          path : "/index/answerResult",
+          query: {
+             questionId: id
+          }
           });
-        });
       },
     },
     computed: {
