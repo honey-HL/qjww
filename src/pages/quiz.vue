@@ -141,7 +141,7 @@
             image: shareImage
           })
           setTimeout(() => {
-            this.$router.push({ path: '/index/quizSuccess?keywords=' + this.quiz.title + '&questionId=' + result.questionId});
+            this.$router.replace({ path: '/index/quizSuccess?keywords=' + this.quiz.title + '&questionId=' + result.questionId});
           }, 1000)
         }, error => {
           this.isLoading = false;
