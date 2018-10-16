@@ -12,7 +12,7 @@
           <div class="item" v-for="(item,index) in images" v-bind:key='index' v-lazy:background-image="item.url.filterImage(api.ip)">
             <i class="del" @click="delImg(item.fileName)"></i>
           </div>
-        <div v-if="config != null && config.isPush == 0" @click="check" class="item add-icon"></div>
+        <div v-if="config != null && config.isReply == 0" @click="check" class="item add-icon"></div>
         <UploadFile @uploadCall="onRead" v-else-if="images.length < 8">
           <div class="item add-icon"></div>
         </UploadFile>
@@ -83,7 +83,7 @@
       },
       /*提交*/
       submit() {
-        if (this.config != null && this.config.isPush == 0) {
+        if (this.config != null && this.config.isReply == 0) {
           this.$toast("对不起，您暂无权限回答");
           return;
         }
