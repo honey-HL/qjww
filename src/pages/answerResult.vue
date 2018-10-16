@@ -96,7 +96,7 @@
       return {
         imgIp: this.api.imgIp,
         items: [],
-        detail: null,
+        detail: {},
         searchValue: "",
         start: 0,
         row: 10,
@@ -142,6 +142,7 @@
      // if (this.detail == null) {
         this.api.http("post", this.api.findById, {id: this.$route.query.questionId}, (result) => {
           this.detail = result.question;
+          this.detail.collection = result.isCollection;
           document.title = this.detail.normalQuestionTitle;
           if (this.detail.avatar != null) {
             if (this.detail.avatar.indexOf("http") !== -1) {
@@ -190,7 +191,7 @@
       this.$nextTick(() => {
         let that = this;
         $("img").on('click',function(){
-          let imgSrcArr = [],imgArr=null;
+          let imgSrcArr = [],imgArr;
           let thisImgAttr = $(this).attr("src");
           if($(this).parents().hasClass("backstagePush")){
             imgArr = $(this).parents(".backstagePush").children("p").children("img");
@@ -246,12 +247,12 @@
           if (this.start == 1) {
             this.items = result.data;
             this.totalNum = result.allNum;
-            if (result.data.length == 0) {
+            if (result && result.data && result.data.length == 0) {
               this.isEnd = true;
             }
           }
           else {
-            if (result.data.length == 0) {
+            if (result && result.data && result.data.length == 0) {
               this.start--;
               this.isEnd = true;
             }
