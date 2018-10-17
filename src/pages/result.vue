@@ -4,7 +4,7 @@
     <scroller :style="{height : scrollHeight}" class="scroller" ref="myscroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
       <div class="hint">最佳匹配答案</div>
       <transition-group name="fade">
-        <div class="row" v-for="(item, index) in items" :key="index" v-if="!item.userPush" @click="detail(item)">
+        <div class="row" v-for="(item, index) in items" :key="index" v-if="index === 0" @click="detail(item)">
           <div class="title" v-html="item.questionTitle"></div>
           
           <!--回答或者描述开始-->
@@ -12,11 +12,11 @@
           <!--新增第一条回答-->
           <div class="hasAnswer" v-if="item.answer != null">
             <div class="answerContent" v-html="item.answer.content"></div>
-            <img class="img-item" v-for="child in splitImg(item.answer.images)" :src="child" >
+            <img class="img-item" v-for="(child, index) in splitImg(item.answer.images)" :key="index" :src="child" >
           </div>
 
           <div class="img-list" v-if="item.label == 0&&item.answer == null">
-            <img class="img-item" v-for="child in splitImg(item.images)" :src="child" >  
+            <img class="img-item" v-for="(child, index) in splitImg(item.images)" :key="index" :src="child" >  
           </div>
           <div class="img-list" v-if="item.label == 2&&item.answer == null">
             <video class="img-item" :src="item.videos"></video>
@@ -32,11 +32,11 @@
       </transition-group>
       <transition name="fade">
         <div class="more-hint">
-          <span>{{totalNum}}</span>条相关讨论
+          还有<span>{{totalNum}}</span>条相关讨论
         </div>
       </transition>
       <transition-group name="fade">
-        <div v-for="(item, index) in items" :key="index" class="row" v-if="item.userPush" @click="detail(item)">
+        <div v-for="(item, index) in items" :key="index" class="row" v-if="index !== 0" @click="detail(item)">
           <div class="title" v-html="item.questionTitle"></div>
           <!-- <div class="content" v-html="item.questionContent"></div>
           <div class="img-list">
@@ -69,7 +69,8 @@
             <div class="left">
               <div v-if="item.isUserAvatar" class="head" v-lazy:background-image="item.avatar"></div>
               <div v-if="!item.isUserAvatar" class="head" v-lazy:background-image="imgIp + item.avatar"></div>
-              <div v-if="item.userPush" class="name">{{!item.anonymity ? item.nickName : '匿名'}}</div>
+              <div v-if="item.nickName" class="name">{{item.nickName}}</div>
+              <div v-else class="name">匿名</div>
             </div>
             <div class="right">
               <div class="time">{{formatting(item.createTime)}}</div>
@@ -191,7 +192,25 @@
       },
       /*分割图片*/
       splitImg(image) {
-        return image == "" || image == null ? [] : image.split(",");
+         if (image) {
+          var imgArr = []
+          var images_arr = []
+          if (image.indexOf(',') == -1) {
+            imgArr.push(image)
+          } else {
+            imgArr = image.split(",")
+          }
+          for (let i in imgArr) {
+            if (imgArr[i].indexOf('http') >= 0) {
+              images_arr.push(imgArr[i])
+            } else {
+              images_arr.push(this.api.ip + imgArr[i] + '')
+            }
+          }
+          return images_arr
+        } else {
+          return ''
+        }
       },
       /*接收搜索参数*/
       searchData(value) {
@@ -424,7 +443,8 @@
   }
   .hasAnswer img.img-item {
     width: calc((100% - 30px) / 4);
-    height: auto;
+    height: 58px;
+    border-radius: 4px;
     margin: 0 10px 10px 0;
     border-radius: 4px;
     /*background: #e6e6e6;*/
