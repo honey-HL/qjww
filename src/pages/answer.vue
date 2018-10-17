@@ -170,7 +170,10 @@
             }
           }
         }, error => {
-          
+          if (error.code == 500) {
+            this.isEnd = true;
+            this.$toast("服务器错误");
+          }
         });
       },
       /*下拉刷新*/
