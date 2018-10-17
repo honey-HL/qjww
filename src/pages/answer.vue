@@ -170,13 +170,11 @@
             }
           }
         }, error => {
-          if (error.code == 500) {
-            this.isEnd = true;
-          }
-          if (error.msg) {
-              this.$toast(error.msg);
-          } else {
-              this.$toast("服务器错误");
+          this.isEnd = true;
+          if (error.code == 500 && error.msg) {
+            this.$toast(error.msg);
+          } else if (error.code == 500 && !error.msg) {
+            this.$toast("服务器错误");
           }
         });
       },

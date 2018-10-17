@@ -96,7 +96,7 @@
             </div>
           </Not>
           <Not v-else-if="dataList2.length == 0" title="暂无专家咨询" hint="已咨询过的专家将显示在这里" type="ZX">
-            <div class="o-btn">
+            <div @click="searchExperts" class="o-btn">
               <span>找专家咨询</span>
             </div>
           </Not>
@@ -181,6 +181,11 @@
       });
     },
     methods: {
+      // 找专家咨询跳转
+      searchExperts () {
+        this.current = 0;
+        this.swiper.slideTo(0);
+      },
       /**获取经纬度*/
       getCityId () {
         let city_list = this.areaList.city_list;
@@ -283,6 +288,7 @@
             }
           }
         }, error => {
+          this.isEnd = true;
             this.isShowLoading = false;
             this.$toast(error.msg);
           if (type == 0) {
