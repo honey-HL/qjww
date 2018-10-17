@@ -69,7 +69,8 @@
             <div class="left">
               <div v-if="item.isUserAvatar" class="head" v-lazy:background-image="item.avatar"></div>
               <div v-if="!item.isUserAvatar" class="head" v-lazy:background-image="imgIp + item.avatar"></div>
-              <div class="name">{{!item.anonymity ? item.nickName == null ? '匿名' : item.nickName : '匿名'}}</div>
+              <div v-if="item.nickName" class="name">{{item.nickName}}</div>
+              <div v-else class="name">匿名</div>
             </div>
             <div class="right">
               <div class="time">{{formatting(item.createTime)}}</div>
