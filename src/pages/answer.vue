@@ -172,7 +172,11 @@
         }, error => {
           if (error.code == 500) {
             this.isEnd = true;
-            this.$toast("服务器错误");
+          }
+          if (error.msg) {
+              this.$toast(error.msg);
+          } else {
+              this.$toast("服务器错误");
           }
         });
       },
