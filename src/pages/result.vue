@@ -50,11 +50,11 @@
           <!--新增第一条回答-->
           <div class="hasAnswer" v-if="item.answer != null">
             <div class="answerContent" v-html="item.answer.content"></div>
-            <img class="img-item" v-for="child in splitImg(item.answer.images)" :src="child" >
+            <img class="img-item" v-for="(child, index) in splitImg(item.answer.images)" :key="index" :src="child" >
           </div>
 
           <div class="img-list" v-if="item.label == 0&&item.answer == null">
-            <img class="img-item" v-for="child in splitImg(item.images)" :src="child" >  
+            <img class="img-item" v-for="(child, index) in splitImg(item.images)" :key="index" :src="child" >  
           </div>
           <div class="img-list" v-if="item.label == 2&&item.answer == null">
             <video class="img-item" :src="item.videos"></video>
@@ -69,8 +69,8 @@
             <div class="left">
               <div v-if="item.isUserAvatar" class="head" v-lazy:background-image="item.avatar"></div>
               <div v-if="!item.isUserAvatar" class="head" v-lazy:background-image="imgIp + item.avatar"></div>
-              <div v-if="item.nickName" class="name">{{item.nickName}}</div>
-              <div v-else class="name">匿名</div>
+              <div v-if="item.anonymity" class="name">匿名</div>
+              <div v-else class="name">{{item.nickName ? item.nickName : '匿名'}}</div>
             </div>
             <div class="right">
               <div class="time">{{formatting(item.createTime)}}</div>
