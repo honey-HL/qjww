@@ -9,7 +9,7 @@
           <span v-html="detail.normalQuestionTitle"></span>
         </div>
         <div class="img-list">
-            <video class="img-item" id="videoPlay" :src="detail.videos" controls :poster="detail.coverUrl" v-if="detail.videos != null"></video>
+            <video class="img-item" id="videoPlay" :src="detail.videos" controls :poster="detail.coverUrl" v-if="detail.videos && detail.videos !== ''"></video>
             <img class="img-item" v-for="(child, index) in splitImg(detail.images)" :key="index" :src="child" alt="" v-if="detail.userPush">
         </div>
         <div class="content backstagePush" v-if="!detail.userPush" v-html="detail.questionContent"></div>
