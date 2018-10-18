@@ -94,6 +94,8 @@
                 result = JSON.parse(result);
                 this.$store.dispatch("setOpenId", result.openid);
                 this.user.openId = result.openid;
+                this.user.nickName = result.nickname;
+                this.user.avatar = result.headimgurl;
                 this.weChatUser = result;
                 window.weChatUserNickName = result.nickname;
                 window.weChatUserHeadimgurl = result.headimgurl;
@@ -108,6 +110,7 @@
                   localStorage.setItem("userInfo", JSON.stringify(result));
                   this.isLogin = true;
                   this.isLoading = false;
+                  console.log('redirect跳转 :' + this.$route.query.redirect);
                   setTimeout(() => {
                     if (this.$route.query.redirect != undefined) {
                       this.$router.push({ path: this.$route.query.redirect });
@@ -118,6 +121,7 @@
                   }, 1000);
                 }, error => {
                   this.isLoading = false;
+                  this.$toast(error.msg);
                 });
               }, error => { });
             }
