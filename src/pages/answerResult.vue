@@ -17,9 +17,10 @@
         <!-- <div class="video-cover"></div> -->
         <div class="operation-bar">
           <div class="left">
-            <div v-if="detail.isUserAvatar" class="head" v-lazy:background-image="detail.avatar"></div>
-            <div v-if="!detail.isUserAvatar" class="head" v-lazy:background-image="imgIp +detail.avatar"></div>
-            <div v-if="detail.userPush" class="name">{{!detail.anonymity ? detail.nickName : '匿名'}}</div>
+            <div v-if="detail.avatar" class="head" v-lazy:background-image="detail.avatar.filterImage(api.ip)"></div>
+            <div v-if="!detail.avatar" class="head" v-lazy:background-image="detail.avatar"></div>
+            <div v-if="detail.anonymity" class="name">匿名</div>
+            <div v-else class="name">{{detail.nickName ? detail.nickName : '匿名'}}</div>
           </div>
           <div class="right">
             <div class="report" @click="report">
@@ -42,9 +43,10 @@
           <!-- <div class="video-cover"></div> -->
           <div class="operation-bar">
             <div class="left">
-              <div class="head" v-lazy:background-image="item.userAvatar" v-if="item.isUserAvatar"></div>
-              <div class="head" v-lazy:background-image="imgIp + item.userAvatar" v-if="!item.isUserAvatar"></div>
-              <div class="name">{{item.userNickName}}</div>
+              <div class="head" v-lazy:background-image="item.userAvatar.filterImage(api.ip)" v-if="item.isUserAvatar"></div>
+              <div class="head" v-lazy:background-image="item.userAvatar" v-if="!item.isUserAvatar"></div>
+              <div v-if="item.anonymity" class="name">匿名</div>
+              <div v-else class="name">{{item.userNickName ? item.userNickName : '匿名'}}</div>
               <div class="time">{{formatting(item.createTime)}}</div>
             </div>
             <div class="right">
@@ -496,7 +498,7 @@
             border-radius: 50%;
             background-size: cover !important;
             background-position: center !important;
-            /*background: #ddd;*/
+            background: #ddd;
           }
           .name {
             padding-left: 5px;
