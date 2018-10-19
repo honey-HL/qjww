@@ -67,8 +67,8 @@
 
           <div class="operation-bar">
             <div class="left">
-              <div v-if="item.isUserAvatar" class="head" v-lazy:background-image="item.avatar"></div>
-              <div v-if="!item.isUserAvatar" class="head" v-lazy:background-image="imgIp + item.avatar"></div>
+              <div v-if="item.avatar" class="head" v-lazy:background-image="item.avatar.filterImage(api.ip)"></div>
+              <div v-if="!item.avatar" class="head" v-lazy:background-image="item.avatar"></div>
               <div v-if="item.anonymity" class="name">匿名</div>
               <div v-else class="name">{{item.nickName ? item.nickName : '匿名'}}</div>
             </div>
