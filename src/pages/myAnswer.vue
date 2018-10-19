@@ -46,8 +46,8 @@
           <scroller v-else-if="dataList2.length > 0" class="scroller" :on-refresh="refresh2" :on-infinite="infinite2" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
             <div class="row" v-for="(item, index) in dataList2" :key="index" @click="detail(item.questionId)">
               <div class="top">
-                <div class="head" v-lazy:background-image="item.userAvatar" v-if="item.isUserAvatar"></div>
-                <div class="head" v-lazy:background-image="imgIp +item.userAvatar" v-if="!item.isUserAvatar"></div>
+                <div v-if="item.userAvatar" class="head" v-lazy:background-image="item.userAvatar.filterImage(api.ip)"></div>
+                <div v-if="!item.userAvatar" class="head" v-lazy:background-image="item.userAvatar"></div>
                 <div class="name">{{item.userNickName}}</div>
               </div>
               <div class="title">
