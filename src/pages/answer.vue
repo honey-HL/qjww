@@ -40,7 +40,7 @@
 
           <div class="content" v-html="item.questionContent" v-if="item.answer == null"></div>
           <div class="img-list" v-if="(item.label == 0||item.label == 1||item.label == 3)&&item.answer == null">
-            <img class="img-item" v-for="(child, index) in splitImg(item.images).slice(0, 4)" :key="index" :src="child.filterImage(api.ip)" >  
+            <img class="img-item" v-for="(child, index) in util.splitImg(item.images).slice(0, 4)" :key="index" :src="child.filterImage(api.ip)" >  
           </div>
 
           <!--新增第一条回答-->
@@ -48,7 +48,7 @@
             <div class="answerContent" v-html="item.answer.content"></div>
           </div>
           <div class="img-list" v-if="item.answer != null">
-            <img class="img-item" v-for="(child, index) in splitImg(item.answer.images).slice(0, 4)" :key="index" :src="child.filterImage(api.ip)" >
+            <img class="img-item" v-for="(child, index) in util.splitImg(item.answer.images).slice(0, 4)" :key="index" :src="child.filterImage(api.ip)" >
           </div>
           <!--新增第一条回答结束-->
 
@@ -193,10 +193,6 @@
           this.getData();
           done(this.isEnd);
         }, 1000);
-      },
-      /*分割图片*/
-      splitImg(image) {
-        return image == "" || image == null ? [] : image.split(",");
       },
       /*接收搜索参数*/
       searchData(value) {

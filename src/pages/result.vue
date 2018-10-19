@@ -12,11 +12,11 @@
           <!--新增第一条回答-->
           <div class="hasAnswer" v-if="item.answer != null">
             <div class="answerContent" v-html="item.answer.content"></div>
-            <img class="img-item" v-for="(child, index) in splitImg(item.answer.images)" :key="index" :src="child" >
+            <img class="img-item" v-for="(child, index) in util.splitImg(item.answer.images)" :key="index" :src="child" >
           </div>
 
           <div class="img-list" v-if="item.label == 0&&item.answer == null">
-            <img class="img-item" v-for="(child, index) in splitImg(item.images)" :key="index" :src="child" >  
+            <img class="img-item" v-for="(child, index) in util.splitImg(item.images)" :key="index" :src="child" >  
           </div>
           <div class="img-list" v-if="item.label == 2&&item.answer == null">
             <video class="img-item" :src="item.videos"></video>
@@ -50,11 +50,11 @@
           <!--新增第一条回答-->
           <div class="hasAnswer" v-if="item.answer != null">
             <div class="answerContent" v-html="item.answer.content"></div>
-            <img class="img-item" v-for="(child, index) in splitImg(item.answer.images)" :key="index" :src="child" >
+            <img class="img-item" v-for="(child, index) in util.splitImg(item.answer.images)" :key="index" :src="child" >
           </div>
 
           <div class="img-list" v-if="item.label == 0&&item.answer == null">
-            <img class="img-item" v-for="(child, index) in splitImg(item.images)" :key="index" :src="child" >  
+            <img class="img-item" v-for="(child, index) in util.splitImg(item.images)" :key="index" :src="child" >  
           </div>
           <div class="img-list" v-if="item.label == 2&&item.answer == null">
             <video class="img-item" :src="item.videos"></video>
@@ -189,28 +189,6 @@
           this.getData();
           done(this.isEnd);
         }, 1000);
-      },
-      /*分割图片*/
-      splitImg(image) {
-         if (image) {
-          var imgArr = []
-          var images_arr = []
-          if (image.indexOf(',') == -1) {
-            imgArr.push(image)
-          } else {
-            imgArr = image.split(",")
-          }
-          for (let i in imgArr) {
-            if (imgArr[i].indexOf('http') >= 0) {
-              images_arr.push(imgArr[i])
-            } else {
-              images_arr.push(this.api.ip + imgArr[i] + '')
-            }
-          }
-          return images_arr
-        } else {
-          return ''
-        }
       },
       /*接收搜索参数*/
       searchData(value) {

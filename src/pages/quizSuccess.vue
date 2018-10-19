@@ -24,13 +24,14 @@
           <div class="title" v-html="item.questionTitle"></div>
           <div class="content" v-html="item.questionContent"></div>
           <div class="img-list">
-            <div class="img-item" v-for="(child, index) in splitImg(item.images)" :key="index" v-lazy:background-image="child"></div>
+            <div class="img-item" v-for="(child, index) in util.splitImg(item.images)" :key="index" v-lazy:background-image="child"></div>
           </div>
           <div class="operation-bar">
             <div class="left">
-              <div v-if="item.isUserAvatar" class="head" v-lazy:background-image="item.avatar"></div>
-              <div v-if="!item.isUserAvatar" class="head" v-lazy:background-image="imgIp + item.avatar"></div>
-              <div v-if="item.userPush" class="name">{{!item.anonymity ? item.nickName : '匿名'}}</div>
+              <div v-if="item.avatar" class="head" v-lazy:background-image="item.avatar.filterImage(api.ip)"></div>
+              <div v-if="!item.avatar" class="head" v-lazy:background-image="item.avatar"></div>
+              <div v-if="item.anonymity" class="name">匿名</div>
+              <div v-else class="name">{{item.nickName ? item.nickName : '匿名'}}</div>
             </div>
             <div class="right">
               <div class="time">{{formatting(item.createTime)}}</div>
@@ -142,10 +143,6 @@
           this.start = this.items.length == 0 ? 0 : this.start + this.row;
           this.getData();
         }, 1000);
-      },
-      /*分割图片*/
-      splitImg(image) {
-        return image == "" || image == null ? [] : image.split(",");
       },
       /*评论*/
       comment(id, title) {

@@ -5,7 +5,7 @@
       <div class="bg"></div>
     </div>
     <scroller :style="{height : scrollHeight}" class="scroller" ref="myscroller" :on-refresh="refresh" :on-infinite="infinite" refresh-layer-color="#5FB62A" loading-layer-color="#5FB62A">
-      <div class="answer-list" v-for="item in items" @click="detail(item)">
+      <div class="answer-list" v-for="(item, index) in items" :key="index" @click="detail(item)">
         <div class="item">
           <div class="title">
             <i class="badge quiz" v-if="item.userPush">提问</i>
@@ -17,11 +17,11 @@
           <!--新增第一条回答-->
           <div class="hasAnswer" v-if="item.answer != null">
             <div class="answerContent" v-html="item.answer.content"></div>
-            <img class="img-item" v-for="child in splitImg(item.answer.images)" :src="child.filterImage(api.ip)" >
+            <img class="img-item" v-for="(child, index) in util.splitImg(item.answer.images)" :key="index" :src="child.filterImage(api.ip)" >
           </div>
 
           <div class="img-list" v-if="item.label == 0&&item.answer == null">
-            <img class="img-item" v-for="child in splitImg(item.images)" :src="child.filterImage(api.ip)" >
+            <img class="img-item" v-for="(child, index) in util.splitImg(item.images)" :key="index" :src="child.filterImage(api.ip)" >
           </div>
           <div class="img-list" v-if="item.label == 2&&item.answer == null">
             <video class="img-item" :src="item.videos"></video>
@@ -132,10 +132,6 @@
           this.getData();
           done(this.isEnd);
         }, 1000);
-      },
-      /*分割图片*/
-      splitImg(image) {
-        return image == "" || image == null ? [] : image.split(",");
       },
       /*接收搜索参数*/
       searchData(value) {
