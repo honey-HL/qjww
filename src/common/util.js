@@ -1,3 +1,5 @@
+import api from './api'
+
 /**根据日期获取星期几 -- 数字 */
 const getWeekNumber = (dateString) => {
   let date;
@@ -102,6 +104,27 @@ export default {
   getUrlParam: getUrlParam,
   getWeekNumber: getWeekNumber,
   formatting: formatting,
+  splitImg: function (image) {
+    if (image) {
+      var imgArr = []
+      var images_arr = []
+      if (image.indexOf(',') == -1) {
+        imgArr.push(image)
+      } else {
+        imgArr = image.split(",")
+      }
+      for (let i in imgArr) {
+        if (imgArr[i].indexOf('http') >= 0) {
+          images_arr.push(imgArr[i])
+        } else {
+          images_arr.push(api.ip + imgArr[i] + '')
+        }
+      }
+      return images_arr
+    } else {
+      return ''
+    }
+  }
 }
 
 

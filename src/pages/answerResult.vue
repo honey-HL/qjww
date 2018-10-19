@@ -10,7 +10,7 @@
         </div>
         <div class="img-list">
             <video class="img-item" id="videoPlay" :src="detail.videos" controls :poster="detail.coverUrl" v-if="detail.videos && detail.videos !== ''"></video>
-            <img class="img-item" v-for="(child, index) in splitImg(detail.images)" :key="index" :src="child" alt="" v-if="detail.userPush">
+            <img class="img-item" v-for="(child, index) in util.splitImg(detail.images)" :key="index" :src="child" alt="" v-if="detail.userPush">
         </div>
         <div class="content backstagePush" v-if="!detail.userPush" v-html="detail.questionContent"></div>
         <div class="content userPush" v-if="detail.userPush" v-html="detail.questionContent"></div>
@@ -37,7 +37,7 @@
         <div class="row" v-for="(item,index) in items" :key="index">
           <div class="content backstagePushAnswer" v-html="item.content"></div>
           <div class="img-list" v-if="item.userPush">
-            <img class="img-item" v-for="(child, index) in splitImg(item.images)" :key="index" :src="child" alt="">
+            <img class="img-item" v-for="(child, index) in util.splitImg(item.images)" :key="index" :src="child" alt="">
           </div>
           <!-- <div class="video-cover"></div> -->
           <div class="operation-bar">
@@ -116,7 +116,7 @@
           handler(curVal,oldVal) {
             console.log(curVal)
             if(curVal != null){
-              let images = this.splitImg(curVal.images)
+              let images = this.util.splitImg(curVal.images)
               let shareImage = ""
               if(images != null && images.length > 0){
                 shareImage = images[0].filterImage(this.api.ip)
@@ -293,28 +293,6 @@
           this.getData();
           done(this.isEnd);
         }, 1000);
-      },
-      /*分割图片*/
-      splitImg(image) {
-        if (image) {
-          var imgArr = []
-          var images_arr = []
-          if (image.indexOf(',') == -1) {
-            imgArr.push(image)
-          } else {
-            imgArr = image.split(",")
-          }
-          for (let i in imgArr) {
-            if (imgArr[i].indexOf('http') >= 0) {
-              images_arr.push(imgArr[i])
-            } else {
-              images_arr.push(this.api.ip + imgArr[i] + '')
-            }
-          }
-          return images_arr
-        } else {
-          return ''
-        }
       },
       /*接收搜索参数*/
       searchData(value) {
