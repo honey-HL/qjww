@@ -212,7 +212,8 @@
       detail(item) {
         this.$store.dispatch("setAnswerDetail", item);
         this.$router.push({
-          path : "/index/answerResult"
+          path : "/index/answerResult",
+          query: {questionId: item.id}
         });
       }
 

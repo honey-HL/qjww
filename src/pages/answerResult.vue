@@ -44,7 +44,7 @@
           <div class="operation-bar">
             <div class="left">
               <div class="head" v-lazy:background-image="item.userAvatar.filterImage(api.ip)" v-if="item.isUserAvatar"></div>
-              <div class="head" v-lazy:background-image="item.userAvatar" v-if="!item.isUserAvatar"></div>
+              <div class="head" v-lazy:background-image="item.userAvatar.filterImage(api.ip)" v-if="!item.isUserAvatar"></div>
               <div v-if="item.anonymity" class="name">匿名</div>
               <div v-else class="name">{{item.userNickName ? item.userNickName : '匿名'}}</div>
               <div class="time">{{formatting(item.createTime)}}</div>
@@ -127,7 +127,7 @@
               let shareData =  {
                 title: curVal.normalQuestionTitle,
                 desc: context,
-                link: window.location.href.split(/[?#]/)[0] + '#/share?questionId=' + curVal.id,
+                link: window.location.href.split(/[#?]/)[0] + 'static/share?questionId=' + curVal.id,
                 image: shareImage
               }
               this.$store.dispatch("setShare",shareData);
@@ -140,54 +140,19 @@
       Search
     },
     created() {
-     // this.detail = this.$store.state.answerDetail;
-     // if (this.detail == null) {
-        this.api.http("post", this.api.findById, {id: this.$route.query.questionId}, (result) => {
-          this.detail = result.question;
-          this.detail.collection = result.isCollection;
-          document.title = this.detail.normalQuestionTitle;
-          if (this.detail.avatar != null) {
-            if (this.detail.avatar.indexOf("http") !== -1) {
-              this.detail.avatar = this.imgIp + this.detail.avatar;
-            }
-          }
-        }, (error) => {
-          if (error.code == 1002) {
-            this.$toast("对不起，问题正在审核！");
-            this.$router.push({path: "/index/answer"});
-          }
-        })
-     // }
-      /*window.alert=function(){};
-      this.detail = this.$store.state.answerDetail;
-      if (this.detail == null) {
-        let url = window.location.href;
-        let a = url.substring(url.lastIndexOf('=')+1, url.length);
-        if(a.indexOf("answerResult") != -1){
+      this.api.http("post", this.api.findById, {id: this.$route.query.questionId}, (result) => {
+        this.detail = result.question;
+        this.detail.collection = result.isCollection;
+        document.title = this.detail.normalQuestionTitle;
+      }, (error) => {
+        if (error.code == 1002) {
+          this.$toast("对不起，问题正在审核！");
           this.$router.push({path: "/index/answer"});
-        }else{
-          this.api.http("post", this.api.findById, {id: a}, (result) => {
-            this.detail = result.question;
-          }, (error) => {
-            if(error.code == 1002){
-              this.$toast("对不起，问题正在审核！");
-              this.$router.push({path: "/index/answer"});
-            }
-          })
         }
-
-      }
-      if(this.detail.avatar.indexOf("http") != -1){
-        this.detail.avatar = this.imgIp+this.detail.avatar;
-      }else{
-        this.detail.avatar = this.detail.avatar;
-      }; */
+      })
     },
     mounted() {
       this.scrollHeight = (window.innerHeight - 52 - 54) + "px";
-    /*  if(this.detail != null){
-        document.title=this.detail.normalQuestionTitle;
-      }*/
     },
     updated() {
       this.$nextTick(() => {
@@ -277,7 +242,11 @@
                 this.items[i]["isUserAvatar"] = false;
               };
           }
+          if (!result.status) {
+            this.isEnd = true;
+          }
         }, error => {
+          this.isEnd = true;
         });
       },
       /*下拉刷新*/
