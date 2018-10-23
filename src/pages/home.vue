@@ -53,6 +53,7 @@
     },
     created() {
       let shareUrl = this.$store.state.sharedUrl
+      console.log('shareUrl===========>' + shareUrl);
       if(shareUrl != null && shareUrl.length > 0){
         this.$store.dispatch("setSharedUrl",'')
         this.$router.push({path: shareUrl})

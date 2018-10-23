@@ -135,7 +135,7 @@
           //this.$toast("请耐心等待审核");
           let userInfo = JSON.parse(localStorage.getItem('userInfo'))
           this.$store.dispatch('setShare', {
-            link: window.location.href.split(/[?#]/)[0] + '#/share?questionId=' + result.questionId,
+            link: window.location.href.split(/[?#]/)[0] + 'static/share?questionId=' + result.questionId,
             title: userInfo.nickName + ' 邀请你来千机问问回答',
             desc: this.quiz.title,
             image: shareImage
