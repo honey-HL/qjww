@@ -76,7 +76,9 @@
         this.api.http("post", this.api.getGroupAuth, {}, (result) => {
           this.config = result;
           this.isConfig = true;
-        }, (error) => {})
+        }, (error) => {
+          this.$toast(error.msg);
+        })
       },
       check() {
         this.$toast("对不起，您暂无权限回答");
@@ -110,7 +112,7 @@
           }, 1000);
         }, error => {
           this.isLoading = false;
-          this.$toast("该问题不允许回答!");
+          this.$toast(error.msg);
         });
       },
       /*删除图片*/
@@ -122,7 +124,9 @@
               break;
             }
           }
-        }, error => { });
+        }, error => {
+          this.$toast(error.msg);
+        });
       }
     }
   }
