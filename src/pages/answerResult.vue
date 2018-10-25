@@ -157,6 +157,8 @@
         if (error.code == 1002) {
           this.$toast("对不起，问题正在审核！");
           this.$router.push({path: "/index/answer"});
+        } else {
+          this.$toast(error.msg);
         }
       })
     },
@@ -224,10 +226,14 @@
         });
       },
       answer() {
-        this.$router.push({
-          path: "/index/icomeAnswer",
-          query: {keywords:this.detail.normalQuestionTitle,questionId: this.detail.id}
-        })
+        if (this.detail && Number(this.detail.auth) === 1) {
+          this.$router.push({
+            path: "/index/icomeAnswer",
+            query: {keywords:this.detail.normalQuestionTitle,questionId: this.detail.id}
+          })
+        } else {
+          this.$toast("对不起，您暂无权限回答");
+        }
       },
       /*获取列表*/
       getData() {
@@ -272,6 +278,7 @@
           }
         }, error => {
           this.isEnd = true;
+          this.$toast(error.msg);
         });
       },
       /*下拉刷新*/
@@ -313,6 +320,7 @@
             }
           }
         }, error => {
+          this.$toast(error.msg);
           console.log(error);
         });
       },
@@ -323,6 +331,7 @@
           //this.$store.dispatch("setAnswerDetail", this.detail);
           this.$toast(this.detail.collection ? "收藏成功" : "取消成功");
         }, error => {
+          this.$toast(error.msg);
           console.log(error);
         });
       },
