@@ -113,7 +113,7 @@
                   console.log('redirect跳转 :' + this.$route.query.redirect);
                   setTimeout(() => {
                     if (this.$route.query.redirect != undefined) {
-                      this.$router.push({ path: this.$route.query.redirect });
+                      this.$router.replace({ path: this.$route.query.redirect });
                     }
                     else {
                       this.$router.go(-3);
