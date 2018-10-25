@@ -10,7 +10,7 @@
           </div>
           <div class="name">{{item.userName}}</div>
           <div class="address">{{item.detailAdd}}</div>
-          <div class="hint"><p>{{item.introduce}}</p></div>
+          <div class="hint"><p class="introduce">{{item.introduce}}</p></div>
           <div class="total-bar">
             <div class="left">
               <span class="num">{{item.answerNum == null ? 0 : item.answerNum}}</span>
@@ -121,6 +121,7 @@
             }
           }
         }, error => {
+          this.isEnd = true;
           console.log(error);
         });
       },
@@ -228,10 +229,15 @@
             line-height: 21px;
             font-size: 12px;
             color: #FFFFFF;
-            p{
+            .introduce {
+              width: inherit;
+              height: 40px;
+              display: -webkit-box;
+              word-break: break-all;
+              -webkit-line-clamp: 2;
+              -webkit-box-orient: vertical;
               overflow: hidden;
-              white-space: nowrap;
-              text-overflow:ellipsis;
+              text-overflow: ellipsis;
             }
           }
           .total-bar {
