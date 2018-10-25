@@ -6,9 +6,9 @@
       <input type="text" placeholder="请输入标题" maxlength="50" v-model="quiz.title">
       <div class="text-div">
         <textarea name="" id="" cols="30" rows="10" placeholder="问题描述（选填）" maxlength="500" v-model="quiz.content"></textarea>
-        <span class="num">{{quiz.content.length}}
-                    <span class="font-hint">字</span>
-                </span>
+        <span class="font-hint">
+          已输入<span class="num">{{quiz.content.length}}/500</span>字
+        </span>
       </div>
       <div class="row">
         <div class="item" v-for="(item, index) in images" :key="index" v-lazy:background-image="item.url.filterImage(api.ip)">
@@ -72,9 +72,20 @@
       }
     },
     watch: {
+      'quiz.title': function (title) {
+        if (title.length >= 50) {
+          this.$toast("标题字数不能超过50");
+        }
+        if (this.util.isEmoji.test(title)) {
+          this.$toast("暂不支持emoji");
+        }
+      },
       'quiz.content': function (content) {
         if (content.length >= 500) {
           this.$toast("文本字数不能超过500");
+        }
+        if (this.util.isEmoji.test(content)) {
+          this.$toast("暂不支持emoji");
         }
       }
     },
@@ -108,16 +119,14 @@
         if (this.util.empty(this.quiz.title)) {
           this.$toast("请输入标题");
           return;
-        }
-        else if (this.util.isEmoji.test(this.quiz.title)) {
+        } else if (this.util.isEmoji.test(this.quiz.title)) {
           this.$toast("暂不支持emoji");
           return;
-        }
-        else if (this.quiz.title.length > 25) {
-          this.$toast("标题不能超过25个字符");
+        } else if (this.quiz.title.length >= 50) {
+          this.$toast("标题字数不能超过50");
           return;
         }
-        else if (this.quiz.content != "" && this.util.isEmoji.test(this.quiz.content)) {
+        if (this.quiz.content != "" && this.util.isEmoji.test(this.quiz.content)) {
           this.$toast("暂不支持emoji");
           return;
         }
@@ -196,14 +205,14 @@
           resize: none;
           margin-bottom: 10px;
         }
-        .num {
+        .font-hint {
           position: absolute;
           right: 10px;
           bottom: -2px;
           font-size: 12px;
-          color: #5FB62A;
-          .font-hint {
-            color: #666;
+          color: #666;
+          .num {
+             color: #5FB62A;
           }
         }
       }
