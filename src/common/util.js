@@ -148,11 +148,17 @@ Date.prototype.format = function (fmt) {
 
 String.prototype.filterImage = function(ip) {
   if(this !== null){
-    let index = this.indexOf("http")
-    if(index >= 0){
+    let is_http = this.indexOf("http");
+    let is_image = this.indexOf("image");
+    let is_qjww = this.indexOf("qjww");
+    if (is_http >= 0) {
       return this
-    }else{
+    }
+    else if (is_image >= 0) {
       return ip + this
+    } 
+    else if (is_qjww >= 0) {
+      return 'https://ask-img.3ceasy.com/' + this
     }
   }
 }

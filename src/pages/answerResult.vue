@@ -9,9 +9,15 @@
           <span v-html="detail.normalQuestionTitle"></span>
         </div>
         <div class="img-list">
-            <video class="img-item" id="videoPlay" :src="detail.videos" controls :poster="detail.coverUrl" v-if="detail.videos && detail.videos !== ''"></video>
-            <img class="img-item" v-for="(child, index) in util.splitImg(detail.images)" :key="index" :src="child" alt="" v-if="detail.userPush">
+            <video class="img-item" id="videoPlay" controls :poster="detail.coverUrl" v-if="detail.videos && detail.videos !== ''">
+              <source :src="detail.videos" type="video/mp4" />
+            </video>
+            <img class="img-item" v-for="(child, index) in util.splitImg(detail.images)" :key="index" :src="child" alt="" v-if="detail.images && detail.images.length > 0">
         </div>
+         <!-- <div id='video'>
+            <video class="img-item" id="videoPlay1" v-if="detail.videos && detail.videos !== ''"></video>
+            <img class="img-item" v-for="(child, index) in util.splitImg(detail.images)" :key="index" :src="child" alt="" v-if="detail.images && detail.images.length > 0">
+        </div> -->
         <div class="content backstagePush" v-if="!detail.userPush" v-html="detail.questionContent"></div>
         <div class="content userPush" v-if="detail.userPush" v-html="detail.questionContent"></div>
         <!-- <div class="video-cover"></div> -->
@@ -142,6 +148,9 @@
     created() {
       this.api.http("post", this.api.findById, {id: this.$route.query.questionId}, (result) => {
         this.detail = result.question;
+        // if (this.detail && this.detail.videos && this.detail.videos.length > 0) {
+        //   this.videoPlay(this.detail);
+        // }
         this.detail.collection = result.isCollection;
         document.title = this.detail.normalQuestionTitle;
       }, (error) => {
@@ -188,6 +197,22 @@
 	  },
 
     methods: {
+      // videoPlay (res) {
+      //   console.log ('res========>' + res)
+      //   var videoObject = {
+      //     container: '#video', //容器的ID或className
+      //     variable: 'player',//播放函数名称
+      //     poster: res.coverUrl,//封面图片
+      //     mobileCkControls: true,//是否在移动端（包括ios）环境中显示控制栏
+      //     mobileAutoFull: false,//在移动端播放后是否按系统设置的全屏播放
+      //     h5container: '#videoPlay1',//h5环境中使用自定义容器
+      //     video: [//视频地址列表形式
+      //      //  ['http://img.ksbbs.com/asset/Mon_1703/05cacb4e02f9d9e.mp4', 'video/mp4', '中文标清', 0], // 'http://img.ksbbs.com/asset/Mon_1703/d0897b4e9ddd9a5.mp4' https://ask.3ceasy.com/qjww-api/image/video_9f2a15977f164b668f1e152aea09f91a.mp4
+      //       [res.videos, 'video/mp4', '中文高清', 0]
+      //     ]
+      //   };
+      //   var player = new ckplayer(videoObject);
+      // },
       newSwiper (){
         this.Swiper = new Swiper(".swiper-container", {
           pagination: {
