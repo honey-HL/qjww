@@ -208,7 +208,7 @@
         .font-hint {
           position: absolute;
           right: 10px;
-          bottom: -2px;
+          bottom: -5px;
           font-size: 12px;
           color: #666;
           .num {
@@ -219,6 +219,7 @@
       .row {
         display: flex;
         flex-flow: wrap;
+        margin-top: 8px;
         .item {
           width: calc((100% - 30px) / 4);
           margin: 0 10px 10px 0;

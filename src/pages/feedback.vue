@@ -2,15 +2,15 @@
   <div class="feedback">
     <div class="content">
       <div class="img">
-        <img src="../assets/fk.png">
+        <img style="border-radius:50%;" src="../assets/sj.png">
       </div>
       <div class="title">创造你最爱的千机问问</div>
       <div class="hint">问问的改进需要您宝贵的意见</div>
       <div class="text-div">
-        <textarea name="" id="" cols="30" rows="10" maxlength="800" v-model="content" placeholder="反馈问题或意见，帮助我们一起创造更好的千机问问"></textarea>
-        <span class="num">{{content.length}}
-                    <span class="font-hint">字</span>
-                </span>
+        <textarea name="" id="" cols="30" rows="10" maxlength="500" v-model="content" placeholder="反馈问题或意见，帮助我们一起创造更好的千机问问"></textarea>
+        <span class="font-hint">
+            已输入<span class="num">{{content.length}}/500</span>字
+        </span>
       </div>
       <div class="row">
         <div class="item" v-for="(item, index) in imgs" :key="index" v-lazy:background-image="item.url.filterImage(api.ip)">
@@ -51,6 +51,16 @@
     },
     created() {
       document.title =this.$route.meta.title;
+    },
+    watch: {
+      'content': function (content) {
+        if (content.length >= 500) {
+          this.$toast("文本字数不能超过500");
+        }
+        if (this.util.isEmoji.test(content)) {
+          this.$toast("暂不支持emoji");
+        }
+      }
     },
     methods: {
       onRead(image) {
@@ -131,20 +141,21 @@
           resize: none;
           margin-bottom: 10px;
         }
-        .num {
+        .font-hint {
           position: absolute;
           right: 10px;
-          bottom: -2px;
+          bottom: -5px;
           font-size: 12px;
-          color: #5FB62A;
-          .font-hint {
-            color: #666;
+          color: #666;
+          .num {
+            color: #5FB62A;
           }
         }
       }
       .row {
         display: flex;
         flex-flow: wrap;
+        margin-top: 8px;
         .item {
           width: calc((100% - 30px) / 4);
           margin: 0 10px 10px 0;
