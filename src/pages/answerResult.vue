@@ -6,13 +6,13 @@
         <div class="title">
           <i class="badge quiz" v-if="detail.userPush">提问</i>
           <i class="badge" v-else :class="{img: detail.label == 1, video: detail.label == 2, problem: detail.label == 3}"></i>
-          <span v-html="detail.normalQuestionTitle"></span>
+          <span v-html="detail.questionTitle"></span>
         </div>
         <div class="img-list">
             <video class="img-item" id="videoPlay" controls :poster="detail.coverUrl" v-if="detail.videos && detail.videos !== ''">
               <source :src="detail.videos" type="video/mp4" />
             </video>
-            <img class="img-item" v-for="(child, index) in util.splitImg(detail.images)" :key="index" :src="child" alt="" v-if="detail.images && detail.images.length > 0">
+            <img class="img-item" v-for="(child, index) in util.splitImg(detail.images)" :key="index" :src="child" alt="" v-if="detail && detail.userPush">
         </div>
          <!-- <div id='video'>
             <video class="img-item" id="videoPlay1" v-if="detail.videos && detail.videos !== ''"></video>
@@ -131,7 +131,7 @@
               }
               let context = curVal.questionContent ? curVal.questionContent.formatHtml(): ""
               let shareData =  {
-                title: curVal.normalQuestionTitle,
+                title: curVal.questionTitle,
                 desc: context,
                 link: window.location.href.split(/[#?]/)[0] + 'static/share?questionId=' + curVal.id,
                 image: shareImage
@@ -152,7 +152,7 @@
         //   this.videoPlay(this.detail);
         // }
         this.detail.collection = result.isCollection;
-        document.title = this.detail.normalQuestionTitle;
+        document.title = this.detail.questionTitle;
       }, (error) => {
         if (error.code == 1002) {
           this.$toast("对不起，问题正在审核！");
@@ -229,7 +229,7 @@
         if (this.detail && Number(this.detail.auth) === 1) {
           this.$router.push({
             path: "/index/icomeAnswer",
-            query: {keywords:this.detail.normalQuestionTitle,questionId: this.detail.id}
+            query: {keywords:this.detail.questionTitle,questionId: this.detail.id}
           })
         } else {
           this.$toast("对不起，您暂无权限回答");
