@@ -59,7 +59,7 @@ function readyShareData (data) {
     let shareData = {
       title: data.title == null ? '千机问问' : data.title,
       link: data.link,
-      desc: data.link,
+      desc: data.desc,
       imgUrl: data.image == null || data.image.length === 0 ? logo : data.image,
       success: function () {},
       cancel: function () {}
