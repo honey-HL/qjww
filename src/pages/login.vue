@@ -76,11 +76,14 @@
         isAll: false,
         isLogin: false,
         weChatUser: null,
+        detail: {},
         score: 0,
       };
     },
     created() {
       document.title =this.$route.meta.title;
+      console.log(this.$store.state);
+      this.detail = this.$store.state.answerDetail;
     },
     mounted() {
       if (this.$store.state.openId == null) {
@@ -110,15 +113,19 @@
                   localStorage.setItem("userInfo", JSON.stringify(result));
                   this.isLogin = true;
                   this.isLoading = false;
-                  console.log('redirect跳转 :' + this.$route.query.redirect);
-                  setTimeout(() => {
-                    if (this.$route.query.redirect != undefined) {
-                      this.$router.replace({ path: this.$route.query.redirect });
-                    }
-                    else {
-                      this.$router.go(-3);
-                    }
-                  }, 1000);
+                  let redirectUrl = this.$route.query.redirect;
+                  let questionId = localStorage.getItem("questionId");
+                  console.log('redirect跳转 :', redirectUrl);
+                  console.log('Number(localStorage.getItem("questionId")', Number(localStorage.getItem("questionId")));
+                  if (this.$route.query.redirect != undefined) {
+                      console.log('直接跳转=====》', redirectUrl);
+                      console.log('this.detail====>', this.detail);
+                      this.$store.dispatch("setAnswerDetail", this.detail);
+                      this.$router.replace({ path: redirectUrl, query: {questionId: questionId}});
+                  }
+                  else {
+                    this.$router.go(-3);
+                  }
                 }, error => {
                   this.isLoading = false;
                   this.$toast(error.msg);
