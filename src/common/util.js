@@ -151,13 +151,14 @@ String.prototype.filterImage = function(ip) {
     let is_http = this.indexOf("http");
     let is_image = this.indexOf("image");
     let is_qjww = this.indexOf("qjww");
+    let is_manle = this.indexOf("manle");
     if (is_http >= 0) {
       return this
     }
     else if (is_image >= 0) {
       return ip + this
     } 
-    else if (is_qjww >= 0) {
+    else if (is_qjww >= 0 || is_manle >= 0) {
       return 'https://ask-img.3ceasy.com/' + this
     }
   }
