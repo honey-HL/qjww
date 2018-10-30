@@ -123,10 +123,6 @@
       this.scrollHeight = (window.innerHeight - 55 - 77 - 50) + "px";
     },
     updated() {
-      let con = $(".content").children("p");
-      con.removeAttr("style");
-      let sp = con.children("span")
-      sp.removeAttr("style")
     },
     methods: {
       link(url) {

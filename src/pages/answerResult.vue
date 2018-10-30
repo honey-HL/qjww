@@ -117,6 +117,7 @@
         showImgSlideArr:null,
         GoSlideToNub:0,
         Swiper:null,
+        isLogin: Number
       };
     },
     watch:{
@@ -146,8 +147,15 @@
       Search
     },
     created() {
+      this.checkLogin();
+      console.log('this.$route.query.questionId==>', this.$route.query.questionId)
       this.api.http("post", this.api.findById, {id: this.$route.query.questionId}, (result) => {
         this.detail = result.question;
+        if (this.detail && this.detail.id) {
+          console.log('this.detail.id', this.detail.id);
+          localStorage.setItem("questionId", this.detail.id);
+        }
+        this.$store.dispatch("setAnswerDetail", this.detail);
         // if (this.detail && this.detail.videos && this.detail.videos.length > 0) {
         //   this.videoPlay(this.detail);
         // }
@@ -199,22 +207,17 @@
 	  },
 
     methods: {
-      // videoPlay (res) {
-      //   console.log ('res========>' + res)
-      //   var videoObject = {
-      //     container: '#video', //容器的ID或className
-      //     variable: 'player',//播放函数名称
-      //     poster: res.coverUrl,//封面图片
-      //     mobileCkControls: true,//是否在移动端（包括ios）环境中显示控制栏
-      //     mobileAutoFull: false,//在移动端播放后是否按系统设置的全屏播放
-      //     h5container: '#videoPlay1',//h5环境中使用自定义容器
-      //     video: [//视频地址列表形式
-      //      //  ['http://img.ksbbs.com/asset/Mon_1703/05cacb4e02f9d9e.mp4', 'video/mp4', '中文标清', 0], // 'http://img.ksbbs.com/asset/Mon_1703/d0897b4e9ddd9a5.mp4' https://ask.3ceasy.com/qjww-api/image/video_9f2a15977f164b668f1e152aea09f91a.mp4
-      //       [res.videos, 'video/mp4', '中文高清', 0]
-      //     ]
-      //   };
-      //   var player = new ckplayer(videoObject);
-      // },
+      checkLogin () {
+        let accessToken = localStorage.getItem("accessToken");
+        if (accessToken && accessToken.length > 0) {
+          console.log('已登录')
+          this.isLogin = 1
+        } else {
+          console.log('未登录')
+          this.isLogin = 0
+        }
+        console.log('accessToken=======>', accessToken);
+      },
       newSwiper (){
         this.Swiper = new Swiper(".swiper-container", {
           pagination: {
@@ -229,7 +232,7 @@
         if (this.detail && Number(this.detail.auth) === 1) {
           this.$router.push({
             path: "/index/icomeAnswer",
-            query: {keywords:this.detail.questionTitle,questionId: this.detail.id}
+            query: {keywords:this.detail.questionTitle,questionId: this.detail.id, isLogin: this.isLogin}
           })
         } else {
           this.$toast("对不起，您暂无权限回答");
@@ -303,20 +306,32 @@
       },
       /*赞*/
       praise(id) {
-        // if (this.config == null) {
-        //   this.$router.push({path: '/index/login'});
-        //   return;
-        // }
+        if (this.isLogin == 1) {
+          console.log('已登录')
+          this.goPraise(id);
+        } else {
+          console.log('wei登录')
+          console.log('wei登录===>this.detail.id', this.detail.id)
+          this.$router.replace({ 
+            path: '/index/login', 
+            query: { redirect: '/index/answerResult' }
+          })
+          this.goPraise(id);
+        }
+      },
+      goPraise (id) {
         if (this.config != null && this.config.isLike == 0) {
           this.$toast("对不起，您暂无权限点赞");
           return;
         }
-        this.api.http("post", this.api.praise, { answerId: id, }, result => {
-          for (let i = 0; this.items.length; i++) {
-            if (this.items[i].id == id) {
-              this.items[i].praiseNum = this.items[i].praise ? this.items[i].praiseNum - 1 : this.items[i].praiseNum + 1;
-              this.items[i].praise = !this.items[i].praise;
-              break;
+        this.api.http("post", this.api.praise, { answerId: id }, result => {
+          if (this.items.length > 0) {
+            for (let i = 0; this.items.length; i++) {
+              if (this.items[i].id == id) {
+                this.items[i].praiseNum = this.items[i].praise ? this.items[i].praiseNum - 1 : this.items[i].praiseNum + 1;
+                this.items[i].praise = !this.items[i].praise;
+                break;
+              }
             }
           }
         }, error => {
@@ -326,6 +341,20 @@
       },
       /*收藏*/
       collect() {
+        if (this.isLogin == 1) {
+          console.log('已登录')
+          this.goCollect();
+        } else {
+          console.log('wei登录')
+          console.log('wei登录===>this.detail.id', this.detail.id)
+          this.$router.replace({ 
+            path: '/index/login', 
+            query: { redirect: '/index/answerResult' }
+          })
+          this.goCollect();
+        }
+      },
+      goCollect () {
         this.api.http("post", this.api.collectionSave, { questionId: this.detail.id, }, result => {
           this.detail.collection = !this.detail.collection;
           //this.$store.dispatch("setAnswerDetail", this.detail);
@@ -337,8 +366,13 @@
       },
       /*举报*/
       report() {
-        this.$router.push({
-          path: "/index/report"
+        this.$router.replace({
+          path: "/index/report",
+          query: {
+            questionTitle: this.detail.questionTitle,
+            isLogin: this.isLogin,
+            id: this.detail.id
+          }
         });
       },
       formatting (time) {

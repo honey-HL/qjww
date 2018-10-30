@@ -55,7 +55,7 @@
     },
     data() {
       return {
-        detail: null,
+        detail: {},
         report: {
           describe: "",
           imgs: [],
@@ -91,6 +91,12 @@
       document.title =this.$route.meta.title;
       this.detail = this.$store.state.answerDetail;
       this.report.id = this.detail.id;
+      if (!this.detail.id) {
+        this.report.id = this.$route.query.id;
+      }
+      if (!this.detail.questionTitle) {
+        this.detail.questionTitle = this.$route.query.questionTitle;
+      }
     },
     methods: {
       onRead(image) {
@@ -114,11 +120,11 @@
         this.api.http("post", this.api.saveReport, this.report, result => {
           this.isLoading = false;
           this.isShow = true;
-          setTimeout(() => {
-            this.$router.go(-1);
-          }, 1000);
+          this.$router.replace({path: '/index/answerResult', query: {questionId: this.report.id}});
         }, error => {
           this.isLoading = false;
+          this.$toast(error.msg);
+          this.$router.replace({path: '/index/answerResult', query: {questionId: this.report.id}});
         });
       },
       /*删除图片*/

@@ -67,7 +67,7 @@
         if (content.length >= 500) {
           this.$toast("文本字数不能超过500");
         }
-        if (this.util.isEmoji.test(answer.content)) {
+        if (this.util.isEmoji.test(this.answer.content)) {
           this.$toast("暂不支持emoji");
         }
       }
@@ -117,9 +117,11 @@
           this.isLoading = false;
           this.isShow = true;
           //this.$toast("请耐心等待审核");
-          setTimeout(() => {
+          if (this.$route.query.isLogin == 1) {
             this.$router.go(-1);
-          }, 1000);
+          } else {
+            this.$router.go(-2);
+          }
         }, error => {
           this.isLoading = false;
           this.$toast(error.msg);

@@ -6,7 +6,7 @@ Vue.use(Vuex)
 const module = {
   state: {
     // 问题详情
-    answerDetail: null,
+    answerDetail: {},
     // 专家详情
     expertDetail: null,
     // openId
