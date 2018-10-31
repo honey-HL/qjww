@@ -235,7 +235,7 @@
             query: {keywords:this.detail.questionTitle,questionId: this.detail.id, isLogin: this.isLogin}
           })
         } else {
-          this.$toast("对不起，您暂无权限回答");
+          this.$toast("该问题不允许回答");
         }
       },
       /*获取列表*/
