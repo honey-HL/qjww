@@ -44,7 +44,7 @@
           </div>
 
           <!--新增第一条回答-->
-          <div class="hasAnswer" v-if="item.answer != null">
+          <div class="hasAnswer_2" v-if="item.answer != null">
             <div class="answerContent" v-html="item.answer.content"></div>
           </div>
           <div class="img-list" v-if="item.answer != null">
@@ -493,18 +493,18 @@
   }
 </style>
 <style lang="css">
-.answerContent{
+.answerContent p{
   font-size: 1.17rem;
 }
-.answer-list .item .hasAnswer .answerContent p,
-.pull-to-refresh-layer .answer-list .item .hasAnswer .answerContent p span
+.answer-list .item .hasAnswer_2 .answerContent p,
+.pull-to-refresh-layer .answer-list .item .hasAnswer_2 .answerContent p span
 {
-  font-size: 14px;
+  font-size: 1.17rem;
 }
-.answer-list .item .hasAnswer .answerContent p {
+.answer-list .item .hasAnswer_2 .answerContent p {
   display: none;
 }
-.answer-list .item .hasAnswer .answerContent p:first-child {
+.answer-list .item .hasAnswer_2 .answerContent p:first-child {
   display: block;
   overflow:hidden; 
   text-overflow:ellipsis;
@@ -520,10 +520,10 @@
 .answer-list .content p img,.answerContent p img{
   display:none;
 }
-.answer-list .content,.hasAnswer p{
+.answer-list .content,.hasAnswer_2 p{
   display: inline-block;
 }
-.hasAnswer{
+.hasAnswer_2{
   height: max-content;
   max-height: 63px;
   font-family: PingFangSC-Light;
@@ -535,7 +535,7 @@
   -webkit-line-clamp: 3;
   overflow: hidden;
 }
-.hasAnswer img.img-item {
+.hasAnswer_2 img.img-item {
   width: calc((100% - 40px) / 4);
   height: 63px;
   max-height: 63px;
