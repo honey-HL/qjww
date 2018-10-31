@@ -411,7 +411,7 @@
   }
   .hasAnswer_1{
     height: max-content;
-    max-height: 84px;
+    max-height: 82px;
     font-family: PingFangSC-Light;
     font-size: 14px;
     color: #999999;
@@ -421,6 +421,13 @@
     -webkit-line-clamp: 4;
     text-overflow: ellipsis;
     overflow: hidden;
+  }
+  .hasAnswer_1 .answerContent p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
   }
   .hasAnswer_1 img.img-item {
     width: calc((100% - 30px) / 4);
