@@ -116,7 +116,7 @@
         isShowSwiperImgShow:false,
         showImgSlideArr:null,
         GoSlideToNub:0,
-        Swiper:null,
+        // Swiper: '',
         isLogin: Number
       };
     },
@@ -188,11 +188,13 @@
           }else if($(this).parents().hasClass("backstagePushAnswer")){
             imgArr = $(this).parents(".backstagePushAnswer").children("p").children("img");
           }
-          for(let i=0;i<imgArr.length;i++){
-            if(thisImgAttr == imgArr[i].src){
-              that.GoSlideToNub = i+1;
+          if (imgArr && imgArr.length > 0) {
+            for(let i=0;i<imgArr.length;i++){
+              if(thisImgAttr == imgArr[i].src){
+                that.GoSlideToNub = i+1;
+              }
+              imgSrcArr.push(imgArr[i].src.filterImage(that.api.ip));
             }
-            imgSrcArr.push(imgArr[i].src.filterImage(that.api.ip));
           }
 
           that.showImgSlideArr = imgSrcArr;
@@ -202,8 +204,8 @@
       });
 
       this.newSwiper();
-      if(this.Swiper != null)
-       this.Swiper.slideTo(this.GoSlideToNub,0,true);
+      // if(this.Swiper != null)
+      //  this.Swiper.slideTo(this.GoSlideToNub,0,true);
 	  },
 
     methods: {
