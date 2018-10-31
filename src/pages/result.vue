@@ -56,10 +56,10 @@
           <div class="img-list" v-if="item.label == 0&&item.answer == null">
             <img class="img-item" v-for="(child, index) in util.splitImg(item.images)" :key="index" :src="child" >  
           </div>
-          <div class="img-list" v-if="item.label == 2&&item.answer == null">
-            <video class="img-item" :src="item.videos"></video>
-            <div class="ThisVideoPlayButton" v-if="item.label === 2 && item.coverUrl !=null">
-              <img class="suspend img-responsive" :src="item.coverUrl" alt="">  
+          <div class="img-list" v-if="item.label == 2">
+            <!-- <video class="img-item" :src="item.videos"></video> -->
+            <div class="ThisVideoPlayButton_1" v-if="item.label === 2 && item.coverUrl !=null">
+              <img class="suspend_1 img-responsive" :src="item.coverUrl" alt="">  
             </div>
           </div>
           <!--回答或者描述结束-->
@@ -454,5 +454,11 @@
     right: 0;
     top: 0;
     bottom: 0;
+  }
+  .ThisVideoPlayButton_1{
+    position: relative;
+  }
+  img.suspend_1{
+    position: relative;
   }
 </style>
