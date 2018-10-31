@@ -10,7 +10,7 @@
           <!--回答或者描述开始-->
           <div class="content" v-html="item.questionContent" v-if="item.answer == null"></div>
           <!--新增第一条回答-->
-          <div class="hasAnswer" v-if="item.answer != null">
+          <div class="hasAnswer_1" v-if="item.answer != null">
             <div class="answerContent" v-html="item.answer.content"></div>
             <img class="img-item" v-for="(child, index) in util.splitImg(item.answer.images)" :key="index" :src="child" >
           </div>
@@ -48,7 +48,7 @@
           <!--回答或者描述开始-->
           <div class="content" v-html="item.questionContent" v-if="item.answer == null"></div>
           <!--新增第一条回答-->
-          <div class="hasAnswer" v-if="item.answer != null">
+          <div class="hasAnswer_1" v-if="item.answer != null">
             <div class="answerContent" v-html="item.answer.content"></div>
             <img class="img-item" v-for="(child, index) in util.splitImg(item.answer.images)" :key="index" :src="child" >
           </div>
@@ -304,6 +304,7 @@
       .operation-bar {
         display: flex;
         align-items: center;
+        margin-top: 10px;
         .left {
           width: 30%;
           display: flex;
@@ -402,25 +403,26 @@
   }
 </style>
 <style lang="css">
-  .content p,.hasAnswer p{
+  .content p,.hasAnswer_1 p{
     display: inline-block;
   }
-  .content p img,.hasAnswer p img{
+  .content p img,.hasAnswer_1 p img{
     max-height: 63px;
   }
-  .hasAnswer{
+  .hasAnswer_1{
     height: max-content;
-    max-height: 100px;
+    max-height: 84px;
     font-family: PingFangSC-Light;
     font-size: 14px;
     color: #999999;
     line-height: 21px;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 4;
+    text-overflow: ellipsis;
     overflow: hidden;
   }
-  .hasAnswer img.img-item {
+  .hasAnswer_1 img.img-item {
     width: calc((100% - 30px) / 4);
     height: 58px;
     border-radius: 4px;
