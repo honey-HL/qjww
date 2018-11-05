@@ -724,4 +724,8 @@
     max-height: none !important;
     margin: 4px 0px 4px 0px !important;
   }
+  .backstagePush p{
+    font-size:16px !important;
+    display: block !important;
+  }
 </style>
