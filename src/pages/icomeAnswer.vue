@@ -113,15 +113,17 @@
         });
         this.answer.imgs = this.answer.imgs.toString();
         this.api.http("post", this.api.saveAnswer, this.answer, result => {
-          this.score = result;
           this.isLoading = false;
           this.isShow = true;
+          this.score = result;
           //this.$toast("请耐心等待审核");
-          if (this.$route.query.isLogin == 1) {
-            this.$router.go(-1);
-          } else {
-            this.$router.go(-2);
-          }
+          setTimeout(() => {
+            if (this.$route.query.isLogin == 1) {
+              this.$router.go(-1);
+            } else {
+              this.$router.go(-2);
+            }
+          }, 1000)
         }, error => {
           this.isLoading = false;
           this.$toast(error.msg);
