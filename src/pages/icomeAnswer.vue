@@ -113,9 +113,9 @@
         });
         this.answer.imgs = this.answer.imgs.toString();
         this.api.http("post", this.api.saveAnswer, this.answer, result => {
-          that.isLoading = false;
-          that.isShow = true;
-          that.score = result;
+          this.isLoading = false;
+          this.isShow = true;
+          this.score = result;
           //this.$toast("请耐心等待审核");
           setTimeout(() => {
             if (this.$route.query.isLogin == 1) {
