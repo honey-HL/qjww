@@ -50,7 +50,7 @@ function readyShareData (data) {
   if (!data.hasOwnProperty('link')) {
     data = {
       link: window.location.href.split(/[?#]/)[0],
-      title: '活力开学季 答题积分拿奖品',
+      title: '千机问问邀你参加有奖内测',
       desc: '我已经在活动里拿到了奖品！轻松答题拿积分'
     }
   }
