@@ -69,7 +69,8 @@
       </transition-group>
     </scroller>
     <div class="footer-bar">
-      <div class="btn" @click="answer">我来回答</div>
+      <div v-if="detail.auth == 1" class="btn" @click="letMeAnswer">我来回答</div>
+      <div v-else class="gray_btn" @click="letMeAnswer">我来回答</div>
       <transition name="fade">
         <div class="collect" @click="collect" v-if="detail.collection">
           <img src="../assets/collect-active.png">
@@ -230,7 +231,7 @@
           loop: true,
         });
       },
-      answer() {
+      letMeAnswer() {
         if (this.detail && Number(this.detail.auth) === 1) {
           this.$router.push({
             path: "/index/icomeAnswer",
@@ -618,6 +619,17 @@
         background-image: linear-gradient(-90deg, #5FB62A 0%, #78BC28 100%);
         border-radius: 100px;
         box-shadow: 0 2px 8px 0 #5FB62A;
+        height: 30px;
+        width: 150px;
+        text-align: center;
+        line-height: 30px;
+        color: #fff;
+      }
+      .gray_btn {
+        display: inline-block;
+        background-image: linear-gradient(-90deg, gray 0%, gray 100%);
+        border-radius: 100px;
+        box-shadow: 0 2px 8px 0 gray;
         height: 30px;
         width: 150px;
         text-align: center;

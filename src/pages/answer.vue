@@ -124,6 +124,26 @@
     },
     updated() {
     },
+    beforeRouteEnter(to,from,next){
+      if(!sessionStorage.askPositon || from.path == '/'){//当前页面刷新不需要切换位置
+        sessionStorage.askPositon = '';
+        next();
+      } else {
+        next(vm => {
+          if (from.name === 'answerResult') {
+            if(vm && vm.$refs.myscroller){//通过vm实例访问this
+              setTimeout(function () {
+                vm.$refs.myscroller.scrollTo(0, sessionStorage.askPositon, false);
+              },0)//同步转异步操作
+            }
+          }
+        })
+      }
+    },
+    beforeRouteLeave(to,from,next){//记录离开时的位置
+      sessionStorage.askPositon = this.$refs.myscroller && this.$refs.myscroller.getPosition() && this.$refs.myscroller.getPosition().top;
+      next()
+    },
     methods: {
       link(url) {
         this.$router.push({
