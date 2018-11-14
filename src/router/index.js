@@ -57,7 +57,7 @@ const routers = new Router({
       component: Index,
       children: [
         { path: 'home', name: 'home', component: Home, meta: { title: "首页" ,defaultShare : true } },
-        { path: 'answer', name: 'answer', component: Answer, meta: { title: "问答" ,defaultShare : true } },
+        { path: 'answer', name: 'answer', component: Answer, meta: { title: "问答" ,isUseCache: false, keepAlive: true, defaultShare : true } },
         { path: 'my', name: 'my', component: My, meta: { title: "我的", requireAuth: true ,defaultShare : true } },
         { path: 'result', name: 'result', component: Result, meta: { title: "搜索结果" ,defaultShare : true } },
         { path: 'login', name: 'login', component: Login, meta: { title: "登录" ,defaultShare : true } },

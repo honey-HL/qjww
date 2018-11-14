@@ -11,7 +11,7 @@
       <p class="title">手机问题，就来千机问问</p>
       <div class="search-bar">
         <img @click="searchEnterFun" src="../assets/search.png" />
-        <input @blur="blurInput" @focus="focusInput" type="search" placeholder="请输入您遇到的手机问题" maxlength="30" v-model="searchValue" @keyup.enter="searchEnterFun">
+        <input @blur="blurInput" @focus="focusInput" type="text" placeholder="请输入您遇到的手机问题" maxlength="30" v-model="searchValue" @keyup.enter="searchEnterFun">
       </div>
       <div class="solve">
         已有
@@ -19,7 +19,7 @@
       </div>
     </div>
     <div v-if="!adShow" class="bottom-bar" v-show="isShow">
-      <div class="title">不止解答·直至解决</div>
+      <div class="title">不只解答·直至解决</div>
       <div class="ad" v-if="adBottom != null && adBottom.status == 1" @click="adDetail(1)" v-lazy:background-image="imgIp + adBottom.img"></div>
     </div>
     <MyFooter v-if="!adShow" />
@@ -218,7 +218,7 @@
         height: calc(34px / 2);
         position: absolute;
         top: 11.5px;
-        left: 15px;
+        right: 15px;
       }
       input {
         width: 100%;
@@ -227,11 +227,11 @@
         line-height: 40px;
         border: 1px solid rgba(153, 153, 153, 0.1);
         border-radius: 30px;
-        padding-left: 45px;
+        padding-left: 15px;
         box-sizing: border-box;
         outline: none;
         color: #5FB62A;
-        padding-right: 8px;
+        padding-right: 15px;
       }
     }
     .solve {
