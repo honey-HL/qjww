@@ -30,14 +30,14 @@
           </div>
           <div class="right">
             <div class="report" @click="report">
-              <img src="../assets/report.png">
+              <span class="report_img"></span>
               <span>举报</span>
             </div>
           </div>
         </div>
       </div>
       <div class="title-num">
-        <img src="../assets/comment.png">
+        <span class="comment_img"></span>
         <span>{{totalNum}}</span>个回答
       </div>
       <transition-group name="fade">
@@ -58,8 +58,8 @@
             <div class="right">
               <transition name="fade">
                 <div class="zan" @click="praise(item.id)">
-                  <img src="../assets/news-zan.png" v-if="item.praise">
-                  <img src="../assets/zan.png" v-else>
+                  <span class="zan_green" v-if="item.praise"></span>
+                  <span class="zan_gray" v-else></span>
                   <span>{{item.praiseNum}}</span>
                 </div>
               </transition>
@@ -739,5 +739,39 @@
   .backstagePush p{
     font-size:16px !important;
     display: block !important;
+  }
+  .zan_green {
+    background: url(../assets/news-zan.png);
+    background-size: contain;
+    object-fit: cover;
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+  }
+  .zan_gray {
+    background: url(../assets/zan.png) no-repeat;
+		background-size: contain;
+    object-fit: cover;
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+  }
+  .report_img {
+    background: url(../assets/report.png) no-repeat;
+		background-size: contain;
+    object-fit: cover;
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+  }
+  .comment_img {
+    background: url(../assets/comment.png) no-repeat;
+		background-size: 100%;
+    object-fit: cover;
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    position: relative;
+    top: 4px;
   }
 </style>
