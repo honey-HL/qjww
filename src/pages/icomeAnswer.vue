@@ -9,8 +9,8 @@
         </span>
       </div>
       <div class="row">
-          <div class="item" v-for="(item,index) in images" v-bind:key='index' v-lazy:background-image="item.url.filterImage(api.ip)">
-            <i class="del" @click="delImg(item.fileName)"></i>
+          <div class="item" v-if="item" v-for="(item,index) in images" v-bind:key='item.fileName' v-lazy:background-image="item.url.filterImage(api.ip)">
+            <i class="del" @click="delImg(index, item.fileName)"></i>
           </div>
         <div v-if="config != null && config.isReply == 0" @click="check" class="item add-icon"></div>
         <UploadFile @uploadCall="onRead" v-else-if="images.length < 8">
@@ -109,7 +109,9 @@
         }
         this.isLoading = true;
         this.images.forEach(item => {
-          this.answer.imgs.push(item.url);
+          if (item && item.url) {
+            this.answer.imgs.push(item.url);
+          }
         });
         this.answer.imgs = this.answer.imgs.toString();
         this.api.http("post", this.api.saveAnswer, this.answer, result => {
@@ -130,14 +132,9 @@
         });
       },
       /*删除图片*/
-      delImg(fileName) {
+      delImg(index, fileName) {
         this.api.http("post", this.api.delFile, { fileName }, result => {
-          for (let i = 0; i < this.images.length; i++) {
-            if (this.images[i].fileName == fileName) {
-              this.images.splice(i, 1);
-              break;
-            }
-          }
+          this.images.splice(index, 1);
         }, error => {
           this.$toast(error.msg);
         });

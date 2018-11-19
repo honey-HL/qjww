@@ -147,13 +147,12 @@
         if (this.util.empty(this.user.phone) || !this.util.isPhone.test(this.user.phone)) {
           this.isPhoneError = true;
           return;
-        }
-        else if (this.util.empty(this.user.code)) {
-          this.isCodeError = true;
+        } else if (this.okPhone !== '' &&  this.okPhone !== this.user.phone) {
+          this.isPhoneError = true;
           return;
         }
-        else if (this.okPhone != this.user.phone) {
-          this.isPhoneError = true;
+        if (this.util.empty(this.user.code)) {
+          this.isCodeError = true;
           return;
         }
         this.isLoading = true;
@@ -182,6 +181,8 @@
             }, 1000);
           }, error => { });
         }, error => {
+          this.$toast(error.msg);
+          this.isCodeError = true;
           this.isLoading = false;
         });
       },
@@ -193,7 +194,7 @@
         }
         this.api.http("post", this.api.getBindCode, this.user, result => {
           //Test
-          this.user.code = result;
+         // this.user.code = result;
           this.isAll = true;
 
           this.isCode = true;
@@ -214,12 +215,13 @@
       /*检查输入*/
       check(type) {
         if (type == 0) {
-          if (this.util.isPhone.test(this.user.phone)) {
+          if (!this.util.isPhone.test(this.user.phone)) {
+            this.isPhoneError = true;
+          } else {
             this.isPhoneError = false;
-            return;
           }
         }
-        else {
+        else if (type == 1){
           if (this.user.code.length == 4) {
             this.isCodeError = false;
             return;
