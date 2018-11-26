@@ -29,6 +29,8 @@ const Content = () => import('@/pages/content')
 const NewsDetail = () => import('@/pages/newsDetail')
 const ChangeName = () => import('@/pages/changeName')
 const Share = () => import('@/pages/share')
+const IntegralMall = () => import('@/pages/integralMall')
+const Instruction = () => import('@/pages/instruction')
 
 
 Router.prototype.goBack = function () {
@@ -57,6 +59,8 @@ const routers = new Router({
       component: Index,
       children: [
         { path: 'home', name: 'home', component: Home, meta: { title: "首页" ,defaultShare : true } },
+        { path: 'instruction', name: 'instruction', component: Instruction, meta: { title: "积分商城" ,defaultShare : true } },
+        { path: 'integralMall', name: 'integralMall', component: IntegralMall, meta: { title: "积分商城" ,defaultShare : true } },
         { path: 'answer', name: 'answer', component: Answer, meta: { title: "问答" ,isUseCache: false, keepAlive: true, defaultShare : true } },
         { path: 'my', name: 'my', component: My, meta: { title: "我的", requireAuth: true ,defaultShare : true } },
         { path: 'result', name: 'result', component: Result, meta: { title: "搜索结果" ,defaultShare : true } },

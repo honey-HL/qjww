@@ -13,8 +13,8 @@
         </div>
         <div class="total-bar">
           <div class="left">
-            <div class="num">{{score}}</div>
-            <div class="hint">积分</div>
+            <div class="num" @click="goIntegralMall">{{score}}</div>
+            <div class="hint" @click="goIntegralMall">积分</div>
           </div>
           <div class="right">
             <div class="num">{{like}}</div>
@@ -106,6 +106,11 @@
       
     },
     methods: {
+      goIntegralMall () {
+        this.$router.push({
+          path: "/index/integralMall"
+        })
+      },
       edit() {
         this.$router.push({
           path: "/index/edit"
