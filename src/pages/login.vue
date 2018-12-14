@@ -77,6 +77,7 @@
         isLogin: false,
         weChatUser: null,
         detail: {},
+        openid: '',
         score: 0,
       };
     },
@@ -86,79 +87,141 @@
       this.detail = this.$store.state.answerDetail;
     },
     mounted() {
-      if (this.$store.state.openId == null) {
+      console.log('code-->', this.code);
+      console.log(this.$store.state);
+      this.openid = localStorage.getItem('openid') ? localStorage.getItem('openid'):'';
+      this.user.openId = this.openid;
+      console.log(localStorage.getItem('openid'));
+      if (this.openid == '') {
+        this.get_wx_code()
+      } else {
+        this.isLoading = false;
+        this.get_login()
+      }
+      // this.get_open_id()
+      // if (this.$store.state.openId == null) {
+      //   this.api.http("post", this.api.isGetCode, {}, result => {
+      //     if (result == 1) {
+      //       if (this.code == null) {
+      //         location.href = this.api.ip + "wxClient/getCode?redirectUrl=" + encodeURIComponent(location.href);
+      //       }
+      //       else {
+      //         this.api.http("post", this.api.getOpenId, { code: this.code }, result => {  
+      //           result = JSON.parse(result);
+      //           this.$store.dispatch("setOpenId", result.openid);
+      //           localStorage.setItem("openid", result.openid);
+      //           this.user.openId = result.openid;
+      //           this.user.nickName = result.nickname;
+      //           this.user.avatar = result.headimgurl;
+      //           this.weChatUser = result;
+      //           window.weChatUserNickName = result.nickname;
+      //           window.weChatUserHeadimgurl = result.headimgurl;
+      //           //localStorage.setItem("userInfo", JSON.stringify(result));
+      //           this.api.http("post", this.api.login, {
+      //             openId: this.user.openId,
+      //             nickName: result.nickname,
+      //             avatar: result.headimgurl
+      //           }, result => {
+      //             localStorage.setItem("accessToken", result.token);
+      //             this.$store.dispatch("setToken", result.token);
+      //             localStorage.setItem("userInfo", JSON.stringify(result));
+      //             this.isLogin = true;
+      //             this.isLoading = false;
+      //             let redirectUrl = this.$route.query.redirect;
+      //             let questionId = localStorage.getItem("questionId");
+      //             console.log('redirect跳转 :', redirectUrl);
+      //             console.log('Number(localStorage.getItem("questionId")', Number(localStorage.getItem("questionId")));
+      //             if (this.$route.query.redirect != undefined) {
+      //                 console.log('直接跳转=====》', redirectUrl);
+      //                 console.log('this.detail====>', this.detail);
+      //                 this.$store.dispatch("setAnswerDetail", this.detail);
+      //                 this.$router.replace({ path: redirectUrl, query: {questionId: questionId}});
+      //             }
+      //             else {
+      //               this.$router.go(-3);
+      //             }
+      //           }, error => {
+      //             this.isLoading = false;
+      //             this.$toast(error.msg);
+      //           });
+      //         }, error => { });
+      //       }
+      //     }
+      //   }, error => { });
+      // }
+      // else {
+      //   console.log('已有openid');
+      //   debugger
+      //   this.isLoading = false;
+      //   this.user.openId = this.$store.state.openId;
+      // }
+
+    },
+    methods: {
+      /**********获取微信授权code**********/
+      get_wx_code () {
         this.api.http("post", this.api.isGetCode, {}, result => {
           if (result == 1) {
             if (this.code == null) {
               location.href = this.api.ip + "wxClient/getCode?redirectUrl=" + encodeURIComponent(location.href);
-            }
-            else {
-              this.api.http("post", this.api.getOpenId, { code: this.code }, result => {  
-                result = JSON.parse(result);
-                this.$store.dispatch("setOpenId", result.openid);
-                this.user.openId = result.openid;
-                this.user.nickName = result.nickname;
-                this.user.avatar = result.headimgurl;
-                this.weChatUser = result;
-                window.weChatUserNickName = result.nickname;
-                window.weChatUserHeadimgurl = result.headimgurl;
-                //localStorage.setItem("userInfo", JSON.stringify(result));
-                this.api.http("post", this.api.login, {
-                  openId: this.user.openId,
-                  nickName: result.nickname,
-                  avatar: result.headimgurl
-                }, result => {
-                  localStorage.setItem("accessToken", result.token);
-                  this.$store.dispatch("setToken", result.token);
-                  localStorage.setItem("userInfo", JSON.stringify(result));
-                  this.isLogin = true;
-                  this.isLoading = false;
-                  let redirectUrl = this.$route.query.redirect;
-                  let questionId = localStorage.getItem("questionId");
-                  console.log('redirect跳转 :', redirectUrl);
-                  console.log('Number(localStorage.getItem("questionId")', Number(localStorage.getItem("questionId")));
-                  if (this.$route.query.redirect != undefined) {
-                      console.log('直接跳转=====》', redirectUrl);
-                      console.log('this.detail====>', this.detail);
-                      this.$store.dispatch("setAnswerDetail", this.detail);
-                      this.$router.replace({ path: redirectUrl, query: {questionId: questionId}});
-                  }
-                  else {
-                    this.$router.go(-3);
-                  }
-                }, error => {
-                  this.isLoading = false;
-                  this.$toast(error.msg);
-                });
-              }, error => { });
+            } else {
+              this.get_open_id()
             }
           }
-        }, error => { });
-      }
-      else {
-        this.isLoading = false;
-        this.user.openId = this.$store.state.openId;
-      }
-
-    },
-    methods: {
-      /*登录*/
-      submit() {
-        if (this.util.empty(this.user.phone) || !this.util.isPhone.test(this.user.phone)) {
-          this.isPhoneError = true;
-          return;
-        } else if (this.okPhone !== '' &&  this.okPhone !== this.user.phone) {
-          this.isPhoneError = true;
-          return;
-        }
-        if (this.util.empty(this.user.code)) {
-          this.isCodeError = true;
-          return;
-        }
-        this.isLoading = true;
-        this.user.nickName = window.weChatUserNickName;
-        this.user.avatar = window.weChatUserHeadimgurl;
-        this.api.http("post", this.api.bindPhone, this.user, result => {
+        }, error => {
+          this.$toast(error.msg)
+        })
+      },
+      /*********登录***********/
+      get_login () {
+        this.api.http("post", this.api.login, {
+          openId: this.user.openId,
+          nickName: this.user.nickName,
+          avatar: this.user.avatar
+        }, result => {
+          localStorage.setItem("accessToken", result.token);
+          this.$store.dispatch("setToken", result.token);
+          localStorage.setItem("userInfo", JSON.stringify(result));
+          this.isLogin = true;
+          this.isLoading = false;
+          let redirectUrl = this.$route.query.redirect;
+          let questionId = localStorage.getItem("questionId");
+          console.log('redirect跳转 :', redirectUrl);
+          console.log('Number(localStorage.getItem("questionId")', Number(localStorage.getItem("questionId")));
+          if (this.$route.query.redirect != undefined) {
+              console.log('直接跳转=====》', redirectUrl);
+              console.log('this.detail====>', this.detail);
+              this.$store.dispatch("setAnswerDetail", this.detail);
+              this.$router.replace({ path: redirectUrl, query: {questionId: questionId}});
+          }
+          else {
+            this.$router.go(-3);
+          }
+        }, error => {
+          this.isLoading = false;
+          this.$toast(error.msg);
+        });
+      },
+      /*********获取openid**********/
+      get_open_id () {
+        this.api.http("post", this.api.getOpenId, { code: this.code }, result => {  
+            result = JSON.parse(result);
+            this.$store.dispatch("setOpenId", result.openid);
+            localStorage.setItem("openid", result.openid);
+            this.user.openId = result.openid;
+            this.user.nickName = result.nickname;
+            this.user.avatar = result.headimgurl;
+            this.weChatUser = result;
+            window.weChatUserNickName = result.nickname;
+            window.weChatUserHeadimgurl = result.headimgurl;
+            this.get_login()
+        }, error => {
+          this.$toast(error.msg);
+          this.isLoading = false;
+        });
+      },
+      get_phone_bind () {
+         this.api.http("post", this.api.bindPhone, this.user, result => {
           localStorage.setItem("accessToken", result.token);
           this.$store.dispatch("setToken", result.token);
           this.score = result.score;
@@ -185,6 +248,51 @@
           this.isCodeError = true;
           this.isLoading = false;
         });
+      },
+      /*登录*/
+      submit() {
+        if (this.util.empty(this.user.phone) || !this.util.isPhone.test(this.user.phone)) {
+          this.isPhoneError = true;
+          return;
+        } else if (this.okPhone !== '' &&  this.okPhone !== this.user.phone) {
+          this.isPhoneError = true;
+          return;
+        }
+        if (this.util.empty(this.user.code)) {
+          this.isCodeError = true;
+          return;
+        }
+        this.isLoading = true;
+        this.user.nickName = window.weChatUserNickName;
+        this.user.avatar = window.weChatUserHeadimgurl;
+        this.get_phone_bind()
+        // this.api.http("post", this.api.bindPhone, this.user, result => {
+        //   localStorage.setItem("accessToken", result.token);
+        //   this.$store.dispatch("setToken", result.token);
+        //   this.score = result.score;
+        //   this.isLogin = true;
+        //   this.isLoading = false;
+        //   this.api.http("post", this.api.getInfo, {}, result => {
+        //     if(result.avatar.indexOf("http") != -1){
+        //       result["isUserHeadPic"] = true;
+        //     }else{
+        //       result["isUserHeadPic"] = false;
+        //     }
+        //     localStorage.setItem("userInfo", JSON.stringify(result));
+        //     setTimeout(() => {
+        //       if (this.$route.query.redirect != undefined) {
+        //         this.$router.replace({ path: this.$route.query.redirect });
+        //       }
+        //       else {
+        //         this.$router.go(-3);
+        //       }
+        //     }, 1000);
+        //   }, error => { });
+        // }, error => {
+        //   this.$toast(error.msg);
+        //   this.isCodeError = true;
+        //   this.isLoading = false;
+        // });
       },
       /*获取验证码*/
       getCode() {

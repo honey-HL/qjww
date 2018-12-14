@@ -4,7 +4,7 @@
 
 import axios from 'axios'
 
-// axios.defaults.baseURL = 'http://192.168.21.119:8888/'; // 田志勇ip
+// axios.defaults.baseURL = 'http://192.168.21.119:8888/api/'; // 田志勇ip
 axios.defaults.baseURL = "https://ask.3ceasy.com/qjww-api/";
 // axios.defaults.baseURL = "http://118.178.105.49/";
 // axios.defaults.baseURL = 'http://192.168.1.110:8181/qjww-api/';
@@ -53,7 +53,7 @@ export default {
 
   ip: "https://ask.3ceasy.com/qjww-api/",
   // ip: "http://118.178.105.49/",
-  // ip: "http://192.168.21.119:8888/", // 田志勇ip
+  // ip: "http://192.168.21.119:8888/api/", // 田志勇ip
   imgIp: "https://ask-img.3ceasy.com/",
   // imgIp: "http://192.168.1.110:8088/",
   //ip: "http://tiger.magic-beans.cn/qjww-api/",
