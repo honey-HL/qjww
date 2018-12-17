@@ -89,9 +89,9 @@
     mounted() {
       console.log('code-->', this.code);
       console.log(this.$store.state);
-      this.openid = localStorage.getItem('openid') ? localStorage.getItem('openid'):'';
+      this.openid = sessionStorage.getItem('openid') ? sessionStorage.getItem('openid'):'';
       this.user.openId = this.openid;
-      console.log(localStorage.getItem('openid'));
+      console.log(sessionStorage.getItem('openid'));
       if (this.openid == '') {
         this.get_wx_code()
       } else {
@@ -207,7 +207,7 @@
         this.api.http("post", this.api.getOpenId, { code: this.code }, result => {  
             result = JSON.parse(result);
             this.$store.dispatch("setOpenId", result.openid);
-            localStorage.setItem("openid", result.openid);
+            sessionStorage.setItem("openid", result.openid);
             this.user.openId = result.openid;
             this.user.nickName = result.nickname;
             this.user.avatar = result.headimgurl;
