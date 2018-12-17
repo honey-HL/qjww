@@ -78,6 +78,7 @@
         weChatUser: null,
         detail: {},
         openid: '',
+        token: '',
         score: 0,
       };
     },
@@ -87,17 +88,39 @@
       this.detail = this.$store.state.answerDetail;
     },
     mounted() {
-      console.log('code-->', this.code);
+     console.log('code-->', this.code);
       console.log(this.$store.state);
-      this.openid = sessionStorage.getItem('openid') ? sessionStorage.getItem('openid'):'';
+      console.log(localStorage.getItem('openid'));
+      this.openid = localStorage.getItem('openid') ? localStorage.getItem('openid'):false;
       this.user.openId = this.openid;
-      console.log(sessionStorage.getItem('openid'));
-      if (this.openid == '') {
-        this.get_wx_code()
-      } else {
-        this.isLoading = false;
+      this.token = localStorage.getItem("accessToken") ? localStorage.getItem("accessToken") :false;
+      console.log('token',localStorage.getItem("accessToken"));
+      if (this.openid) { // 1.有openid
         this.get_login()
+      } else { // 2.没有openid
+        // if (!this.token) {
+          if (!this.isAll) {
+            this.get_wx_code(2)
+          } else {
+            this.get_wx_code(1)
+          }
+        // }
       }
+      // if (this.openid == '') { // 1.绑定过还是空  2.没绑定
+      //   this.get_wx_code()
+      // } 
+      // else {
+      //   this.isLoading = false;
+      //   this.get_login()
+      // }
+      // if (this.isLogin && this.user.openId) { // 已绑定手机号
+      //   this.isLoading = true;
+      //   this.get_login()
+      // }
+      // if (this.code && this.code.length > 0 && !this.isLogin) { // 未绑定手机号
+      //   this.isLoading = true;
+      //   this.get_open_id()
+      // }
       // this.get_open_id()
       // if (this.$store.state.openId == null) {
       //   this.api.http("post", this.api.isGetCode, {}, result => {
@@ -159,13 +182,13 @@
     },
     methods: {
       /**********获取微信授权code**********/
-      get_wx_code () {
+      get_wx_code (type) { // 1第一次绑定手机号  2.已绑定
         this.api.http("post", this.api.isGetCode, {}, result => {
           if (result == 1) {
             if (this.code == null) {
               location.href = this.api.ip + "wxClient/getCode?redirectUrl=" + encodeURIComponent(location.href);
             } else {
-              this.get_open_id()
+              this.get_open_id(type)
             }
           }
         }, error => {
@@ -203,25 +226,31 @@
         });
       },
       /*********获取openid**********/
-      get_open_id () {
+      get_open_id (type) {
         this.api.http("post", this.api.getOpenId, { code: this.code }, result => {  
             result = JSON.parse(result);
             this.$store.dispatch("setOpenId", result.openid);
-            sessionStorage.setItem("openid", result.openid);
+            localStorage.setItem("openid", result.openid);
             this.user.openId = result.openid;
             this.user.nickName = result.nickname;
             this.user.avatar = result.headimgurl;
+            console.log('this.user', this.user);
             this.weChatUser = result;
             window.weChatUserNickName = result.nickname;
             window.weChatUserHeadimgurl = result.headimgurl;
-            this.get_login()
+            if (type === 1) {
+              this.get_phone_bind()
+            } else if (type === 2) {
+              this.get_login()
+            }
         }, error => {
           this.$toast(error.msg);
           this.isLoading = false;
         });
       },
       get_phone_bind () {
-         this.api.http("post", this.api.bindPhone, this.user, result => {
+        console.log('this.user', this.user);
+        this.api.http("post", this.api.bindPhone, this.user, result => {
           localStorage.setItem("accessToken", result.token);
           this.$store.dispatch("setToken", result.token);
           this.score = result.score;
@@ -263,9 +292,11 @@
           return;
         }
         this.isLoading = true;
-        this.user.nickName = window.weChatUserNickName;
-        this.user.avatar = window.weChatUserHeadimgurl;
+        // this.user.nickName = window.weChatUserNickName;
+        // this.user.avatar = window.weChatUserHeadimgurl;
         this.get_phone_bind()
+        // this.get_wx_code(1)
+        // this.get_phone_bind()
         // this.api.http("post", this.api.bindPhone, this.user, result => {
         //   localStorage.setItem("accessToken", result.token);
         //   this.$store.dispatch("setToken", result.token);

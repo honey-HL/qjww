@@ -100,11 +100,16 @@
         this.score = result;
       }, error => { });
 
-      if(this.userInfo.avatar.indexOf("http") != -1){
-        return;
-      }else{
-        this.userInfo.avatar = this.imgIp + this.userInfo.avatar;
-      };
+      console.log('this.userInfo', JSON.stringify(this.userInfo))
+      if (this.userInfo && this.userInfo.avatar) {
+        if (this.userInfo.avatar.indexOf("http") != -1) { // 有头像前缀
+          return;
+        } else { // 没有头像前缀
+          this.userInfo.avatar = this.imgIp + this.userInfo.avatar;
+        }
+      } else {
+        this.userInfo.avatar = ''
+      }
       
     },
     methods: {

@@ -1,7 +1,7 @@
 <template>
   <div id="footer">
     <div class="item" v-for="(item, index) in footNav" :key="index">
-      <router-link tag="div" :to="item.id" replace>
+      <router-link tag="div" :to="item.id">
         <div class="icon" v-if="item.active" :style="{background: 'url(' + item.activeIcon + ')'}"></div>
         <div class="icon" v-else :style="{background: 'url(' + item.icon + ')'}"></div>
         <div class="name">{{item.name}}</div>

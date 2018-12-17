@@ -99,7 +99,7 @@ routers.beforeEach((to, from, next) => {
     from.name ? next({ name: from.name }) : next('/index/home');         //如果上级也未匹配到路由则跳转登录页面，如果上级能匹配到则转上级路由
   }
   else if (to.meta.requireAuth) { //需要验证
-    if (!localStorage.getItem("accessToken")) {
+    if (!localStorage.getItem("openid") || !localStorage.getItem("accessToken")) {
       next({
         path: '/index/login',
         query: { redirect: to.fullPath }
