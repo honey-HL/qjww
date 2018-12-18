@@ -257,7 +257,9 @@
           this.isLogin = true;
           this.isLoading = false;
           this.api.http("post", this.api.getInfo, {}, result => {
-            if(result.avatar.indexOf("http") != -1){
+            console.log('260 result', JSON.stringify(result));
+            console.log('this.$route.query', this.$route.query);
+            if(result.avatar && result.avatar.indexOf("http") != -1){
               result["isUserHeadPic"] = true;
             }else{
               result["isUserHeadPic"] = false;
